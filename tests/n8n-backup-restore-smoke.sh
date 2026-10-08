@@ -102,10 +102,11 @@ wait_n8n "$BASE-sqlite-restore"
 docker exec "$BASE-sqlite-restore" n8n export:workflow --all --output=/home/node/.n8n/after.json
 volume_file "$BASE-sqlite-dst" after.json sqlite-restored.json
 verify_export sqlite-restored.json sqlite-restored
-echo "Executing restored SQLite witness workflow:"
-docker exec "$BASE-sqlite-restore" n8n execute --id=qa-n8n-restore-witness
-echo 'PASS SQLite restored n8n instance boots and executes restored workflow'
+# Do not invoke another CLI n8n process alongside the running server: the Task Broker port is shared.
 docker rm -f "$BASE-sqlite-restore" >/dev/null
+echo "Executing restored SQLite witness workflow in a standalone n8n process:"
+docker run --rm -v "$BASE-sqlite-dst:/home/node/.n8n" "$N8N_IMAGE" execute --id=qa-n8n-restore-witness
+echo 'PASS SQLite restored n8n instance boots and executes restored workflow'
 
 echo 'SCENARIO 2: PostgreSQL custom pg_dump + .n8n volume on empty target'
 docker volume create "$BASE-pg-home-src" >/dev/null
