@@ -99,12 +99,34 @@
 <p>Use this example to build an n8n deployment on a <strong>self-managed Linux VPS</strong>. You install and maintain n8n yourself; choosing a server through our partner does not include a preinstalled n8n instance. The example combines n8n, PostgreSQL, an external task runner and Caddy HTTPS in a private Compose network. It is a configuration template, <strong>not a claim of a live-tested deployment</strong>.</p>
 <p><strong>Want the fastest fresh installation instead?</strong> n8n also provides an <a href="https://docs.n8n.io/deploy/host-n8n/install-options/one-line-setup" rel="noopener noreferrer">official one-line Docker setup</a>. You can download and review its script with <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> before running <code>sh get-n8n.sh</code>. That option launches an initial instance with SQLite at a local URL and includes n8n Assistant sandbox services; it is <strong>not the same</strong> as this public-HTTPS, PostgreSQL-backed VPS deployment. The official full sandbox stack needs more RAM and CPU than a lean n8n installation (its Compose guide specifies at least 4 GB RAM / 2 vCPUs). For an internet-facing production VPS, continue with the manually configured stack below.</p>
 <h3>1. Prepare Docker, DNS and access</h3>
-<p>Connect over SSH as an administrator with sudo access. Point a DNS A record for <code>n8n.example.com</code> to the VPS IPv4 address. Install Docker Engine and the Compose v2 plugin using the <a href="https://docs.docker.com/engine/install/ubuntu/" rel="noopener noreferrer">official Docker instructions for Ubuntu</a> (use the instructions matching your Linux distribution). Then check the installed tools and hostname:</p>
-<pre><code>docker --version
-docker compose version
+<p>Connect over SSH with sudo access and point a DNS A record for <code>n8n.example.com</code> to your VPS IPv4 address. On a <strong>fresh Ubuntu 22.04, 24.04 or 26.04</strong> VPS, the following commands install Docker Engine and the modern <code>docker compose</code> plugin from Docker's official signed <code>apt</code> repository:</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Register Docker's signed apt repository
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>This is the production-oriented repository method in the <a href="https://docs.docker.com/engine/install/ubuntu/" rel="noopener noreferrer">official Docker Ubuntu installation guide</a>. <strong>Do not blindly reinstall or remove Docker on a VPS already running containers or other websites</strong>; first inspect the existing installation and possible package conflicts. For Debian or another distribution, use the corresponding official OS-specific instructions instead of Ubuntu commands.</p>
+<p>Now verify Docker itself, the Compose plugin, DNS and the working directory:</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
 getent hosts n8n.example.com
 mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
-<p>Keep your actual SSH administration port reachable before enabling a firewall. Allow inbound HTTP (80) and HTTPS (443) for certificate issuance and the editor. The example deliberately does <strong>not</strong> publish PostgreSQL (5432), n8n (5678) or task-runner broker (5679) to the public internet.</p>
+<p>If <code>getent hosts</code> returns no address or the wrong address, correct your DNS before starting Caddy; replace <code>n8n.example.com</code> throughout this guide with your real hostname. Docker normally requires root privileges: if your SSH user cannot run the later <code>docker compose</code> commands directly, prefix them with <code>sudo</code>. Adding a user to the <code>docker</code> group grants root-equivalent access and should not be done casually on a shared server.</p>
+<p>Keep your actual SSH administration port reachable before enabling a firewall. Allow inbound HTTP (80) and HTTPS (443) for certificate issuance and the editor. Docker-published container ports can bypass some UFW rules, so review Docker's firewall guidance and publish only the intended Caddy ports. This Compose example deliberately does <strong>not</strong> publish PostgreSQL (5432), n8n (5678) or task-runner broker (5679) to the public internet.</p>
 <h3>2. Create environment values and preserve the key</h3>
 <p>From the project directory, generate three <strong>different</strong> random hexadecimal values with:</p>
 <pre><code>openssl rand -hex 32
