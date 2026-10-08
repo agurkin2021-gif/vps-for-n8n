@@ -1,0 +1,25 @@
+name: Isolated n8n backup and restore
+on:
+  push:
+    branches:
+      - seo/n8n-backup-restore-content-v4-20261008
+    paths:
+      - .github/workflows/n8n-restore-smoke.yml
+      - tests/n8n-backup-restore-smoke.sh
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  n8n-restore-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - name: Checkout isolated QA branch
+        uses: actions/checkout@v4
+      - name: Confirm test script syntax
+        run: bash -n tests/n8n-backup-restore-smoke.sh
+      - name: Restore SQLite and PostgreSQL into clean n8n instances
+        shell: bash
+        run: bash tests/n8n-backup-restore-smoke.sh
