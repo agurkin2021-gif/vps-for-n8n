@@ -86,7 +86,8 @@
 <article><h3>Linux VPS</h3><p>Use a maintained Linux server sized for n8n, PostgreSQL, Docker and the reverse proxy.</p></article>
 <article><h3>DNS</h3><p>Point a domain or subdomain at the VPS before issuing TLS certificates and publishing webhook URLs.</p></article>
 <article><h3>Docker Compose</h3><p>Install Docker Engine and the Compose plugin using supported packages for the operating system.</p></article>
-<article><h3>Firewall</h3><p>Expose only required administration and web ports. Keep PostgreSQL and internal application services private.</p></article></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Choose a Linux VPS for n8n</a></div><p id="affiliate-note"><small>Partner link: we may earn a commission from purchases.</small></p></section>
+<article><h3>Firewall</h3><p>Expose only required administration and web ports. Keep PostgreSQL and internal application services private.</p></article></div>
+<p><strong>Installing on a VPS that already hosts websites?</strong> You can add n8n to a server you control when CPU, RAM and storage allow it. However, if Nginx, Apache, Caddy or another reverse proxy already owns ports 80/443, do <strong>not</strong> start the example Caddy container below unchanged: the ports will conflict. Instead, route a new n8n subdomain through your existing reverse proxy with appropriate private networking, or use a clean VPS for the exact Compose example. Preserve the other sites and their TLS configuration; the example assumes that ports 80/443 are available.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Choose a Linux VPS for n8n</a></div><p id="affiliate-note"><small>Partner link: we may earn a commission from purchases.</small></p></section>
 <section class="section"><p class="eyebrow">DEPLOYMENT STACK</p><h2>Components to configure</h2><div class="requirements">
 <div><b>Reverse proxy</b><span>Receives public HTTPS traffic and forwards it to n8n.</span></div>
 <div><b>n8n</b><span>Runs the editor, triggers and workflows with persistent application data.</span></div>
@@ -96,6 +97,7 @@
 </div></section>
 <section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">COPY-AND-ADAPT INSTALLATION</p><h2>Install n8n on your VPS with Docker Compose</h2>
 <p>Use this example to build an n8n deployment on a <strong>self-managed Linux VPS</strong>. You install and maintain n8n yourself; choosing a server through our partner does not include a preinstalled n8n instance. The example combines n8n, PostgreSQL, an external task runner and Caddy HTTPS in a private Compose network. It is a configuration template, <strong>not a claim of a live-tested deployment</strong>.</p>
+<p><strong>Want the fastest fresh installation instead?</strong> n8n also provides an <a href="https://docs.n8n.io/deploy/host-n8n/install-options/one-line-setup" rel="noopener noreferrer">official one-line Docker setup</a>. You can download and review its script with <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> before running <code>sh get-n8n.sh</code>. That option launches an initial instance with SQLite at a local URL and includes n8n Assistant sandbox services; it is <strong>not the same</strong> as this public-HTTPS, PostgreSQL-backed VPS deployment. The official full sandbox stack needs more RAM and CPU than a lean n8n installation (its Compose guide specifies at least 4 GB RAM / 2 vCPUs). For an internet-facing production VPS, continue with the manually configured stack below.</p>
 <h3>1. Prepare Docker, DNS and access</h3>
 <p>Connect over SSH as an administrator with sudo access. Point a DNS A record for <code>n8n.example.com</code> to the VPS IPv4 address. Install Docker Engine and the Compose v2 plugin using the <a href="https://docs.docker.com/engine/install/ubuntu/" rel="noopener noreferrer">official Docker instructions for Ubuntu</a> (use the instructions matching your Linux distribution). Then check the installed tools and hostname:</p>
 <pre><code>docker --version
@@ -108,10 +110,10 @@ mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <pre><code>openssl rand -hex 32
 openssl rand -hex 32
 openssl rand -hex 32</code></pre>
-<p>Create a file named <code>.env</code> using the template below, replace every <code>REPLACE_WITH_RANDOM_HEX</code> with a different generated value, and change the hostname and timezone. The shown <code>2.41.4</code> image is an illustrative pinned version based on the current official example, <strong>not a promise it is the newest secure release</strong>; check the maintained n8n release before starting and pin the same version for n8n and its runner.</p>
+<p>Create a file named <code>.env</code> using the template below, replace every <code>REPLACE_WITH_RANDOM_HEX</code> with a different generated value, and change the hostname and timezone. The shown <code>2.42.5</code> tag is the <strong>stable release listed on 8 October 2026</strong>, used here as a dated configuration example, <strong>not a guarantee of a live-tested deployment or of future security</strong>. Before installing, check <a href="https://github.com/n8n-io/n8n/releases" rel="noopener noreferrer">the current official n8n releases</a>, then keep n8n and its task-runner image on the same verified version.</p>
 <pre><code># .env — replace the three example secrets
 # Pin a maintained n8n release; keep n8n and runner equal.
-N8N_VERSION=2.41.4
+N8N_VERSION=2.42.5
 N8N_HOST=n8n.example.com
 GENERIC_TIMEZONE=Etc/UTC
 POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
@@ -207,7 +209,13 @@ docker compose up -d
 docker compose ps
 docker compose logs --tail=100 n8n n8n-runner postgres caddy
 curl -fsS https://n8n.example.com/healthz</code></pre>
-<p>The last command checks the <strong>public HTTPS</strong> health endpoint. If certificate issuance is still pending, inspect Caddy logs and DNS/ports before concluding n8n is broken. Open <code>https://n8n.example.com</code>, create the first owner account immediately and enable appropriate sign-in protections. Next, create a Webhook node: use its <strong>Test URL</strong> while listening for a test event; publish the workflow before expecting its <strong>Production URL</strong> to work continuously. Test from a device outside the VPS.</p>
+<p>The last command checks the <strong>public HTTPS</strong> health endpoint. If certificate issuance is still pending, inspect Caddy logs and DNS/ports before concluding n8n is broken. Open <code>https://n8n.example.com</code>, create the first owner account immediately and enable appropriate sign-in protections. Confirm that the instance actually executes a workflow, not merely that the editor loads:</p>
+<ol>
+<li>In the editor, create a workflow with a <strong>Webhook</strong> trigger. Set <strong>HTTP Method</strong> to <code>GET</code>, choose the <strong>Path</strong> <code>vps-check</code>, and set <strong>Respond</strong> to <strong>Immediately</strong>. Save the workflow.</li>
+<li>Click <strong>Listen for Test Event</strong>, copy the full <strong>Test URL</strong> shown by n8n, and from another device run <code>curl -i 'PASTE_TEST_URL_HERE'</code> with the copied URL. Expect an HTTP success response and the incoming event to appear in the n8n editor. Test URLs work only while n8n is listening for the event.</li>
+<li><strong>Publish</strong> the workflow, switch the node to its <strong>Production URL</strong>, copy it and run <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> again. Confirm the execution under the workflow's <strong>Executions</strong> tab. Production webhook requests need the workflow to be published and do not show their payload in the editor's test view.</li>
+</ol>
+<p>This is a deliberately simple, unauthenticated smoke test: never send secrets to it. Unpublish/delete it after testing, or configure Webhook authentication/IP restrictions before using a public endpoint for real data. See the <a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/" rel="noopener noreferrer">official Webhook test/production documentation</a>.</p>
 <h3>6. Back up before changing pinned versions</h3>
 <p>Save a recoverable PostgreSQL dump <em>and</em> the persistent n8n data volume, <code>.env</code>/encryption key and required external files to storage outside this server. Verify a restore using the <a href="backup-restore.html">backup and recovery guide</a> before updating production. Example commands:</p>
 <pre><code># Back up the database, encryption key, instance data,
