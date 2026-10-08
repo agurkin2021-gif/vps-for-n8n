@@ -69,7 +69,35 @@ jobs:
           echo 'QA_PASS: n8n app started and database migrations completed'
           # A real record inside n8n's actual database proves the DB restore, without touching user data.
           docker compose exec -T postgres psql -U qa -d qa -v ON_ERROR_STOP=1 -c "CREATE TABLE qa_restore_evidence(value TEXT NOT NULL); INSERT INTO qa_restore_evidence VALUES ('n8n-db-restore-pass-20261008');"
-          echo 'QA: Exporting n8n workflows and credentials via supported CLI'
+          echo 'QA: Creating a disposable owner and sample workflow/credential'
+          setup_code=$(curl -sS -o qa-setup-response.json -w '%{http_code}' -X POST http://127.0.0.1:15678/rest/owner/setup -H 'content-type: application/json' -d '{"email":"restore-qa@example.invalid","firstName":"Restore","lastName":"QA","password":"QA-only-Password1234!"}')
+          if [ "$setup_code" != "200" ]; then echo "QA_FAIL: setup returned HTTP $setup_code"; cat qa-setup-response.json; exit 1; fi
+          cat > qa-workflow.json <<'FIXTURE'
+          {
+            "id": "QA-recovery-workflow",
+            "name": "QA recovery workflow",
+            "nodes": [
+              {"id":"f62ad37d-0c64-496b-b321-c155e5911648","name":"Manual Trigger","type":"n8n-nodes-base.manualTrigger","typeVersion":1,"position":[220,220],"parameters":{}}
+            ],
+            "connections": {},
+            "settings": {"executionOrder":"v1"},
+            "active": false
+          }
+          FIXTURE
+          docker compose cp qa-workflow.json n8n:/tmp/qa-workflow.json
+          docker compose exec -T n8n n8n import:workflow --input=/tmp/qa-workflow.json
+          cat > qa-credential.json <<'FIXTURE'
+          {
+            "id": "qa-restore-credential",
+            "name": "QA recovery credential",
+            "type": "httpHeaderAuth",
+            "data": {"name":"X-QA","value":"isolated-test-dummy"},
+            "nodesAccess": [{"nodeType":"n8n-nodes-base.httpRequest","date":"2026-10-08T00:00:00.000Z"}]
+          }
+          FIXTURE
+          docker compose cp qa-credential.json n8n:/tmp/qa-credential.json
+          docker compose exec -T n8n n8n import:credentials --input=/tmp/qa-credential.json
+          echo 'QA: Exporting real test workflow/credential data via supported CLI'
           docker compose exec -T n8n n8n export:workflow --backup --output=/home/node/.n8n/backups/workflows/
           docker compose exec -T n8n n8n export:credentials --backup --output=/home/node/.n8n/backups/credentials/
           echo 'QA_PASS: workflow/credential CLI exports'
@@ -92,6 +120,10 @@ jobs:
           value=$(docker compose exec -T postgres psql -U qa -d qa -tAc "SELECT value FROM qa_restore_evidence LIMIT 1;" | tr -d '\r')
           if [ "$value" != 'n8n-db-restore-pass-20261008' ]; then echo "QA_FAIL: restored database record missing: $value"; exit 1; fi
           echo 'QA_PASS: real PostgreSQL custom-format dump restored on empty new database'
+          workflow_count=$(docker compose exec -T postgres psql -U qa -d qa -tAc "SELECT count(*) FROM workflow_entity WHERE name='QA recovery workflow';" | tr -d '\r')
+          credential_count=$(docker compose exec -T postgres psql -U qa -d qa -tAc "SELECT count(*) FROM credentials_entity WHERE name='QA recovery credential';" | tr -d '\r')
+          if [ "$workflow_count" != "1" ] || [ "$credential_count" != "1" ]; then echo "QA_FAIL: restored workflow/credential counts $workflow_count/$credential_count"; exit 1; fi
+          echo 'QA_PASS: actual n8n workflow and encrypted credential records recovered from dump'
           docker compose up -d n8n
           docker compose stop n8n
           docker compose cp ./n8n-user-folder-backup/. n8n:/home/node/.n8n/
