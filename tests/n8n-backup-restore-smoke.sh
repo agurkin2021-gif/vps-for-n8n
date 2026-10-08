@@ -8,6 +8,8 @@ SUFFIX="$(date +%s)-$$"
 BASE="n8n-qa-$SUFFIX"
 NETWORK="$BASE-net"
 TMP="$(mktemp -d)"
+# n8n runs as non-root node and must traverse the bind-mounted host directory.
+chmod 755 "$TMP"
 PASS="synthetic-test-password"
 TEST_KEY="synthetic-test-key-01234567890123456789"
 cleanup() {
@@ -71,6 +73,7 @@ cat > "$TMP/workflow.json" <<'JSON'
   }
 ]
 JSON
+chmod 644 "$TMP/workflow.json"
 docker network create "$NETWORK" >/dev/null
 for image in "$N8N_IMAGE" "$PG_IMAGE" "$TOOLS_IMAGE"; do docker pull "$image"; done
 
