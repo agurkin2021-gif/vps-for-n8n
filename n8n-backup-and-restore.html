@@ -17,8 +17,72 @@
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html"/>
 <link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html"/>
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html"/>
-<link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"/><meta content="website" property="og:type"/><meta content="n8n Backup and Restore" property="og:title"/><meta content="Back up and restore self-hosted n8n: database, workflows, credentials, encryption key, binary data and restore testing." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Backup and Restore" name="twitter:title"/><meta content="Back up and restore self-hosted n8n: database, workflows, credentials, encryption key, binary data and restore testing." name="twitter:description"/><link href="favicon.svg" rel="icon" type="image/svg+xml"/><link href="styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Backup and Restore","item":"https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"}]}</script></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">English ▾</button><div class="lang-menu"><a href="n8n-backup-and-restore.html" aria-current="page">English</a><a href="es/copias-seguridad-restauracion-n8n.html">Español</a><a href="ru/rezervnoe-kopirovanie-n8n.html">Русский</a><a href="pt-br/backup-restauracao-n8n.html">Português</a><a href="de/n8n-backup-wiederherstellung.html">Deutsch</a><a href="hi/n8n-backup-restore.html">हिन्दी</a><a href="bn/n8n-backup-restore.html">বাংলা</a><a href="ja/n8n-backup-restore.html">日本語</a><a href="pa/n8n-backup-restore.html">ਪੰਜਾਬੀ</a><a href="mr/n8n-backup-restore.html">मराठी</a><a href="te/n8n-backup-restore.html">తెలుగు</a><a href="ta/n8n-backup-restore.html">தமிழ்</a><a href="tr/n8n-yedekleme-geri-yukleme.html">Türkçe</a><a href="vi/sao-luu-khoi-phuc-n8n.html">Tiếng Việt</a><a href="ko/n8n-backup-restore.html">한국어</a><a href="fr/sauvegarde-restauration-n8n.html">Français</a></div></div></header><main>
-<section class="section"><p class="eyebrow">BACKUP &amp; RECOVERY</p><h1>n8n Backup and Restore</h1><p class="lead">A workflow export is useful, but it is not automatically a complete disaster-recovery backup. A recoverable self-hosted n8n deployment must preserve the application data, the matching encryption key and every external file or storage dependency required by your workflows.</p></section>
+<link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"/><meta content="website" property="og:type"/><meta content="n8n Backup and Restore" property="og:title"/><meta content="Back up and restore self-hosted n8n: database, workflows, credentials, encryption key, binary data and restore testing." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Backup and Restore" name="twitter:title"/><meta content="Back up and restore self-hosted n8n: database, workflows, credentials, encryption key, binary data and restore testing." name="twitter:description"/><link href="favicon.svg" rel="icon" type="image/svg+xml"/><link href="styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Backup and Restore","item":"https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"}]}</script><style id="backup-hero-visual-styles">
+.backup-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);align-items:center;gap:36px;min-height:465px}
+.backup-hero-copy{min-width:0}
+.backup-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.backup-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.backup-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 19px 29px rgba(16,28,48,.13));transition:transform .18s ease}
+.backup-hero-art a:hover svg,.backup-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.backup-hero-art a:focus-visible{outline:3px solid #ff6b4a}
+.backup-hero .actions{margin:28px 0 10px}
+.backup-hero .backup-affiliate-note{font-size:13px;line-height:1.55;color:#64748b;margin:0}
+@media(max-width:770px){.backup-hero{grid-template-columns:1fr;min-height:0;gap:18px}.backup-hero-art a{max-width:405px}}
+@media(max-width:450px){.backup-hero-art a{max-width:330px}.backup-hero{gap:12px}}
+@media(prefers-reduced-motion:reduce){.backup-hero-art svg{transition:none}}
+</style></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">English ▾</button><div class="lang-menu"><a href="n8n-backup-and-restore.html" aria-current="page">English</a><a href="es/copias-seguridad-restauracion-n8n.html">Español</a><a href="ru/rezervnoe-kopirovanie-n8n.html">Русский</a><a href="pt-br/backup-restauracao-n8n.html">Português</a><a href="de/n8n-backup-wiederherstellung.html">Deutsch</a><a href="hi/n8n-backup-restore.html">हिन्दी</a><a href="bn/n8n-backup-restore.html">বাংলা</a><a href="ja/n8n-backup-restore.html">日本語</a><a href="pa/n8n-backup-restore.html">ਪੰਜਾਬੀ</a><a href="mr/n8n-backup-restore.html">मराठी</a><a href="te/n8n-backup-restore.html">తెలుగు</a><a href="ta/n8n-backup-restore.html">தமிழ்</a><a href="tr/n8n-yedekleme-geri-yukleme.html">Türkçe</a><a href="vi/sao-luu-khoi-phuc-n8n.html">Tiếng Việt</a><a href="ko/n8n-backup-restore.html">한국어</a><a href="fr/sauvegarde-restauration-n8n.html">Français</a></div></div></header><main>
+<section class="section backup-hero"><div class="backup-hero-copy"><p class="eyebrow">BACKUP &amp; RECOVERY</p><h1>n8n Backup and Restore</h1><p class="lead">A workflow export is useful, but it is not automatically a complete disaster-recovery backup. A recoverable self-hosted n8n deployment must preserve the application data, the matching encryption key and every external file or storage dependency required by your workflows.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note">Choose a VPS for n8n</a></div><p class="backup-affiliate-note" id="backup-hero-affiliate-note">Partner link: we may earn a commission from purchases.</p></div><div class="backup-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note" aria-label="Explore VPS hosting options for n8n backup and restore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 490" fill="none" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="br-bg" x1="22" y1="20" x2="476" y2="459" gradientUnits="userSpaceOnUse"><stop stop-color="#29384E"/><stop offset="1" stop-color="#121B29"/></linearGradient>
+<linearGradient id="br-server" x1="183" y1="155" x2="317" y2="351" gradientUnits="userSpaceOnUse"><stop stop-color="#304158"/><stop offset="1" stop-color="#172436"/></linearGradient>
+</defs>
+<rect x="18" y="25" width="464" height="440" rx="34" fill="url(#br-bg)"/>
+<rect x="35" y="42" width="430" height="406" rx="24" stroke="#7890A9" stroke-opacity=".38" stroke-width="1.8"/>
+<circle cx="250" cy="245" r="169" stroke="#516A88" stroke-opacity=".26" stroke-width="2.2" stroke-dasharray="5 11"/>
+<path d="M169 107C204 87 241 79 280 84C358 95 412 159 415 236" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round"/>
+<path d="M394 218L415 241L434 214" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M333 385C296 404 258 412 220 406C141 394 88 329 84 253" stroke="#FF815F" stroke-width="10" stroke-linecap="round"/>
+<path d="M104 270L83 247L65 274" stroke="#FF815F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<g stroke="#718FA4" stroke-width="2.8" stroke-dasharray="5 9" stroke-linecap="round">
+<path d="M250 140V119"/><path d="M170 211L132 183"/><path d="M330 211L371 183"/><path d="M172 313L133 350"/><path d="M328 313L371 350"/>
+</g>
+<g transform="translate(177 150)">
+<rect x="0" y="0" width="146" height="192" rx="22" fill="url(#br-server)" stroke="#8499B3" stroke-width="3"/>
+<rect x="17" y="22" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+<rect x="17" y="76" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+<rect x="17" y="130" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+<g stroke="#8EA6C0" stroke-width="6" stroke-linecap="round"><path d="M33 37H77M33 49H66"/><path d="M33 91H77M33 103H66"/><path d="M33 145H77M33 157H66"/></g>
+<g fill="#FF8A66"><circle cx="107" cy="43" r="6"/><circle cx="107" cy="97" r="6"/><circle cx="107" cy="151" r="6"/></g>
+<path d="M73 193V211M46 214H101" stroke="#869CB5" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(197 65)">
+<rect x="0" y="0" width="106" height="83" rx="20" fill="#284247" stroke="#8BE1CA" stroke-width="2.6"/>
+<path d="M34 40V30C34 8 72 8 72 30V40" stroke="#9DE9D3" stroke-width="5" stroke-linecap="round"/>
+<rect x="27" y="38" width="52" height="31" rx="9" stroke="#9DE9D3" stroke-width="4"/>
+<circle cx="53" cy="52" r="4" fill="#9DE9D3"/><path d="M53 55V60" stroke="#9DE9D3" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(39 148)">
+<rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+<path d="M30 22H68L81 35V74H30Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M68 22V35H81M40 48H70M40 60H64" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(349 148)">
+<rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+<ellipse cx="55" cy="28" rx="27" ry="10" stroke="#FF7959" stroke-width="3.4" fill="#FFE8E0"/>
+<path d="M28 29V66C28 81 82 81 82 66V29M28 47C31 61 80 61 82 47" stroke="#FF7959" stroke-width="3.4"/>
+</g>
+<g transform="translate(38 332)">
+<rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+<path d="M25 24H86V70H25Z" stroke="#FF7959" stroke-width="3.5"/>
+<path d="M38 51L48 61L73 36" stroke="#FF7959" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(351 332)">
+<rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+<path d="M34 62C21 62 17 49 25 40C27 26 43 20 55 27C67 18 84 28 85 42C98 48 91 63 81 63H34Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M50 44V64M42 55L50 65L59 55" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g fill="#FF8764"><circle cx="170" cy="211" r="5"/><circle cx="330" cy="211" r="5"/><circle cx="172" cy="313" r="5"/><circle cx="328" cy="313" r="5"/></g>
+</svg></a></div></section>
 <section class="section dark"><p class="eyebrow">QUICK CHECKLIST</p><h2>What an n8n backup should protect</h2><div class="cards"><article><h3>Database</h3><p>Back up the PostgreSQL database or the SQLite database file used by the instance. The database contains core n8n state such as workflows, credentials and execution data.</p></article><article class="featured"><h3>Encryption key</h3><p>Preserve the exact n8n encryption key separately and securely. Restored encrypted credentials depend on the same key.</p></article><article><h3>Persistent files</h3><p>Include the persistent n8n data directory and any mounted files, binary-data storage or workflow assets your deployment relies on.</p></article><article><h3>Deployment configuration</h3><p>Keep the Compose/configuration files and the non-secret configuration needed to rebuild the stack. Protect secrets with appropriate access controls.</p></article></div></section>
 <section class="section"><p class="eyebrow">TWO BACKUP LEVELS</p><h2>Logical export vs complete disaster recovery</h2><div class="cards"><article><h3>Workflow &amp; credential export</h3><p>n8n CLI exports are useful for migration, versioned workflow copies and selective restoration. Credentials can be exported in encrypted form and imported later with the matching encryption key.</p></article><article><h3>Entity export</h3><p>The CLI can export database entities for moving data between supported database types. Execution-history tables are optional because they can be very large.</p></article><article><h3>Full instance recovery</h3><p>For a dead-server scenario, protect the actual database, encryption key, persistent data and deployment dependencies. Do not assume a workflow JSON export reconstructs the entire instance.</p></article><article><h3>Provider snapshot</h3><p>A VPS snapshot is useful as an additional recovery layer, but it should not be the only copy and should not replace an independently verified application/database backup.</p></article></div></section>
 <section class="section dark"><p class="eyebrow">DATABASE</p><h2>Back up the database consistently</h2><div class="cards"><article><h3>PostgreSQL</h3><p>Use a consistent PostgreSQL backup method and store the resulting backup away from the VPS. A database copy on the same failed disk is not disaster recovery.</p></article><article><h3>SQLite</h3><p>If the deployment uses SQLite, protect the database file from the persistent n8n data directory. Avoid copying a database in an unsafe state while it is actively being modified.</p></article><article><h3>Execution history</h3><p>Decide whether historical execution data is part of your recovery objective. It can make backups substantially larger, so retention and compliance requirements should drive the choice.</p></article><article><h3>Database version</h3><p>Record the database engine and version used by the source deployment so a recovery environment can be prepared compatibly.</p></article></div></section>
