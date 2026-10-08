@@ -102,7 +102,8 @@ wait_n8n "$BASE-sqlite-restore"
 docker exec "$BASE-sqlite-restore" n8n export:workflow --all --output=/home/node/.n8n/after.json
 volume_file "$BASE-sqlite-dst" after.json sqlite-restored.json
 verify_export sqlite-restored.json sqlite-restored
-docker exec "$BASE-sqlite-restore" n8n execute --id=qa-n8n-restore-witness >/dev/null
+echo "Executing restored SQLite witness workflow:"
+docker exec "$BASE-sqlite-restore" n8n execute --id=qa-n8n-restore-witness
 echo 'PASS SQLite restored n8n instance boots and executes restored workflow'
 docker rm -f "$BASE-sqlite-restore" >/dev/null
 
@@ -131,6 +132,7 @@ volume_restore "$BASE-pg-home-dst" postgres-user-folder.tar.gz
 pg_n8n "$BASE-pg-dst" "$BASE-pg-home-dst" export:workflow --all --output=/home/node/.n8n/after-pg.json
 volume_file "$BASE-pg-home-dst" after-pg.json postgres-restored.json
 verify_export postgres-restored.json postgres-restored
-pg_n8n "$BASE-pg-dst" "$BASE-pg-home-dst" execute --id=qa-n8n-restore-witness >/dev/null
+echo "Executing restored PostgreSQL witness workflow:"
+pg_n8n "$BASE-pg-dst" "$BASE-pg-home-dst" execute --id=qa-n8n-restore-witness
 echo 'PASS PostgreSQL dump, target restore, n8n workflow and execution'
 echo 'ALL ISOLATED REAL-N8N RESTORE TESTS PASSED'
