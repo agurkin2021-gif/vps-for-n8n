@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://agurkin2021-gif.github.io/vps-for-n8n/sitemap.xml
