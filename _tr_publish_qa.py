@@ -57,6 +57,7 @@ def canonical(path):
 
 TR_BY_CATEGORY={category(en):tr for en,tr in PAIRS}
 TR_BY_CATEGORY.update(TR_EXTRA)
+EN_BY_CATEGORY={category(en):en for en,_ in PAIRS}
 
 def tr_dest(path):
     tp=category(path)
@@ -104,8 +105,11 @@ def do_link(match,path):
     tag=match.group()
     hit=re.search(r'\bhreflang=(["\'])([^"\']+)\1',tag,re.I)
     if not hit:return tag
-    if hit.group(2).lower()=="tr":
+    code=hit.group(2).lower()
+    if code=="tr":
         tag=set_href(tag,tr_dest(path))
+    elif code in ("en","x-default") and locale(path)=="tr" and category(path) in EN_BY_CATEGORY:
+        tag=set_href(tag,canonical(EN_BY_CATEGORY[category(path)]))
     return tag
 
 def set_turkish_button(text,path):
