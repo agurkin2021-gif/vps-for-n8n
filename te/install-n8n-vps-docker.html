@@ -1,4 +1,10 @@
-<!doctype html><html lang="te"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>VPS లో n8n Docker Install — PostgreSQL & HTTPS</title><meta name="description" content="Docker Compose, PostgreSQL, persistent data, HTTPS, webhooks మరియు health verification తో n8n deployment."><meta name="robots" content="index,follow"><link rel="canonical" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html">
+<!DOCTYPE html>
+
+<html lang="te"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>VPSలో n8n ఇన్‌స్టాల్ చేయడం — Docker, PostgreSQL</title>
+<meta content="Docker Compose, PostgreSQL, శాశ్వత స్టోరేజ్, HTTPS, రివర్స్ ప్రాక్సీ, సరైన వెబ్‌హుక్ కాన్ఫిగరేషన్‌తో VPSలో n8n ఇన్‌స్టాల్ చేయండి." name="description"/>
+<meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" rel="canonical"/>
 <link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
 <link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
 <link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html"/>
@@ -15,4 +21,284 @@
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
 <link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
-<link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><link rel="icon" href="../favicon.svg"><link rel="stylesheet" href="../styles.css"></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">తెలుగు ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" aria-current="page">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html">Français</a></div></div></header><main><section class="section"><p class="eyebrow">VPS లో n8n Docker Install — PostgreSQL & HTTPS</p><h1>VPS లో n8n ను Docker తో Install చేయడం</h1><p class="lead">Docker Compose, PostgreSQL, persistent data, HTTPS, webhooks మరియు health verification తో n8n deployment.</p></section><section class="section"><h2>Production ముందు deployment verify చేయండి</h2><div class="requirements"><div><b>1</b><span>Docker Compose లో n8n మరియు PostgreSQL persistent volumes వాడాలి; PostgreSQL ను public internet కు expose చేయకండి.</span></div><div><b>2</b><span>N8N_ENCRYPTION_KEY స్థిరంగా ఉంచి container బయట కూడా secure చేయండి.</span></div><div><b>3</b><span>Start తర్వాత docker compose ps, logs మరియు /healthz check చేసి తర్వాతే production webhooks enable చేయండి.</span></div><div><b>4</b><span>n8n version pin చేయండి; PostgreSQL major version ను అదే volume పై blind upgrade చేయకండి.</span></div></div></section><section class="section dark" data-intent-completion="1"><p class="eyebrow">ముఖ్య technical decisions</p><h2>Production ముందు deployment verify చేయండి</h2><div class="cards"><article><h3>1</h3><p>Docker Compose లో n8n మరియు PostgreSQL persistent volumes వాడాలి; PostgreSQL ను public internet కు expose చేయకండి.</p></article><article><h3>2</h3><p>N8N_ENCRYPTION_KEY స్థిరంగా ఉంచి container బయట కూడా secure చేయండి.</p></article><article><h3>3</h3><p>Start తర్వాత docker compose ps, logs మరియు /healthz check చేసి తర్వాతే production webhooks enable చేయండి.</p></article><article><h3>4</h3><p>n8n version pin చేయండి; PostgreSQL major version ను అదే volume పై blind upgrade చేయకండి.</p></article></div><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS options చూడండి</a></div></section><section class="section" data-intent-completion="1"><p class="eyebrow">FAQ</p><h2>Production ముందు deployment verify చేయండి: FAQ</h2><div class="faq"><details><summary>1 GB నిజమైన VPSనా?</summary><p>అవును. ఇది తేలిక workload కోసం నిజమైన entry VPS; పరిమితి తక్కువ resource headroom మాత్రమే.</p></details><details><summary>2 GB ఎందుకు light baseline?</summary><p>Docker, OS మరియు చిన్న peaks కోసం ఎక్కువ headroom ఇస్తుంది.</p></details><details><summary>Scale ముందు ఎందుకు measure చేయాలి?</summary><p>CPU, RAM, disk మరియు latency నిజమైన bottleneck ను చూపిస్తాయి.</p></details></div><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS options చూడండి</a></div></section><section class="section"><h2>Related guides</h2><p><a href="index.html">n8n VPS</a> · <a href="n8n-vps-requirements.html">n8n-vps-requirements</a> · <a href="install-n8n-vps-docker.html">install-n8n-vps-docker</a> · <a href="n8n-backup-restore.html">n8n-backup-restore</a> · <a href="n8n-vps-security.html">n8n-vps-security</a> · <a href="n8n-queue-mode.html">n8n-queue-mode</a></p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n infrastructure guide.</span><p><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></p><div class="lang-switch footer-lang-switch"><button type="button">తెలుగు ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te" aria-current="page">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="VPSలో n8n ఇన్‌స్టాల్ చేయడం — Docker, PostgreSQL" property="og:title"/><meta content="Docker Compose, PostgreSQL, శాశ్వత స్టోరేజ్, HTTPS, రివర్స్ ప్రాక్సీ, సరైన వెబ్‌హుక్ కాన్ఫిగరేషన్‌తో VPSలో n8n ఇన్‌స్టాల్ చేయండి." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="VPSలో n8n ఇన్‌స్టాల్ చేయడం — Docker, PostgreSQL" name="twitter:title"/><meta content="Docker Compose, PostgreSQL, శాశ్వత స్టోరేజ్, HTTPS, రివర్స్ ప్రాక్సీ, సరైన వెబ్‌హుక్ కాన్ఫిగరేషన్‌తో VPSలో n8n ఇన్‌స్టాల్ చేయండి." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"హోమ్","item":"https://agurkin2021-gif.github.io/vps-for-n8n/te/"},{"@type":"ListItem","position":2,"name":"VPS లో n8n ని ఇన్‌స్టాల్ చేయండి","item":"https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
+.install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
+.install-n8n-hero-copy{min-width:0}
+.install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.install-n8n-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.install-n8n-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 29px rgba(23,36,61,.13));transition:transform .18s ease}
+.install-n8n-hero-art a:hover svg,.install-n8n-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.install-n8n-hero-art a:focus-visible{outline:3px solid #ff6847}
+.install-n8n-hero .actions{margin:28px 0 10px}
+.install-n8n-hero .hero-affiliate-disclosure{font-size:13px;color:#636e80;line-height:1.55;margin:0}
+@media(max-width:790px){.install-n8n-hero{grid-template-columns:1fr;min-height:0;gap:20px}.install-n8n-hero-art a{max-width:410px}}
+@media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
+</style></head><body>
+<header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">తెలుగు ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" aria-current="page">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></div></div></header><main>
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">Docker ఇన్‌స్టాలేషన్</p><h1>VPSలో n8n ఇన్‌స్టాల్ చేయండి</h1><p class="lead">Docker కంపోజ్ మరియు PostgreSQL ని ఉపయోగించి VPS లో n8n ని ఇన్‌స్టాల్ చేయండి. ఉత్పత్తి విస్తరణకు స్థిరమైన అప్లికేషన్ మరియు డేటాబేస్ డేటా కూడా అవసరం <code>N8N_ENCRYPTION_KEY</code>, పబ్లిక్ హోస్ట్ పేరు, HTTPS మరియు సరైన వెబ్‌హుక్ కాన్ఫిగరేషన్. ఉత్పత్తి వర్క్‌ఫ్లోలను సక్రియం చేయడానికి ముందు ఈ ముక్కలను ధృవీకరించండి.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">n8n కోసం VPS ని ఎంచుకోండి</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">భాగస్వామి లింక్: మేము కొనుగోళ్ల నుండి కమీషన్ పొందవచ్చు.</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="n8n ని ఇన్‌స్టాల్ చేయడానికి VPS ని ఎంచుకోండి"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+<linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
+<linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+</defs>
+<rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+<rect x="35" y="37" width="430" height="387" rx="25" stroke="#71859d" stroke-opacity=".27" stroke-width="2"/>
+<g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+<g stroke="#7496a9" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M248 114V91"/><path d="M163 202H112"/><path d="M338 202H391"/><path d="M160 287L112 338"/><path d="M339 290L393 337"/></g>
+<g transform="translate(193 62)">
+<rect width="111" height="67" rx="21" fill="#284b4d" stroke="#7fdac1" stroke-width="2.5"/>
+<rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+<path d="M50 26V20C50 7 65 7 65 20V26" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+<path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(158 133)">
+<rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+<rect x="19" y="21" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="147" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+<g stroke="#92a8bf" stroke-width="6" stroke-linecap="round"><path d="M67 38H139M67 51H117"/><path d="M67 101H139M67 114H115"/><path d="M67 164H139M67 177H113"/></g>
+<g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+<path d="M91 221V234" stroke="#91a4ba" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(50 167)">
+<rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff7755" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+<path d="M38 35L47 43L61 30"/>
+</g></g>
+<g transform="translate(354 170)">
+<rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<path d="M21 28L38 19L53 28L70 19L79 24V52L63 62L48 52L30 61L21 56V28Z" stroke="#ff795b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
+</g>
+<g transform="translate(44 309)">
+<rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="47" r="7"/><circle cx="77" cy="28" r="7"/><circle cx="77" cy="67" r="7"/><path d="M39 44L71 30M39 50L70 65"/></g>
+</g>
+<g transform="translate(346 309)">
+<rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3"><ellipse cx="55" cy="27" rx="26" ry="9" fill="#ffe8df"/><path d="M29 27V62C29 76 81 76 81 62V27"/><path d="M29 45C31 58 80 58 81 45"/></g>
+</g>
+<g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
+</svg></a></div></section>
+<section class="section dark"><p class="eyebrow">ముందస్తు అవసరాలు</p><h2>n8n ని ప్రారంభించే ముందు VPS ని సిద్ధం చేయండి</h2><div class="cards">
+<article><h3>Linux VPS</h3><p>n8n, PostgreSQL, Docker మరియు రివర్స్ ప్రాక్సీ కోసం నిర్వహించబడే Linux సర్వర్‌ని ఉపయోగించండి.</p></article>
+<article><h3>DNS</h3><p>TLS ప్రమాణపత్రాలను జారీ చేయడానికి మరియు వెబ్‌హుక్ URLలను ప్రచురించడానికి ముందు VPS వద్ద డొమైన్ లేదా సబ్‌డొమైన్‌ను సూచించండి.</p></article>
+<article><h3>Docker కంపోజ్ చేయండి</h3><p>ఆపరేటింగ్ సిస్టమ్ కోసం మద్దతు ఉన్న ప్యాకేజీలను ఉపయోగించి Docker ఇంజిన్ మరియు కంపోజ్ ప్లగిన్‌ను ఇన్‌స్టాల్ చేయండి.</p></article>
+<article><h3>ఫైర్‌వాల్</h3><p>అవసరమైన పరిపాలన మరియు వెబ్ పోర్ట్‌లను మాత్రమే బహిర్గతం చేయండి. PostgreSQL మరియు అంతర్గత అప్లికేషన్ సేవలను ప్రైవేట్‌గా ఉంచండి.</p></article></div>
+<p><strong>ఇప్పటికే వెబ్‌సైట్‌లను హోస్ట్ చేస్తున్న VPS లో ఇన్‌స్టాల్ చేస్తున్నారా?</strong> CPU, RAM మరియు నిల్వ అనుమతించినప్పుడు మీరు నియంత్రించే సర్వర్‌కు n8n ని జోడించవచ్చు. అయితే, Nginx, Apache, Caddy లేదా మరొక రివర్స్ ప్రాక్సీ ఇప్పటికే పోర్ట్‌లను కలిగి ఉంటే 80/443, చేయండి <strong>కాదు</strong> దిగువ ఉదాహరణ Caddy కంటైనర్‌ను మార్చకుండా ప్రారంభించండి: పోర్ట్‌లు వైరుధ్యంగా ఉంటాయి. బదులుగా, తగిన ప్రైవేట్ నెట్‌వర్కింగ్‌తో మీ ప్రస్తుత రివర్స్ ప్రాక్సీ ద్వారా కొత్త n8n సబ్‌డొమైన్‌ను రూట్ చేయండి లేదా ఖచ్చితమైన కంపోజ్ ఉదాహరణ కోసం క్లీన్ VPS ని ఉపయోగించండి. ఇతర సైట్‌లను మరియు వాటి TLS కాన్ఫిగరేషన్‌ను సంరక్షించండి; పోర్ట్‌లు 80/443 అందుబాటులో ఉన్నాయని ఉదాహరణ ఊహిస్తుంది.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">n8n కోసం Linux VPS ని ఎంచుకోండి</a></div><p id="affiliate-note"><small>భాగస్వామి లింక్: మేము కొనుగోళ్ల నుండి కమీషన్ పొందవచ్చు.</small></p></section>
+<section class="section"><p class="eyebrow">డిప్లాయ్‌మెంట్ నిర్మాణం</p><h2>కాన్ఫిగర్ చేయడానికి భాగాలు</h2><div class="requirements">
+<div><b>రివర్స్ ప్రాక్సీ</b><span>పబ్లిక్ HTTPS ట్రాఫిక్‌ని అందుకుంటుంది మరియు దానిని n8n కి ఫార్వార్డ్ చేస్తుంది.</span></div>
+<div><b>n8n</b><span>నిరంతర అప్లికేషన్ డేటాతో ఎడిటర్, ట్రిగ్గర్‌లు మరియు వర్క్‌ఫ్లోలను అమలు చేస్తుంది.</span></div>
+<div><b>PostgreSQL</b><span>ఉత్పత్తి విస్తరణ కోసం వర్క్‌ఫ్లో, క్రెడెన్షియల్ మరియు ఎగ్జిక్యూషన్ స్టేట్‌ను స్టోర్ చేస్తుంది.</span></div>
+<div><b>నిరంతర వాల్యూమ్‌లు</b><span>డిస్పోజబుల్ కంటైనర్‌ల వెలుపల అప్లికేషన్ మరియు డేటాబేస్ స్థితిని ఉంచండి.</span></div>
+<div><b>పబ్లిక్ DNS</b><span>VPS కి ఎడిటర్ మరియు వెబ్‌హుక్ ప్రొవైడర్లు ఉపయోగించిన హోస్ట్ పేరుని మ్యాప్ చేయండి.</span></div>
+</div></section>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">ఉదాహరణ ఆధారంగా ఇన్‌స్టాలేషన్</p><h2>Docker కంపోజ్‌తో మీ VPS లో n8n ని ఇన్‌స్టాల్ చేయండి</h2>
+<p>a పై n8n విస్తరణను రూపొందించడానికి ఈ ఉదాహరణను ఉపయోగించండి <strong>స్వీయ-నిర్వహణ Linux VPS</strong>. మీరు n8n ని మీరే ఇన్‌స్టాల్ చేసి నిర్వహించండి; మా భాగస్వామి ద్వారా సర్వర్‌ని ఎంచుకోవడంలో ముందుగా ఇన్‌స్టాల్ చేయబడిన n8n ఉదాహరణ ఉండదు. ఉదాహరణ ప్రైవేట్ కంపోజ్ నెట్‌వర్క్‌లో n8n, PostgreSQL, బాహ్య టాస్క్ రన్నర్ మరియు Caddy HTTPS ని మిళితం చేస్తుంది. ఇది కాన్ఫిగరేషన్ టెంప్లేట్, <strong>ప్రత్యక్ష-పరీక్షించిన విస్తరణ యొక్క దావా కాదు</strong>.</p>
+<p><strong>బదులుగా వేగవంతమైన తాజా ఇన్‌స్టాలేషన్ కావాలా?</strong> n8n అధికారిక వన్-లైన్ Docker సెటప్‌ను కూడా అందిస్తుంది. దీనితో మీరు దాని స్క్రిప్ట్‌ని డౌన్‌లోడ్ చేసుకోవచ్చు మరియు సమీక్షించవచ్చు <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> నడుస్తున్న ముందు <code>sh get-n8n.sh</code>. ఆ ఎంపిక స్థానిక URL వద్ద SQLite తో ప్రారంభ ఉదాహరణను ప్రారంభిస్తుంది మరియు n8n అసిస్టెంట్ శాండ్‌బాక్స్ సేవలను కలిగి ఉంటుంది; అది <strong>అదే కాదు</strong> ఈ పబ్లిక్-HTTPS, PostgreSQL-మద్దతు గల VPS విస్తరణ. అధికారిక పూర్తి శాండ్‌బాక్స్ స్టాక్‌కు లీన్ n8n ఇన్‌స్టాలేషన్ కంటే ఎక్కువ RAM మరియు CPU అవసరం (దాని కంపోజ్ గైడ్ కనీసం 4 GB RAM / 2 vCPUలను నిర్దేశిస్తుంది). ఇంటర్నెట్ ఫేసింగ్ ఉత్పత్తి VPS కోసం, దిగువ మాన్యువల్‌గా కాన్ఫిగర్ చేసిన స్టాక్‌తో కొనసాగించండి.</p>
+<h3>1. Docker, DNS మరియు యాక్సెస్‌ని సిద్ధం చేయండి</h3>
+<p>సుడో యాక్సెస్‌తో SSH ని కనెక్ట్ చేయండి మరియు దీని కోసం DNS రికార్డ్‌ని సూచించండి <code>n8n.example.com</code> మీ VPS IPv4 చిరునామాకు. ఒక <strong>తాజా Ubuntu 22.04, 24.04 లేదా 26.04</strong> VPS, కింది ఆదేశాలు Docker ఇంజిన్‌ను ఇన్‌స్టాల్ చేస్తాయి మరియు ఆధునికమైనవి <code>docker compose</code> Docker యొక్క అధికారిక సంతకం నుండి ప్లగిన్ <code>apt</code> రిపోజిటరీ:</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Register Docker's signed apt repository
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>ఇది అధికారిక Docker Ubuntu ఇన్‌స్టాలేషన్ గైడ్‌లో ఉత్పత్తి-ఆధారిత రిపోజిటరీ పద్ధతి. <strong>VPS ఇప్పటికే నడుస్తున్న కంటైనర్‌లు లేదా ఇతర వెబ్‌సైట్‌లలో Docker ని గుడ్డిగా మళ్లీ ఇన్‌స్టాల్ చేయవద్దు లేదా తీసివేయవద్దు</strong>; ముందుగా ఇప్పటికే ఉన్న ఇన్‌స్టాలేషన్ మరియు సాధ్యమయ్యే ప్యాకేజీ వైరుధ్యాలను తనిఖీ చేయండి. డెబియన్ లేదా మరొక పంపిణీ కోసం, Ubuntu ఆదేశాలకు బదులుగా సంబంధిత అధికారిక OS-నిర్దిష్ట సూచనలను ఉపయోగించండి.</p>
+<p>ఇప్పుడు Docker ని, కంపోజ్ ప్లగ్ఇన్, DNS మరియు వర్కింగ్ డైరెక్టరీని ధృవీకరించండి:</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
+getent hosts n8n.example.com
+mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
+<p>ఉంటే <code>getent hosts</code> చిరునామా లేదా తప్పు చిరునామాను అందించదు, Caddy ని ప్రారంభించే ముందు మీ DNS ని సరి చేయండి; భర్తీ చేయండి <code>n8n.example.com</code> మీ నిజమైన హోస్ట్ పేరుతో ఈ గైడ్ అంతటా. Docker కి సాధారణంగా రూట్ అధికారాలు అవసరం: మీ SSH వినియోగదారు తర్వాత అమలు చేయలేకపోతే <code>docker compose</code> ఆదేశాలను నేరుగా, వాటితో ఉపసర్గ చేయండి <code>sudo</code>. వినియోగదారుని జోడించడం <code>docker</code> సమూహం రూట్-సమానమైన ప్రాప్యతను మంజూరు చేస్తుంది మరియు భాగస్వామ్య సర్వర్‌లో సాధారణం చేయకూడదు.</p>
+<p>ఫైర్‌వాల్‌ని ఎనేబుల్ చేసే ముందు మీ వాస్తవ SSH అడ్మినిస్ట్రేషన్ పోర్ట్‌ను అందుబాటులో ఉంచుకోండి. సర్టిఫికేట్ జారీ మరియు ఎడిటర్ కోసం ఇన్‌బౌండ్ HTTP (80) మరియు HTTPS (443)ని అనుమతించండి. Docker-ప్రచురితమైన కంటైనర్ పోర్ట్‌లు కొన్ని UFW నియమాలను దాటవేయగలవు, కాబట్టి Docker యొక్క ఫైర్‌వాల్ మార్గదర్శకత్వాన్ని సమీక్షించండి మరియు ఉద్దేశించిన Caddy పోర్ట్‌లను మాత్రమే ప్రచురించండి. ఈ కంపోజ్ ఉదాహరణ ఉద్దేశపూర్వకంగా చేస్తుంది <strong>కాదు</strong> పబ్లిక్ ఇంటర్నెట్‌లో PostgreSQL (5432), n8n (5678) లేదా టాస్క్-రన్నర్ బ్రోకర్ (5679)ని ప్రచురించండి.</p>
+<h3>2. పర్యావరణ విలువలను సృష్టించండి మరియు కీని సంరక్షించండి</h3>
+<p>ప్రాజెక్ట్ డైరెక్టరీ నుండి, మూడుని రూపొందించండి <strong>భిన్నమైనది</strong> దీనితో యాదృచ్ఛిక హెక్సాడెసిమల్ విలువలు:</p>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
+<p>అనే ఫైల్‌ను సృష్టించండి <code>.env</code> దిగువన ఉన్న టెంప్లేట్‌ని ఉపయోగించి, ప్రతిదాన్ని భర్తీ చేయండి <code>REPLACE_WITH_RANDOM_HEX</code> వేరే ఉత్పత్తి చేయబడిన విలువతో మరియు హోస్ట్ పేరు మరియు సమయ మండలిని మార్చండి. చూపినది <code>2.42.5</code> ట్యాగ్ ఉంది <strong>స్థిరమైన విడుదల 8 అక్టోబర్ 2026 న జాబితా చేయబడింది</strong>, ఇక్కడ డేటెడ్ కాన్ఫిగరేషన్ ఉదాహరణగా ఉపయోగించబడింది, <strong>ప్రత్యక్ష-పరీక్షించిన విస్తరణ లేదా భవిష్యత్తు భద్రతకు హామీ కాదు</strong>. ఇన్‌స్టాల్ చేసే ముందు, ప్రస్తుత అధికారిక n8n విడుదలలను తనిఖీ చేయండి, ఆపై n8n మరియు దాని టాస్క్-రన్నర్ చిత్రాన్ని అదే ధృవీకరించబడిన సంస్కరణలో ఉంచండి.</p>
+<pre><code># .env — replace the three example secrets
+# Pin a maintained n8n release; keep n8n and runner equal.
+N8N_VERSION=2.42.5
+N8N_HOST=n8n.example.com
+GENERIC_TIMEZONE=Etc/UTC
+POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
+N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
+RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
+<p>ఎప్పుడూ కట్టుబడి ఉండకండి <code>.env</code> పబ్లిక్ రిపోజిటరీకి. గుప్తీకరణ కీ మరియు పునరుద్ధరణ సూచనలను VPS నుండి సురక్షితంగా నిల్వ చేయండి. కంటైనర్ రిక్రియేషన్ లేదా మైగ్రేషన్ తర్వాత కీ తప్పనిసరిగా అలాగే ఉండాలి.</p>
+<h3>3. తాజా ఇన్‌స్టాలేషన్ కోసం compose.yaml అని వ్రాయండి</h3>
+<p>అదే డైరెక్టరీలో, సృష్టించండి <code>compose.yaml</code>. ఉదాహరణ అధికారిక n8n పర్యావరణం-వేరియబుల్ సమావేశాలను మరియు PostgreSQL 18 ని ఉపయోగిస్తుంది <code>PGDATA</code> n8n హోస్టింగ్ ప్రాజెక్ట్ ద్వారా డాక్యుమెంట్ చేయబడిన మార్గం:</p>
+<pre><code>services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+      N8N_WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_PROXY_HOPS: "1"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  n8n-runner:
+    image: n8nio/runners:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+    depends_on:
+      - n8n
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:</code></pre>
+<p>నాలుగు సేవలు విభిన్న పాత్రలను కలిగి ఉన్నాయి: PostgreSQL డేటాబేస్ స్థితిని నిల్వ చేస్తుంది, n8n వర్క్‌ఫ్లోలను అమలు చేస్తుంది, <code>n8n-runner</code> సరిపోలే సంస్కరణ మరియు భాగస్వామ్య ప్రమాణీకరణ టోకెన్‌తో రన్నర్ టాస్క్‌లను అమలు చేస్తుంది మరియు Caddy పబ్లిక్ HTTPS ని నిర్వహిస్తుంది. ఒక బాహ్య <em>టాస్క్ రన్నర్</em> Redis క్యూ మోడ్ కాదు. Caddy మాత్రమే హోస్ట్ పోర్ట్‌లను ప్రచురిస్తుంది. ఈ లీన్ ఇలస్ట్రేషన్ సెటప్ కోసం ఒకే డేటాబేస్ పాత్రను ఉపయోగిస్తుంది; PostgreSQL అధికారాల యొక్క బలమైన విభజన కోసం, అధికారిక n8n PostgreSQL విస్తరణ ఉదాహరణను సంప్రదించండి.</p>
+<h3>4. HTTPS Caddyfileని సృష్టించండి</h3>
+<p>ఫైల్‌ను సృష్టించండి <code>Caddyfile</code> (క్యాపిటల్ సి, పొడిగింపు లేదు) పాటు <code>compose.yaml</code>. ప్రతిచోటా ఉదాహరణ హోస్ట్ పేరును మీ స్వంత DNS పేరుతో భర్తీ చేయండి:</p>
+<pre><code>n8n.example.com {
+    reverse_proxy n8n:5678
+}</code></pre>
+<p>డొమైన్ సరిగ్గా పరిష్కరించబడినప్పుడు మరియు బాహ్య ట్రాఫిక్ పోర్ట్‌లను 80/443 కి చేరుకున్నప్పుడు Caddy పబ్లిక్ TLS సర్టిఫికెట్‌లను అభ్యర్థిస్తుంది మరియు పునరుద్ధరిస్తుంది. DNS ని సూచించవద్దు <code>localhost</code>. మీరు Caddy ని మరొక రివర్స్ ప్రాక్సీతో భర్తీ చేస్తే, అసలు హోస్ట్, ప్రోటోకాల్ మరియు క్లయింట్-అడ్రస్ హెడర్‌లను ఫార్వార్డ్ చేయండి మరియు సర్దుబాటు చేయండి <code>N8N_PROXY_HOPS</code> విశ్వసనీయ ప్రాక్సీ హాప్‌ల వాస్తవ సంఖ్య కోసం.</p>
+<h3>5. కంటైనర్లను ప్రారంభించండి మరియు బయటి నుండి పరీక్షించండి</h3>
+<p>సేవ్ చేసిన తర్వాత ప్రాజెక్ట్ డైరెక్టరీ నుండి ఈ ఆదేశాలను అమలు చేయండి <code>.env</code>, <code>compose.yaml</code> మరియు <code>Caddyfile</code>:</p>
+<pre><code>chmod 600 .env
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100 n8n n8n-runner postgres caddy
+curl -fsS https://n8n.example.com/healthz</code></pre>
+<p>చివరి ఆదేశం తనిఖీ చేస్తుంది <strong>పబ్లిక్ HTTPS</strong> ఆరోగ్య ముగింపు స్థానం. సర్టిఫికేట్ జారీ ఇంకా పెండింగ్‌లో ఉంటే, n8n విచ్ఛిన్నమైందని నిర్ధారించే ముందు Caddy లాగ్‌లు మరియు DNS/పోర్ట్‌లను తనిఖీ చేయండి. తెరవండి <code>https://n8n.example.com</code>, వెంటనే మొదటి యజమాని ఖాతాను సృష్టించండి మరియు తగిన సైన్-ఇన్ రక్షణలను ప్రారంభించండి. ఉదాహరణ వాస్తవానికి వర్క్‌ఫ్లోను అమలు చేస్తుందని నిర్ధారించండి, ఎడిటర్ లోడ్ చేయడమే కాదు:</p>
+<ol>
+<li>ఎడిటర్‌లో, aతో వర్క్‌ఫ్లో సృష్టించండి <strong>వెబ్‌హుక్</strong> ట్రిగ్గర్. సెట్ <strong>HTTP పద్ధతి</strong> కు <code>GET</code>, ఎంచుకోండి <strong>Path</strong> <code>vps-check</code>, మరియు సెట్ <strong>ప్రతిస్పందించండి</strong> కు <strong>వెంటనే</strong>. వర్క్‌ఫ్లోను సేవ్ చేయండి.</li>
+<li>క్లిక్ చేయండి <strong>టెస్ట్ ఈవెంట్ కోసం వినండి</strong>, పూర్తి కాపీ చేయండి <strong>పరీక్ష URL</strong> n8n ద్వారా చూపబడింది మరియు మరొక పరికరం అమలు నుండి <code>curl -i 'PASTE_TEST_URL_HERE'</code> కాపీ చేసిన URLతో. n8n ఎడిటర్‌లో HTTP విజయ ప్రతిస్పందన మరియు ఇన్‌కమింగ్ ఈవెంట్ కనిపించాలని ఆశించండి. n8n ఈవెంట్‌ని వింటున్నప్పుడు మాత్రమే పరీక్ష URLలు పని చేస్తాయి.</li>
+<li><strong>ప్రచురించండి</strong> వర్క్‌ఫ్లో, నోడ్‌ను దానికి మార్చండి <strong>ఉత్పత్తి URL</strong>, దాన్ని కాపీ చేసి రన్ చేయండి <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> మళ్ళీ. వర్క్‌ఫ్లో కింద అమలును నిర్ధారించండి <strong>మరణశిక్షలు</strong> ట్యాబ్. ఉత్పత్తి వెబ్‌హుక్ అభ్యర్థనలకు వర్క్‌ఫ్లో ప్రచురించబడాలి మరియు ఎడిటర్ పరీక్ష వీక్షణలో వాటి పేలోడ్‌ను చూపవద్దు.</li>
+</ol>
+<p>ఇది ఉద్దేశపూర్వకంగా సరళమైన, ప్రమాణీకరించని పొగ పరీక్ష: దీనికి రహస్యాలను ఎప్పుడూ పంపవద్దు. నిజమైన డేటా కోసం పబ్లిక్ ఎండ్‌పాయింట్‌ని ఉపయోగించే ముందు దాన్ని పరీక్షించిన తర్వాత ప్రచురించడం/తొలగించడం లేదా Webhook ప్రమాణీకరణ/IP పరిమితులను కాన్ఫిగర్ చేయండి. అధికారిక Webhook పరీక్ష/ఉత్పత్తి డాక్యుమెంటేషన్ చూడండి.</p>
+<h3>6. పిన్ చేసిన సంస్కరణలను మార్చడానికి ముందు బ్యాకప్ చేయండి</h3>
+<p>రికవరీ చేయగల PostgreSQL డంప్‌ను సేవ్ చేయండి <em>మరియు</em> నిరంతర n8n డేటా వాల్యూమ్, <code>.env</code>/ఎన్‌క్రిప్షన్ కీ మరియు ఈ సర్వర్ వెలుపల నిల్వ చేయడానికి అవసరమైన బాహ్య ఫైల్‌లు. ఉపయోగించి పునరుద్ధరణను ధృవీకరించండి <a href="n8n-backup-restore.html">బ్యాకప్ మరియు రికవరీ గైడ్</a> ఉత్పత్తిని నవీకరించే ముందు. ఉదాహరణ ఆదేశాలు:</p>
+<pre><code># Back up the database, encryption key, instance data,
+# and files before changing the pinned versions.
+docker compose exec -T postgres \
+  pg_dump -U n8n -d n8n &gt; n8n-db.sql
+# After securing the backup outside this VPS:
+docker compose pull
+docker compose up -d
+docker compose ps</code></pre>
+<p>పిన్ చేసిన వాటిని మార్చండి <code>N8N_VERSION</code> విడుదల గమనికలను చదివిన తర్వాత మాత్రమే; n8n మరియు రన్నర్ చిత్రాలు రెండూ కలిసి ముందుకు సాగాలి. <strong>పరిగెత్తవద్దు <code>docker compose down -v</code></strong> సాధారణ నిర్వహణ సమయంలో పేరు పెట్టబడిన డేటా వాల్యూమ్‌లను తొలగిస్తుంది. PostgreSQL ప్రధాన-వెర్షన్ మార్పులకు డేటాబేస్ అప్‌గ్రేడ్ లేదా డంప్/పునరుద్ధరణ ప్రణాళిక అవసరం; Postgres 18 చిత్రాన్ని వేరే ప్రధాన ట్యాగ్‌తో భర్తీ చేయడం ఆటోమేటిక్ మైగ్రేషన్ కాదు.</p>
+<p>అధికారిక సూచనలు: n8n Docker కంపోజ్ గైడ్, n8n రివర్స్-ప్రాక్సీ/వెబ్‌హూక్ కాన్ఫిగరేషన్ మరియు అధికారిక PostgreSQL డిప్లాయ్‌మెంట్ నోట్స్. ఇన్‌ఫ్రాస్ట్రక్చర్ బెంచ్‌మార్క్ లేదా ప్రొవైడర్-నిర్దిష్ట ప్రీఇన్‌స్టాల్ చేసిన ఫీచర్ ఏదీ ఊహించబడలేదు.</p>
+</section>
+<section class="section dark"><p class="eyebrow">కాన్ఫిగరేషన్</p><h2>రహస్యాలు మరియు పబ్లిక్ URLలను ఉద్దేశపూర్వకంగా సెట్ చేయండి</h2><div class="cards">
+<article><h3>ఎన్క్రిప్షన్ కీ</h3><p>ఉత్పత్తి ఆధారాలను నిల్వ చేయడానికి ముందు బలమైన n8n ఎన్‌క్రిప్షన్ కీని సెట్ చేయండి మరియు సంరక్షించండి. రికవరీ తర్వాత అదే కీ అవసరం.</p></article>
+<article><h3>PostgreSQL ఆధారాలు</h3><p>అంకితమైన డేటాబేస్ ఆధారాలను ఉపయోగించండి మరియు పబ్లిక్ సోర్స్ నియంత్రణ వెలుపల పాస్‌వర్డ్‌లను ఉంచండి.</p></article>
+<article><h3>పబ్లిక్ హోస్ట్ పేరు</h3><p>అంతర్గత కంటైనర్ చిరునామా కాకుండా నిజమైన బాహ్య హోస్ట్ పేరు మరియు HTTPS మూలాన్ని కాన్ఫిగర్ చేయండి.</p></article>
+<article><h3>Webhook URL</h3><p>సెట్ <code>N8N_WEBHOOK_URL</code> పబ్లిక్‌గా చేరుకోగల HTTPS బేస్ URLకి మరియు సెట్ చేయండి <code>N8N_PROXY_HOPS=1</code> ఒక విశ్వసనీయ రివర్స్ ప్రాక్సీ ఉన్నప్పుడు. <code>WEBHOOK_URL</code> n8n 2.35.0 మరియు తరువాతి కాలంలో విస్మరించబడిన మారుపేరు; పాత ట్యుటోరియల్స్ నుండి కాపీ చేయడాన్ని నివారించండి.</p></article>
+</div></section>
+<section class="section"><p class="eyebrow">శాశ్వత డేటా నిల్వ</p><h2>n8n మరియు PostgreSQL విడివిడిగా కొనసాగించండి</h2><div class="cards">
+<article><h3>n8n డేటా</h3><p>n8n డేటా డైరెక్టరీ కోసం నిరంతర నిల్వను మౌంట్ చేయండి, కాబట్టి క్లిష్టమైన సందర్భ స్థితి కంటైనర్ వినోదం నుండి బయటపడుతుంది.</p></article>
+<article><h3>PostgreSQL డేటా</h3><p>PostgreSQL కంటైనర్ నుండి స్వతంత్రంగా డేటాబేస్ డైరెక్టరీని కొనసాగించండి.</p></article>
+<article><h3>ఫైల్ అనుమతులు</h3><p>హోస్ట్ స్టోరేజ్‌ని అనవసరంగా అనుమతించకుండా మౌంటెడ్ పాత్‌లను ఉద్దేశించిన కంటైనర్ వినియోగదారు రాయగలిగేలా చేయండి.</p></article>
+<article><h3>వర్క్‌ఫ్లో ఫైల్‌లు</h3><p>ఉత్పత్తి వర్క్‌ఫ్లో ఆధారపడి ఉండే ఏదైనా మౌంటెడ్ ఫైల్‌లు లేదా బైనరీ-డేటా నిల్వను కొనసాగించండి.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">PostgreSQL</p><h2>ప్రైవేట్ డేటాబేస్ సేవకు n8n ని కనెక్ట్ చేయండి</h2><div class="requirements">
+<div><b>డేటాబేస్ రకం</b><span>అనుకోకుండా SQLite కి పడిపోకుండా PostgreSQL కోసం n8n ని కాన్ఫిగర్ చేయండి.</span></div>
+<div><b>హోస్ట్</b><span>ప్రైవేట్ Docker నెట్‌వర్క్‌లో PostgreSQL సేవ పేరును ఉపయోగించండి.</span></div>
+<div><b>ఆధారాలు</b><span>ఉద్దేశించిన డేటాబేస్, అప్లికేషన్ యూజర్ మరియు పాస్‌వర్డ్‌ను సరిపోల్చండి.</span></div>
+<div><b>సంసిద్ధత</b><span>n8n విజయవంతంగా ప్రారంభించబడుతుందని ఆశించే ముందు PostgreSQL ని సిద్ధంగా ఉంచడానికి అనుమతించండి.</span></div>
+<div><b>నెట్‌వర్క్</b><span>కంటైనర్-టు-కంటైనర్ డేటాబేస్ యాక్సెస్‌కు పబ్లిక్ PostgreSQL పోర్ట్ అవసరం లేదు.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">HTTPS మరియు రివర్స్ ప్రాక్సీ</p><h2>పబ్లిక్ n8n URLని HTTPS వెనుక ఉంచండి</h2><div class="cards">
+<article><h3>రివర్స్ ప్రాక్సీ</h3><p>Nginx, Caddy లేదా Traefikని పబ్లిక్ ఎంట్రీ పాయింట్‌గా ఉపయోగించండి మరియు ట్రాఫిక్‌ను ప్రైవేట్ n8n సేవకు ఫార్వార్డ్ చేయండి.</p></article>
+<article><h3>TLS</h3><p>పబ్లిక్ హోస్ట్ పేరు కోసం చెల్లుబాటు అయ్యే ప్రమాణపత్రాన్ని జారీ చేయండి మరియు HTTP ట్రాఫిక్‌ను HTTPS కి మళ్లించండి.</p></article>
+<article><h3>ఫార్వార్డ్ చేసిన హెడర్‌లు</h3><p>హోస్ట్, ప్రోటోకాల్ మరియు క్లయింట్ సమాచారాన్ని పాస్ చేయండి n8n అవసరాలు మరియు ఆశించిన ప్రాక్సీ హాప్ కౌంట్‌ను కాన్ఫిగర్ చేయండి.</p></article>
+<article><h3>Webhook ధృవీకరణ</h3><p>VPS వెలుపలి నుండి వెబ్‌హుక్‌ను ట్రిగ్గర్ చేయండి మరియు n8n బాహ్యంగా చేరుకోగల HTTPS URLని ఉత్పత్తి చేస్తుందని నిర్ధారించండి.</p></article></div>
+<p><a href="n8n-vps-security.html">పూర్తి ఉత్పత్తి భద్రతా తనిఖీ జాబితా</a></p></section>
+<section class="section dark"><p class="eyebrow">మొదటి ప్రారంభం</p><h2>ఉత్పత్తి ఉపయోగం ముందు నిలకడను ధృవీకరించండి</h2><div class="requirements">
+<div><b>కంటైనర్లు</b><span>n8n, PostgreSQL ని నిర్ధారించండి మరియు ప్రాక్సీ ప్రారంభించిన తర్వాత మరియు పునఃప్రారంభించిన తర్వాత ఆరోగ్యంగా ఉంటుంది.</span></div>
+<div><b>ఎడిటర్</b><span>పబ్లిక్ HTTPS హోస్ట్ పేరుని తెరిచి, ప్రామాణీకరణ పనిని సరిగ్గా నిర్ధారించండి.</span></div>
+<div><b>డేటాబేస్</b><span>పరీక్ష స్థితిని సృష్టించండి, కంటైనర్‌లను పునఃసృష్టించండి మరియు స్థితి కొనసాగుతోందని ధృవీకరించండి.</span></div>
+<div><b>వెబ్‌హుక్</b><span>DNS, TLS, ప్రాక్సింగ్ మరియు పబ్లిక్ కాల్‌బ్యాక్ URLని ధృవీకరించడానికి బాహ్య వెబ్‌హుక్ పరీక్షను అమలు చేయండి.</span></div>
+<div><b>ఆధారాలు</b><span>n8n పునఃప్రారంభించిన తర్వాత గుప్తీకరించిన ఆధారాలు ఉపయోగించగలవని ధృవీకరించండి.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">అప్‌డేట్‌లు</p><h2>కంటైనర్‌లను బ్యాకప్‌లుగా పరిగణించకుండా Docker విస్తరణను అప్‌గ్రేడ్ చేయండి</h2><div class="cards">
+<article><h3>విడుదల గమనికలను చదవండి</h3><p>అప్‌గ్రేడ్ చేయడానికి ముందు ముఖ్యమైన n8n మార్పులను సమీక్షించండి, ముఖ్యంగా సంస్కరణలను దాటవేసేటప్పుడు.</p></article>
+<article><h3>ముందుగా బ్యాకప్ చేయండి</h3><p>ప్రొడక్షన్ ఇమేజ్‌ని మార్చే ముందు రికవరీ చేయగల డేటాబేస్ మరియు ఇన్‌స్టాన్స్ బ్యాకప్ తీసుకోండి.</p></article>
+<article><h3>సురక్షితంగా పునఃసృష్టించండి</h3><p>ఎంచుకున్న ఇమేజ్‌ని లాగి, నిరంతర వాల్యూమ్‌లను భద్రపరుస్తూ అప్లికేషన్ కంటైనర్‌లను మళ్లీ సృష్టించండి.</p></article>
+<article><h3>అప్‌గ్రేడ్ చేసిన తర్వాత ధృవీకరించండి</h3><p>విస్తరణ ఆరోగ్యంగా ఉన్నట్లు ప్రకటించే ముందు లాగ్‌లు, ఎడిటర్ యాక్సెస్, ఆధారాలు మరియు ప్రతినిధి వర్క్‌ఫ్లోలను తనిఖీ చేయండి.</p></article></div>
+<p><a href="n8n-backup-restore.html">బ్యాకప్ &amp; పునరుద్ధరణ గైడ్</a></p></section>
+<section class="section dark"><p class="eyebrow">సాధారణ సమస్యలు</p><h2>ఎందుకు n8n Docker ఇన్‌స్టాల్ స్థానికంగా పని చేస్తుంది కానీ ఉత్పత్తిలో విఫలమవుతుంది</h2><div class="cards">
+<article><h3>తప్పు webhook URL</h3><p>కాల్‌బ్యాక్‌లు పబ్లిక్ HTTPS మూలానికి బదులుగా లోకల్ హోస్ట్, HTTP లేదా అంతర్గత హోస్ట్ పేరును సూచిస్తాయి.</p></article>
+<article><h3>పట్టుదల లేదు</h3><p>కంటైనర్‌ను మళ్లీ సృష్టించినప్పుడు అప్లికేషన్ లేదా డేటాబేస్ స్థితి అదృశ్యమవుతుంది.</p></article>
+<article><h3>ఎన్‌క్రిప్షన్ కీని కోల్పోయింది</h3><p>కొత్త ఉదాహరణ వేరొక కీని ఉపయోగిస్తున్నందున, సేవ్ చేసిన ఆధారాలు పునర్నిర్మించిన తర్వాత ఉపయోగించబడవు.</p></article>
+<article><h3>పబ్లిక్ డేటాబేస్ పోర్ట్</h3><p>n8n మాత్రమే చేరుకోవాల్సిన అవసరం ఉన్నప్పటికీ PostgreSQL అనవసరంగా బహిర్గతమవుతుంది.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">డిప్లాయ్‌మెంట్ తర్వాత తనిఖీ</p><h2>నిజమైన వర్క్‌ఫ్లోలను కనెక్ట్ చేయడానికి ముందు ఆరోగ్యాన్ని ధృవీకరించండి</h2><div class="cards"><article><h3>కంటైనర్ స్థితిని తనిఖీ చేయండి</h3><p>పరుగు <code>docker compose ps</code> మరియు డిప్లాయ్‌మెంట్‌ను ఆరోగ్యకరమైనదిగా పరిగణించే ముందు అప్లికేషన్ మరియు డేటాబేస్ సేవలు ఆశించిన విధంగా రన్ అవుతున్నాయని నిర్ధారించండి.</p></article><article><h3>n8n ఆరోగ్య ముగింపు బిందువును తనిఖీ చేయండి</h3><p>పైన కంపోజ్ ఉదాహరణతో, పోర్ట్ 5678 హోస్ట్‌లో ప్రచురించబడలేదు. దీనితో పబ్లిక్ ఎండ్ పాయింట్‌ని తనిఖీ చేయండి <code>curl -fsS https://n8n.example.com/healthz</code> హోస్ట్ పేరును మార్చిన తర్వాత, మరియు ఉపయోగించండి <code>docker compose ps</code> HTTPS లేదా డేటాబేస్ సిద్ధంగా లేకుంటే సర్వీస్ లాగ్‌లు.</p></article><article><h3>అప్లికేషన్ వెర్షన్‌లను పిన్ చేయండి</h3><p>సమీక్షించని తేలియాడే చిత్ర నవీకరణను నిర్వహణ వ్యూహంగా పరిగణించవద్దు. మీరు అమలు చేసే n8n సంస్కరణను రికార్డ్ చేయండి, విడుదల గమనికలను చదవండి మరియు మార్చడానికి ముందు బ్యాకప్ చేయండి.</p></article><article><h3>స్థానంలో ఉన్న PostgreSQL ప్రధాన సంస్కరణలను బంప్ చేయవద్దు</h3><p>పోస్ట్‌గ్రెస్ ప్రధాన ఇమేజ్ ట్యాగ్‌ను మాత్రమే మార్చడం వలన ఇప్పటికే ఉన్న డేటా డైరెక్టరీని అననుకూలంగా చేయవచ్చు. కంటైనర్ రిక్రియేషన్ మేజర్-వర్షన్ మైగ్రేషన్‌ను నిర్వహిస్తుందని భావించే బదులు డేటాబేస్ అప్‌గ్రేడ్ విధానాన్ని బ్యాకప్ చేయండి మరియు అనుసరించండి.</p></article></div><p>ప్రస్తుత అధికారిక Docker కంపోజ్ గైడ్</p></section><section class="section"><p class="eyebrow">తరచుగా అడిగే ప్రశ్నలు</p><h2>n8n ని Docker తో ఇన్‌స్టాల్ చేస్తోంది: సాధారణ ప్రశ్నలు</h2><div class="faq">
+<details><summary>Docker ని ఉపయోగిస్తున్నప్పుడు n8n కి PostgreSQL అవసరమా?</summary><p>Docker కి PostgreSQL అవసరం లేదు మరియు చిన్న విస్తరణలు SQLite ని ఉపయోగించవచ్చు. ఉత్పత్తి-ఆధారిత VPS విస్తరణ కోసం, PostgreSQL బలమైన డేటాబేస్ పునాదిని అందిస్తుంది మరియు తర్వాత క్యూ-మోడ్ స్కేలింగ్‌కు మద్దతు ఇస్తుంది.</p></details>
+<details><summary>PostgreSQL డేటాను నిల్వ చేసినట్లయితే నిరంతర n8n వాల్యూమ్‌ను ఎందుకు ఉంచాలి?</summary><p>నిరంతర n8n డైరెక్టరీ ముఖ్యమైన ఉదాహరణ స్థితి మరియు కాన్ఫిగరేషన్‌ను కలిగి ఉంటుంది. డేటాబేస్ మాత్రమే పునరుద్ధరణ ఆస్తి అని భావించే బదులు డిప్లాయ్‌మెంట్ డిజైన్ ప్రకారం దానిని భద్రపరచండి.</p></details>
+<details><summary>నా వెబ్‌హుక్ లోకల్ హోస్ట్‌ను ఎందుకు చూపుతుంది?</summary><p>అంతర్గత కంటైనర్ చిరునామా పబ్లిక్ మూలానికి భిన్నంగా ఉంటుంది. బాహ్య హోస్ట్ పేరు, ప్రోటోకాల్ మరియు వెబ్‌హుక్ URLని కాన్ఫిగర్ చేయండి మరియు రివర్స్ ప్రాక్సీ అవసరమైన హెడర్‌లను పాస్ చేస్తుందని నిర్ధారించుకోండి.</p></details>
+<details><summary>పోర్ట్ 5678 పబ్లిక్‌గా ఉండాలా?</summary><p>రివర్స్ ప్రాక్సీ వెనుక సాధారణ ఉత్పత్తి విస్తరణ కోసం, ప్రాక్సీ వద్ద HTTPS ని బహిర్గతం చేయండి మరియు నిర్దిష్ట కార్యాచరణ కారణం లేకపోతే n8n అప్లికేషన్ పోర్ట్‌ను అంతర్గతంగా ఉంచండి.</p></details>
+<details><summary>నాకు Redis అవసరమా?</summary><p>ప్రామాణిక సింగిల్-ఇన్‌స్టాన్స్ Docker విస్తరణ కోసం కాదు. మీరు ఉద్దేశపూర్వకంగా క్యూ మోడ్ మరియు వర్కర్లకు మారినప్పుడు Redis సంబంధితంగా మారుతుంది.</p></details>
+<details><summary>బాహ్య n8n టాస్క్ రన్నర్‌లు క్యూ మోడ్ వర్కర్‌ల మాదిరిగానే ఉంటారా?</summary><p>నం. బాహ్య టాస్క్ రన్నర్లు n8n ప్రధాన ప్రక్రియ నుండి విడిగా మద్దతు ఉన్న టాస్క్ కోడ్‌ని అమలు చేస్తారు మరియు భాగస్వామ్య ప్రమాణీకరణ టోకెన్‌ను ఉపయోగిస్తారు. Redis క్యూ మోడ్ వర్క్‌ఫ్లో ఎగ్జిక్యూషన్‌లను పంపిణీ చేస్తుంది మరియు దాని స్వంత మౌలిక సదుపాయాల అవసరాలను కలిగి ఉంటుంది. ఈ ఉదాహరణ బాహ్య టాస్క్ రన్నర్‌ని చూపుతుంది, Redis క్యూ మోడ్ కాదు. రన్నర్ ఇమేజ్ వెర్షన్‌ను n8n వెర్షన్‌తో సరిపోల్చండి.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS ఎంపికలను వీక్షించండి</a></div>
+<p><a href="n8n-vps-requirements.html">VPS అవసరాలు</a> · <a href="n8n-vps-security.html">ఉత్పత్తి భద్రత</a> · <a href="n8n-backup-restore.html">బ్యాకప్ &amp; పునరుద్ధరించండి</a> · <a href="n8n-queue-mode.html">క్యూ మోడ్ &amp; కార్మికులు</a> · <a href="index.html">ప్రధాన n8n VPS గైడ్</a></p></section>
+<section class="section" data-best-vps-link="1"><h2>ప్రొవైడర్‌లను పోలుస్తున్నారా?</h2><p>ప్రొవైడర్ ఎంపిక కోసం, ఒక-క్లిక్ సెటప్, మద్దతు సరిహద్దులు, బ్యాకప్‌లు, మైగ్రేషన్, ప్రాంతం మరియు స్కేలింగ్, ఉపయోగించండి <a href="best-vps-for-n8n.html">n8n పోలిక కోసం ఉత్తమ VPS</a>. వనరుల పరిమాణం కోసం, తిరిగి వెళ్ళండి <a href="index.html">n8n గైడ్ కోసం ప్రధాన VPS</a>.</p></section></main><footer><b>n8nVPS</b><span>స్వీయ-హోస్ట్ n8n కోసం ఇండిపెండెంట్ ఇన్‌ఫ్రాస్ట్రక్చర్ గైడ్.</span><p><a href="about.html">మా గురించి</a> · <a href="contact.html">సంప్రదించండి</a> · <a href="privacy.html">గోప్యత</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">తెలుగు ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te" aria-current="page">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
