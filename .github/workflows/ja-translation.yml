@@ -1,36 +1,36 @@
-name: Japanese localization final navigation audit
+name: Japanese final localization quality assurance
 on:
   push:
     branches: [ja-complete-20261009]
     paths: [.github/workflows/ja-translation.yml]
 permissions:
-  contents: write
+  contents: read
 jobs:
-  verify-and-sync-navigation:
+  final-quality-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ja-complete-20261009
-      - name: Check all eleven full Japanese HTML pages
+      - name: Validate translated HTML after editorial correction
         shell: bash
         run: |
           python -m py_compile _ja_translate_full.py _ja_sync_nav.py
           python - <<'PY'
-          from _ja_translate_full import PAGES, ROOT, validate
-          for i, (en, ja) in enumerate(PAGES, 1):
-              validate((ROOT/en).read_text(encoding="utf-8"), (ROOT/ja).read_text(encoding="utf-8"), en, ja)
-              print(f"PAGE {i:02d}/11 PARITY PASS: {ja}")
+          from _ja_translate_full import ROOT, PAGES, validate
+          from pathlib import Path
+          import re
+          for index, (en, ja) in enumerate(PAGES, 1):
+              source=(ROOT/en).read_text(encoding="utf-8")
+              translation=(ROOT/ja).read_text(encoding="utf-8")
+              validate(source,translation,en,ja)
+              assert len(re.findall(r"<h1(?:\\s|>)",translation,re.I)) == 1
+              assert 'footer-lang-switch' in translation
+              print(f"FINAL PASS {index}/11: {ja}")
           PY
-      - name: Synchronize footer language choices and sitemap
+      - name: Check site-wide Japanese links and sitemap idempotently
         shell: bash
         run: |
           python -u _ja_sync_nav.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -u
-          if ! git diff --cached --quiet; then
-            git commit -m "Publish-ready Japanese footer choices and complete sitemap"
-            git push origin HEAD:ja-complete-20261009
-          fi
+          git diff --exit-code
