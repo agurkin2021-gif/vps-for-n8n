@@ -10,7 +10,86 @@
         "excessPx": 719,
         "inner": 390,
         "html": 1109,
-        "body": 1109
+        "body": 1109,
+        "offenders": [
+          {
+            "i": 260,
+            "tag": "CODE",
+            "cls": "",
+            "right": 1109,
+            "width": 1079,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# RESTORE ONLY TO A FRESH, EMPTY TARGET DATABASE\n# Adapt Postgres"
+          },
+          {
+            "i": 351,
+            "tag": "CODE",
+            "cls": "",
+            "right": 1041,
+            "width": 1011,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# After fresh-instance owner setup AND providing the correct key\n"
+          },
+          {
+            "i": 339,
+            "tag": "CODE",
+            "cls": "",
+            "right": 1032,
+            "width": 1002,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Execute from your Docker Compose project; the n8n service must "
+          },
+          {
+            "i": 167,
+            "tag": "CODE",
+            "cls": "",
+            "right": 849,
+            "width": 819,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Run only on the intended CLEAN recovery instance\ndocker compose"
+          },
+          {
+            "i": 152,
+            "tag": "CODE",
+            "cls": "",
+            "right": 772,
+            "width": 742,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# In the Docker Compose project; adapt service, DB and user names"
+          },
+          {
+            "i": 160,
+            "tag": "CODE",
+            "cls": "",
+            "right": 685,
+            "width": 655,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Only for SQLite and the default /home/node/.n8n mount\n# Stop n8"
+          },
+          {
+            "i": 348,
+            "tag": "CODE",
+            "cls": "",
+            "right": 675,
+            "width": 645,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Run only on the intended CLEAN recovery instance\ndocker compose"
+          }
+        ]
       }
     },
     {
@@ -21,7 +100,64 @@
         "excessPx": 591,
         "inner": 390,
         "html": 981,
-        "body": 981
+        "body": 981,
+        "offenders": [
+          {
+            "i": 166,
+            "tag": "CODE",
+            "cls": "",
+            "right": 981,
+            "width": 963,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation\nsudo a"
+          },
+          {
+            "i": 219,
+            "tag": "CODE",
+            "cls": "",
+            "right": 596,
+            "width": 578,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "chmod 600 .env\ndocker compose config --quiet\ndocker compose up -d"
+          },
+          {
+            "i": 192,
+            "tag": "CODE",
+            "cls": "",
+            "right": 577,
+            "width": 559,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# .env — replace the three example secrets\n# Pin a maintained n8n"
+          },
+          {
+            "i": 248,
+            "tag": "CODE",
+            "cls": "",
+            "right": 538,
+            "width": 520,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Back up the database, encryption key, instance data,\n# and file"
+          },
+          {
+            "i": 200,
+            "tag": "CODE",
+            "cls": "",
+            "right": 529,
+            "width": 511,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "services:\n  postgres:\n    image: postgres:18\n    restart: unless-"
+          }
+        ]
       }
     },
     {
@@ -32,7 +168,20 @@
         "excessPx": 353,
         "inner": 390,
         "html": 743,
-        "body": 743
+        "body": 743,
+        "offenders": [
+          {
+            "i": 110,
+            "tag": "CODE",
+            "cls": "",
+            "right": 743,
+            "width": 713,
+            "scroll": 0,
+            "overflowX": "visible",
+            "whiteSpace": "pre",
+            "text": "# Merge with the existing services; do not replace your full Comp"
+          }
+        ]
       }
     }
   ],
