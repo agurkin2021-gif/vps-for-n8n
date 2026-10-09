@@ -1,0 +1,36 @@
+name: Japanese final localization quality assurance
+on:
+  push:
+    branches: [ja-complete-20261009]
+    paths: [.github/workflows/ja-translation.yml]
+permissions:
+  contents: read
+jobs:
+  final-quality-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ja-complete-20261009
+      - name: Validate translated HTML after editorial correction
+        shell: bash
+        run: |
+          python -m py_compile _ja_translate_full.py _ja_sync_nav.py
+          python - <<'PY'
+          from _ja_translate_full import ROOT, PAGES, validate
+          from pathlib import Path
+          import re
+          for index, (en, ja) in enumerate(PAGES, 1):
+              source=(ROOT/en).read_text(encoding="utf-8")
+              translation=(ROOT/ja).read_text(encoding="utf-8")
+              validate(source,translation,en,ja)
+              assert len(re.findall(r"<h1\b",translation,re.I)) == 1
+              assert 'footer-lang-switch' in translation
+              print(f"FINAL PASS {index}/11: {ja}")
+          PY
+      - name: Check site-wide Japanese links and sitemap idempotently
+        shell: bash
+        run: |
+          python -u _ja_sync_nav.py
+          git diff --exit-code
