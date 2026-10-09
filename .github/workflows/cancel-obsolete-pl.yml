@@ -1,0 +1,22 @@
+name: Cancel obsolete Polish translation runs
+on:
+  push:
+    branches:
+      - maintenance/cancel-obsolete-pl-translate
+    paths:
+      - ".github/workflows/cancel-obsolete-pl.yml"
+permissions:
+  actions: write
+  contents: read
+jobs:
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel superseded requests to translation service
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh api --method POST "repos/${GH_REPO}/actions/runs/37871111037/cancel" || true
+          gh api --method POST "repos/${GH_REPO}/actions/runs/37871126355/cancel" || true
+          echo "Older jobs cancellation requested."
