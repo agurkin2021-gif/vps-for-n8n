@@ -29,7 +29,7 @@
 
 <p><strong>Fragment Compose trybu kolejkowego dla istniejącego stosu.</strong> Scal poniższy przykład z bieżącym <code>compose.yaml</code>; to <em>nie jest</em> pełnym samodzielnym wdrożeniem. Zakłada, że masz już trwałe, prywatne <code>postgres</code> oraz <code>n8n</code> usługi, istniejącą <code>N8N_VERSION</code> przypiętą wersję w środowisku oraz własne chronione <code>POSTGRES_PASSWORD</code> i oryginalny <code>N8N_ENCRYPTION_KEY</code>. Dopasuj nazwy, wolumeny, bazę i wersję n8n do istniejącego projektu. Dodaj ustawienia Redis trybu kolejkowego i <code>EXECUTIONS_MODE=queue</code> również do istniejącej usługi main, jak opisano wyżej.</p>
 
-<pre><code># Merge with the existing services; do not replace your full Compose file.
+<pre><code># Scal z istniejącymi usługami; nie zastępuj całego pliku Compose.
 services:
   redis:
     image: redis:7-alpine
