@@ -110,7 +110,7 @@
 
 
 
-<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
 
 
 
@@ -366,7 +366,7 @@
 
 
 
-<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/><meta content="website" property="og:type"/><meta content="VPS-এ n8n install করুন" property="og:title"/><meta content="Docker Compose, PostgreSQL, persistent storage, HTTPS, reverse proxy ও webhook configuration দিয়ে n8n install করুন।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="VPS-এ n8n install করুন" name="twitter:title"/><meta content="Docker Compose, PostgreSQL, persistent storage, HTTPS, reverse proxy ও webhook configuration দিয়ে n8n install করুন।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"হোম","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"VPS-এ n8n install করুন","item":"https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="VPS-এ n8n install করুন" property="og:title"/><meta content="Docker Compose, PostgreSQL, persistent storage, HTTPS, reverse proxy ও webhook configuration দিয়ে n8n install করুন।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="VPS-এ n8n install করুন" name="twitter:title"/><meta content="Docker Compose, PostgreSQL, persistent storage, HTTPS, reverse proxy ও webhook configuration দিয়ে n8n install করুন।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"হোম","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"VPS-এ n8n install করুন","item":"https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
 .install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
 .install-n8n-hero-copy{min-width:0}
 .install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
@@ -1386,7 +1386,7 @@
 
 
 
-<p>এই example ব্যবহার করে n8n deployment তৈরি করুন একটি <strong>self-managed Linux VPS</strong>. n8n আপনি নিজেই install ও maintain করেন; আমাদের partner-এর মাধ্যমে server বেছে নিলে preinstalled n8n instance included নয়। Example private Compose network-এ n8n, PostgreSQL, external task runner ও Caddy HTTPS combine করে। এটি configuration template, <strong>live-tested deployment-এর claim নয়</strong>.</p>
+<p>এই example ব্যবহার করে n8n deployment তৈরি করুন একটি <strong>নিজে পরিচালিত Linux VPS</strong>. n8n আপনি নিজেই install ও maintain করেন; আমাদের partner-এর মাধ্যমে server বেছে নিলে preinstalled n8n instance included নয়। Example private Compose network-এ n8n, PostgreSQL, external task runner ও Caddy HTTPS combine করে। এটি configuration template, <strong>live-tested deployment-এর claim নয়</strong>.</p>
 
 
 
@@ -2253,7 +2253,7 @@ docker compose ps</code></pre>
 
 
 
-<article><h3>Webhook verification</h3><p>VPS-এর বাইরে থেকে webhook trigger করুন এবং confirm করুন n8n externally reachable HTTPS URL generate করে।</p></article></div>
+<article><h3>ওয়েবহুক যাচাই</h3><p>VPS-এর বাইরে থেকে webhook trigger করুন এবং confirm করুন n8n externally reachable HTTPS URL generate করে।</p></article></div>
 
 
 
@@ -2477,7 +2477,7 @@ docker compose ps</code></pre>
 
 
 
-<p><a href="n8n-backup-restore.html">Backup &amp; restore guide</a></p></section>
+<p><a href="n8n-backup-restore.html">ব্যাকআপ ও পুনরুদ্ধারের নির্দেশিকা</a></p></section>
 
 
 
@@ -2557,7 +2557,7 @@ docker compose ps</code></pre>
 
 
 
-<article><h3>Public database port</h3><p>শুধু n8n-এর access দরকার হলেও PostgreSQL অপ্রয়োজনীয়ভাবে exposed।</p></article></div></section>
+<article><h3>সর্বসাধারণের জন্য উন্মুক্ত ডেটাবেস পোর্ট</h3><p>শুধু n8n-এর access দরকার হলেও PostgreSQL অপ্রয়োজনীয়ভাবে exposed।</p></article></div></section>
 
 
 
@@ -2685,7 +2685,7 @@ docker compose ps</code></pre>
 
 
 
-<p><a href="n8n-vps-requirements.html">VPS রিকোয়ারমেন্ট</a> · <a href="n8n-vps-security.html">Production security</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a> · <a href="n8n-queue-mode.html">Queue mode &amp; worker</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
+<p><a href="n8n-vps-requirements.html">VPS রিকোয়ারমেন্ট</a> · <a href="n8n-vps-security.html">প্রোডাকশন নিরাপত্তা</a> · <a href="n8n-backup-restore.html">ব্যাকআপ ও পুনরুদ্ধার</a> · <a href="n8n-queue-mode.html">Queue mode &amp; worker</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
 
 
 
