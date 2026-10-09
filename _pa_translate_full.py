@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sequential EN -> JA HTML localization, strict technical-data and DOM checks."""
+"""Sequential EN -> PA HTML localization, strict technical-data and DOM checks."""
 from __future__ import annotations
 import collections
 import html
@@ -31,7 +31,7 @@ SEP = "\n\n§§§\n\n"
 CACHE_PATH = ROOT / ".github" / "pa-translation-cache.json"
 LANGUAGE_NAMES = {
     "English", "Español", "Русский", "Português", "Deutsch", "हिन्दी", "বাংলা",
-    "ਪੰਜਾਬੀ", "ਪੰਜਾਬੀ", "मराठी", "తెలుగు", "தமிழ்", "Türkçe", "Tiếng Việt",
+    "日本語", "ਪੰਜਾਬੀ", "मराठी", "తెలుగు", "தமிழ்", "Türkçe", "Tiếng Việt",
     "한국어", "Français", "Italiano", "Polski", "n8nVPS", "n8n", "VDSina",
 }
 EXACT = {
@@ -333,7 +333,7 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1ja\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1pa\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"ਪੰਜਾਬੀ ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
@@ -345,9 +345,9 @@ def process(enpath,japath):
             tag=re.sub(r'\bhref=["\'][^"\']*["\']','href="'+BASE+japath+'"',tag,count=1)
             if "aria-current=" not in tag:tag=tag[:-1]+' aria-current="page">'
         return tag+label+"</a>"
-    output=re.sub(r'(<a\b[^>]*>)(English|日本語)</a>',fix_language_link,output)
+    output=re.sub(r'(<a\b[^>]*>)(English|ਪੰਜਾਬੀ)</a>',fix_language_link,output)
     # Punjabi alternate must be present even on English source pages missing the tag.
-    if not re.search(r'<link\b[^>]*hreflang=["\']ja["\']',output,re.I):
+    if not re.search(r'<link\b[^>]*hreflang=["\']pa["\']',output,re.I):
         output=output.replace("</head>",'<link rel="alternate" hreflang="pa" href="'+BASE+japath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"pa/index.html",BASE+"pa/")
@@ -365,8 +365,8 @@ def validate(src,out,enpath,japath):
         raise AssertionError(f"CSS changed: {enpath}")
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
         raise AssertionError(f"JavaScript changed: {enpath}")
-    if not re.search(r'<html\b[^>]*lang=["\']ja',out,re.I):
-        raise AssertionError("lang ja missing")
+    if not re.search(r'<html\b[^>]*lang=["\']pa',out,re.I):
+        raise AssertionError("lang pa missing")
     canonical = BASE + ("pa/" if japath == "pa/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):

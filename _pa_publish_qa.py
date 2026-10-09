@@ -99,10 +99,10 @@ def do_menu(match,path):
         labels_found.append(name)
         tag=set_href(tag,dest(code,tp))
         tag=re.sub(r'\s+aria-current=(["\'])page\1','',tag,flags=re.I)
-        if code==current and dest(code,tp)==canonical(path):
-            tag=tag[:-1]+' aria-current="page">'
         if code=="pa" and not re.search(r'\blang=',tag):
             tag=tag[:-1]+' lang="pa">'
+        if code==current and dest(code,tp)==canonical(path):
+            tag=tag[:-1]+' aria-current="page">'
         return tag+label+close
     inner=ANCHOR.sub(rewrite,inner)
     if PA_TITLE not in labels_found:

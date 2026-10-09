@@ -71,9 +71,9 @@ def process_file(f:Path):
         return False,False
     # Make any pre-existing hreflang="pa" link match the footer's selection.
     if has_equivalent:
-        processed=re.sub(r'<link\b[^>]*hreflang=["\']ja["\'][^>]*>',
+        processed=re.sub(r'<link\b[^>]*hreflang=["\']pa["\'][^>]*>',
             lambda m:re.sub(r'\bhref=["\'][^"\']*["\']','href="'+BASE+"pa/"+("" if target=="index.html" else target)+'"',m.group()),processed,flags=re.I)
-        if not re.search(r'<link\b[^>]*hreflang=["\']ja["\']',processed,re.I):
+        if not re.search(r'<link\b[^>]*hreflang=["\']pa["\']',processed,re.I):
             processed=processed.replace("</head>",'<link rel="alternate" hreflang="pa" href="'+BASE+"pa/"+("" if target=="index.html" else target)+'"/></head>',1)
     footer=processed[processed.find("<footer"):]
     if not PA_ANCHOR.search(footer):return False,False
@@ -105,4 +105,4 @@ expected=[BASE+"pa/"+("" if x=="index.html" else x) for x in PUNJABI]
 if len(en)!=11 or any(x not in ja for x in expected):
     raise RuntimeError(f"Sitemap mismatch: en={len(en)}, ja={len(ja)}, missing={[x for x in expected if x not in ja]}")
 if len(set(urls))!=len(urls):raise RuntimeError("Sitemap duplicate URLs")
-print(f"SITEMAP_QA english={len(en)} matching_ja={len(expected)} pa_total={len(ja)} extra_region={len(ja)-len(expected)} duplicates=0",flush=True)
+print(f"SITEMAP_QA english={len(en)} matching_pa={len(expected)} pa_total={len(ja)} extra_region={len(ja)-len(expected)} duplicates=0",flush=True)

@@ -4,6 +4,9 @@ on:
     branches: [pa-complete-sitemap-20261009]
     paths:
       - .github/workflows/pa-publish-qa.yml
+      - _pa_publish_qa.py
+      - _pa_translate_full.py
+      - _pa_sync_nav.py
 permissions:
   contents: write
 jobs:
@@ -19,7 +22,11 @@ jobs:
           python -m py_compile _pa_publish_qa.py
           python -u _pa_publish_qa.py
       - name: Confirm idempotence and full page QA
-        run: python -u _pa_publish_qa.py
+        run: |
+          git diff --binary > /tmp/pa-first-pass.diff
+          python -u _pa_publish_qa.py
+          git diff --binary > /tmp/pa-second-pass.diff
+          cmp /tmp/pa-first-pass.diff /tmp/pa-second-pass.diff
       - name: Commit verified localized pages and menus
         run: |
           git config user.name "github-actions[bot]"
