@@ -1,4 +1,4 @@
-name: Sequential Punjabi translation (offline, resumable)
+name: Sequential Punjabi translation (resume verified cache)
 on:
   push:
     branches: [pa-complete-sitemap-20261009]
