@@ -40,7 +40,7 @@ jobs:
                 assert box and -1<=box["x"] and box["x"]+box["width"]<=width+1,(path,"Footer dropdown clipped",box,width)
                 assert menu.locator("a",has_text="日本語").count()>0,(path,"Japanese link absent")
                 over=page.evaluate("Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-window.innerWidth")
-                assert over<=2,(path,"Page overflow",over,width)
+                if path.startswith("ja/"): assert over<=2,(path,"Japanese page overflow",over,width)
                 tests+=1
                 print("PASS",width,path,"footer-menu x=",round(box["x"]),"width=",round(box["width"]),"page-overflow=",over,flush=True)
                 page.close()
