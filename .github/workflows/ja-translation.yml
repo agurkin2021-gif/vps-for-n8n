@@ -1,4 +1,4 @@
-name: Japanese page localization
+name: Japanese page localization - retry validated page 1
 on:
   push:
     branches: [ja-complete-20261009]
