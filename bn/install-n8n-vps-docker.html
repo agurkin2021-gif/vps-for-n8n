@@ -14,7 +14,31 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <html lang="bn"><head>
+
+
+
+
+
+
+
+
 
 
 
@@ -30,7 +54,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <title>VPS-এ n8n install করুন</title>
+
+
+
+
+
+
+
+
 
 
 
@@ -46,7 +86,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" rel="canonical"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -62,7 +118,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -78,7 +150,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -94,7 +182,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -110,7 +214,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -126,7 +246,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -142,7 +278,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -158,7 +310,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -174,7 +342,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +386,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">বাংলা ▾</button><div class="lang-menu"><a href="install-n8n-vps-docker.html" aria-current="page">English</a><a href="es/instalar-n8n-vps-docker.html">Español</a><a href="/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="pt-br/instalar-n8n-vps-docker.html">Português</a><a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="hi/install-n8n-vps-docker.html">हिन्दी</a><a href="bn/install-n8n-vps-docker.html">বাংলা</a><a href="ja/install-n8n-vps-docker.html">日本語</a><a href="pa/install-n8n-vps-docker.html">ਪੰਜਾਬੀ</a><a href="mr/install-n8n-vps-docker.html">मराठी</a><a href="te/install-n8n-vps-docker.html">తెలుగు</a><a href="ta/install-n8n-vps-docker.html">தமிழ்</a><a href="tr/n8n-vps-docker-kurulumu.html">Türkçe</a><a href="vi/cai-n8n-tren-vps.html">Tiếng Việt</a><a href="ko/install-n8n-vps-docker.html">한국어</a><a href="fr/installer-n8n-vps-docker.html">Français</a><a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></div></div></header><main>
 
 
@@ -210,7 +402,23 @@
 
 
 
-<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">DOCKER INSTALLATION</p><h1>VPS-এ n8n install করুন</h1><p class="lead">Docker Compose ও PostgreSQL ব্যবহার করে VPS-এ n8n install করুন। Production deployment-এর জন্য persistent application/database data এবং stable <code>N8N_ENCRYPTION_KEY</code>, public hostname, HTTPS এবং সঠিক webhook configuration-ও দরকার। Production workflow activate করার আগে এগুলো verify করুন।</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">n8n-এর জন্য VPS বেছে নিন</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">Partner link: কেনাকাটায় আমরা commission পেতে পারি।</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="n8n install করার জন্য VPS বেছে নিন"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+
+
+
+
+
+
+
+
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">DOCKER ইনস্টলেশন</p><h1>VPS-এ n8n install করুন</h1><p class="lead">Docker Compose ও PostgreSQL ব্যবহার করে VPS-এ n8n install করুন। Production deployment-এর জন্য persistent application/database data এবং stable <code>N8N_ENCRYPTION_KEY</code>, public hostname, HTTPS এবং সঠিক webhook configuration-ও দরকার। Production workflow activate করার আগে এগুলো verify করুন।</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">n8n-এর জন্য VPS বেছে নিন</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">Partner link: কেনাকাটায় আমরা commission পেতে পারি।</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="n8n install করার জন্য VPS বেছে নিন"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+
+
+
+
+
+
+
+
 
 
 
@@ -226,7 +434,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+
+
+
+
+
+
+
+
 
 
 
@@ -242,7 +466,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+
+
+
+
+
+
+
+
 
 
 
@@ -258,7 +498,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -274,7 +530,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+
+
+
+
+
+
+
+
 
 
 
@@ -290,7 +562,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <g transform="translate(193 62)">
+
+
+
+
+
+
+
+
 
 
 
@@ -306,7 +594,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -322,6 +626,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
 
 
@@ -330,7 +642,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g>
+
+
+
+
+
+
+
+
 
 
 
@@ -346,7 +674,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -362,7 +706,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -378,7 +738,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+
+
+
+
+
+
+
+
 
 
 
@@ -394,7 +770,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+
+
+
+
+
+
+
+
 
 
 
@@ -410,7 +802,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g>
+
+
+
+
+
+
+
+
 
 
 
@@ -426,7 +834,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -442,7 +866,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -458,7 +898,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g></g>
+
+
+
+
+
+
+
+
 
 
 
@@ -474,7 +930,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -490,6 +962,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
 
 
@@ -498,7 +978,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g>
+
+
+
+
+
+
+
+
 
 
 
@@ -514,7 +1010,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -530,7 +1042,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g>
+
+
+
+
+
+
+
+
 
 
 
@@ -546,7 +1074,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+
+
+
+
+
+
+
+
 
 
 
@@ -562,7 +1106,23 @@
 
 
 
+
+
+
+
+
+
+
+
 </g>
+
+
+
+
+
+
+
+
 
 
 
@@ -578,6 +1138,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </svg></a></div></section>
 
 
@@ -586,7 +1154,23 @@
 
 
 
-<section class="section dark"><p class="eyebrow">PREREQUISITES</p><h2>n8n start করার আগে VPS প্রস্তুত করুন</h2><div class="cards">
+
+
+
+
+
+
+
+
+<section class="section dark"><p class="eyebrow">পূর্বশর্ত</p><h2>n8n start করার আগে VPS প্রস্তুত করুন</h2><div class="cards">
+
+
+
+
+
+
+
+
 
 
 
@@ -602,7 +1186,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>DNS</h3><p>TLS certificate issue ও webhook URL publish করার আগে domain বা subdomain VPS-এ point করুন।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -618,7 +1218,23 @@
 
 
 
-<article><h3>Firewall</h3><p>শুধু দরকারি administration ও web port expose করুন। PostgreSQL ও internal application service private রাখুন।</p></article></div>
+
+
+
+
+
+
+
+
+<article><h3>ফায়ারওয়াল</h3><p>শুধু দরকারি administration ও web port expose করুন। PostgreSQL ও internal application service private রাখুন।</p></article></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -634,7 +1250,23 @@
 
 
 
-<section class="section"><p class="eyebrow">DEPLOYMENT STACK</p><h2>Configure করার component</h2><div class="requirements">
+
+
+
+
+
+
+
+
+<section class="section"><p class="eyebrow">ডিপ্লয়মেন্ট STACK</p><h2>Configure করার component</h2><div class="requirements">
+
+
+
+
+
+
+
+
 
 
 
@@ -650,7 +1282,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <div><b>n8n</b><span>Persistent application data-সহ editor, trigger ও workflow চালায়।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -666,7 +1314,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <div><b>Persistent volume</b><span>Application ও database state disposable container-এর বাইরে রাখে।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -682,6 +1346,14 @@
 
 
 
+
+
+
+
+
+
+
+
 </div></section>
 
 
@@ -690,7 +1362,23 @@
 
 
 
-<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">COPY-AND-ADAPT INSTALLATION</p><h2>নিজের VPS-এ Docker Compose দিয়ে n8n install করুন</h2>
+
+
+
+
+
+
+
+
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">COPY-AND-ADAPT ইনস্টলেশন</p><h2>নিজের VPS-এ Docker Compose দিয়ে n8n install করুন</h2>
+
+
+
+
+
+
+
+
 
 
 
@@ -706,6 +1394,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <p><strong>এর বদলে সবচেয়ে দ্রুত fresh installation চান?</strong> n8n official one-line Docker setup-ও দেয়। Script download ও review করতে পারেন <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> run করার আগে <code>sh get-n8n.sh</code>. এই option local URL-এ SQLite-সহ initial instance launch করে এবং n8n Assistant sandbox service অন্তর্ভুক্ত করে; এটি <strong>একই নয়</strong> এই public-HTTPS, PostgreSQL-backed VPS deployment-এর সঙ্গে। Official full sandbox stack lean n8n installation-এর চেয়ে বেশি RAM ও CPU চায় (Compose guide অন্তত 4 GB RAM / 2 vCPUs বলে)। Internet-facing production VPS-এর জন্য নিচের manually configured stack ব্যবহার করুন।</p>
 
 
@@ -714,7 +1410,23 @@
 
 
 
+
+
+
+
+
+
+
+
 <h3>1. Docker, DNS ও access প্রস্তুত করুন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -749,6 +1461,14 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin d
 
 
 
+
+
+
+
+
+
+
+
 <p>এখন Docker, Compose plugin, DNS ও working directory verify করুন:</p>
 <pre><code>sudo docker --version
 sudo docker compose version
@@ -756,6 +1476,14 @@ sudo docker run --rm hello-world
 getent hosts n8n.example.com
 mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <p>যদি <code>getent hosts</code> কোনো address বা ভুল address return করে, Caddy start করার আগে DNS ঠিক করুন; replace করুন <code>n8n.example.com</code> পুরো guide-এ নিজের real hostname দিয়ে। Docker সাধারণত root privilege চায়: SSH user পরে <code>docker compose</code> command সরাসরি চালাতে না পারলে সামনে দিন <code>sudo</code>। User-কে <code>docker</code> group-এ যোগ করলে root-equivalent access হয়; shared server-এ এটি casually করবেন না।</p>
+
+
+
+
+
+
+
+
 
 
 
@@ -771,7 +1499,23 @@ mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <h3>2. Environment value তৈরি করুন এবং key সংরক্ষণ করুন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -800,7 +1544,23 @@ RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <h3>3. Fresh installation-এর জন্য compose.yaml লিখুন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -889,7 +1649,23 @@ volumes:
 
 
 
+
+
+
+
+
+
+
+
 <h3>4. HTTPS Caddyfile তৈরি করুন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -909,7 +1685,23 @@ volumes:
 
 
 
+
+
+
+
+
+
+
+
 <h3>5. Container start করুন এবং বাইরে থেকে test করুন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -932,6 +1724,14 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <ol>
 
 
@@ -940,7 +1740,23 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
-<li>Editor-এ workflow তৈরি করুন একটি <strong>Webhook</strong> trigger দিয়ে। Set করুন <strong>HTTP Method</strong> এ <code>GET</code>, বেছে নিন <strong>Path</strong>        <code>vps-check</code>, এবং set করুন <strong>Respond</strong> এ <strong>Immediately</strong>. Workflow save করুন।</li>
+
+
+
+
+
+
+
+
+<li>Editor-এ workflow তৈরি করুন একটি <strong>Webhook</strong> trigger দিয়ে। Set করুন <strong>HTTP Method</strong> এ <code>GET</code>, বেছে নিন <strong>Path</strong>                <code>vps-check</code>, এবং set করুন <strong>Respond</strong> এ <strong>Immediately</strong>. Workflow save করুন।</li>
+
+
+
+
+
+
+
+
 
 
 
@@ -956,7 +1772,23 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <li><strong>Publish করুন</strong> workflow, node-কে তার <strong>Production URL</strong>, copy করে run করুন <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> আবার। Workflow-এর <strong>Executions</strong> tab-এ execution confirm করুন। Production webhook request-এর জন্য workflow published থাকা দরকার এবং payload editor test view-এ দেখায় না।</li>
+
+
+
+
+
+
+
+
 
 
 
@@ -972,6 +1804,14 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <p>এটি ইচ্ছাকৃতভাবে simple unauthenticated smoke test: এতে secret পাঠাবেন না। Test-এর পর unpublish/delete করুন, অথবা real data-র public endpoint ব্যবহারের আগে Webhook authentication/IP restriction configure করুন। Official Webhook test/production documentation দেখুন।</p>
 
 
@@ -980,7 +1820,23 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <h3>6. Pinned version বদলানোর আগে backup নিন</h3>
+
+
+
+
+
+
+
+
 
 
 
@@ -1005,7 +1861,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <p>Authoritative reference: n8n Docker Compose guide, n8n reverse-proxy/webhook configuration এবং official PostgreSQL deployment note। কোনো infrastructure benchmark বা provider-specific preinstalled feature assume করা হয়নি।</p>
+
+
+
+
+
+
+
+
 
 
 
@@ -1021,7 +1893,6 @@ docker compose ps</code></pre>
 
 
 
-<section class="section dark"><p class="eyebrow">CONFIGURATION</p><h2>Secret ও public URL সচেতনভাবে set করুন</h2><div class="cards">
 
 
 
@@ -1029,7 +1900,32 @@ docker compose ps</code></pre>
 
 
 
-<article><h3>Encryption key</h3><p>Production credential store করার আগে strong n8n encryption key set ও preserve করুন। Recovery-এর পর একই key দরকার।</p></article>
+
+<section class="section dark"><p class="eyebrow">কনফিগারেশন</p><h2>Secret ও public URL সচেতনভাবে set করুন</h2><div class="cards">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<article><h3>এনক্রিপশন কী</h3><p>Production credential store করার আগে strong n8n encryption key set ও preserve করুন। Recovery-এর পর একই key দরকার।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1045,7 +1941,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Public hostname</h3><p>Internal container address-এর বদলে real external hostname ও HTTPS origin configure করুন।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1061,7 +1973,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 </div></section>
+
+
+
+
+
+
+
+
 
 
 
@@ -1077,7 +2005,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>n8n data</h3><p>n8n data directory-এর জন্য persistent storage mount করুন যাতে critical instance state container recreation-এর পরও থাকে।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1093,7 +2037,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>File permission</h3><p>Mounted path intended container user দ্বারা writable করুন, host storage অপ্রয়োজনীয় permissive করবেন না।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1109,7 +2069,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>n8n-কে private database service-এ connect করুন</h2><div class="requirements">
+
+
+
+
+
+
+
+
 
 
 
@@ -1125,7 +2101,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <div><b>Host</b><span>Private Docker network-এ PostgreSQL service name ব্যবহার করুন।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1141,7 +2133,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <div><b>Readiness</b><span>n8n সফলভাবে initialize হবে আশা করার আগে PostgreSQL ready হতে দিন।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1157,7 +2165,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 </div></section>
+
+
+
+
+
+
+
+
 
 
 
@@ -1173,7 +2197,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Reverse proxy</h3><p>Nginx, Caddy বা Traefik-কে public entry point হিসেবে ব্যবহার করুন এবং traffic private n8n service-এ forward করুন।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1189,7 +2229,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Forwarded header</h3><p>n8n-এর দরকারি host, protocol ও client information pass করুন এবং expected proxy hop count configure করুন।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1205,7 +2261,6 @@ docker compose ps</code></pre>
 
 
 
-<p><a href="n8n-vps-security.html">Full production security checklist</a></p></section>
 
 
 
@@ -1213,7 +2268,32 @@ docker compose ps</code></pre>
 
 
 
-<section class="section dark"><p class="eyebrow">FIRST START</p><h2>Production use-এর আগে persistence verify করুন</h2><div class="requirements">
+
+<p><a href="n8n-vps-security.html">সম্পূর্ণ production security checklist</a></p></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="section dark"><p class="eyebrow">প্রথম START</p><h2>Production use-এর আগে persistence verify করুন</h2><div class="requirements">
+
+
+
+
+
+
+
+
 
 
 
@@ -1229,7 +2309,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <div><b>Editor</b><span>Public HTTPS hostname open করুন এবং authentication ঠিকমতো কাজ করে confirm করুন।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1245,7 +2341,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <div><b>Webhook</b><span>DNS, TLS, proxying ও public callback URL validate করতে external webhook test চালান।</span></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1261,6 +2373,14 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 </div></section>
 
 
@@ -1269,7 +2389,23 @@ docker compose ps</code></pre>
 
 
 
-<section class="section"><p class="eyebrow">UPDATES</p><h2>Container-কে backup না ধরে Docker deployment upgrade করুন</h2><div class="cards">
+
+
+
+
+
+
+
+
+<section class="section"><p class="eyebrow">UPDATE</p><h2>Container-কে backup না ধরে Docker deployment upgrade করুন</h2><div class="cards">
+
+
+
+
+
+
+
+
 
 
 
@@ -1285,7 +2421,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>আগে backup নিন</h3><p>Production image বদলানোর আগে recoverable database ও instance backup নিন।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1301,7 +2453,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Upgrade-এর পর verify করুন</h3><p>Deployment healthy বলার আগে log, editor access, credential ও representative workflow check করুন।</p></article></div>
+
+
+
+
+
+
+
+
 
 
 
@@ -1317,7 +2485,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <section class="section dark"><p class="eyebrow">COMMON FAILURE</p><h2>n8n Docker install local-এ কাজ করেও production-এ কেন fail করতে পারে</h2><div class="cards">
+
+
+
+
+
+
+
+
 
 
 
@@ -1333,7 +2517,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Persistence missing</h3><p>Container recreate হলে application বা database state হারিয়ে যায়।</p></article>
+
+
+
+
+
+
+
+
 
 
 
@@ -1349,6 +2549,14 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <article><h3>Public database port</h3><p>শুধু n8n-এর access দরকার হলেও PostgreSQL অপ্রয়োজনীয়ভাবে exposed।</p></article></div></section>
 
 
@@ -1357,7 +2565,23 @@ docker compose ps</code></pre>
 
 
 
-<section class="section dark"><p class="eyebrow">POST-DEPLOY VERIFICATION</p><h2>Real workflow connect করার আগে health verify করুন</h2><div class="cards"><article><h3>Container state check করুন</h3><p>Run করুন <code>docker compose ps</code> এবং deployment healthy ধরার আগে confirm করুন application ও database service expectedভাবে চলছে।</p></article><article><h3>n8n health endpoint check করুন</h3><p>উপরের Compose example-এ port 5678 host-এ publish করা নেই। Public endpoint check করুন <code>curl -fsS https://n8n.example.com/healthz</code> hostname বদলানোর পর, এবং ব্যবহার করুন <code>docker compose ps</code> সঙ্গে service log যদি HTTPS বা database ready না থাকে।</p></article><article><h3>Application version pin করুন</h3><p>Unreviewed floating image update-কে maintenance strategy ভাববেন না। Running n8n version record করুন, release note পড়ুন এবং বদলানোর আগে backup নিন।</p></article><article><h3>PostgreSQL major version in-place bump করবেন না</h3><p>শুধু Postgres major image tag বদলালে existing data directory incompatible হতে পারে। Container recreation major-version migration করে ধরে না নিয়ে backup নিন এবং database upgrade procedure follow করুন।</p></article></div><p>Current official Docker Compose guide</p></section><section class="section"><p class="eyebrow">FAQ</p><h2>Docker দিয়ে n8n install: সাধারণ প্রশ্ন</h2><div class="faq">
+
+
+
+
+
+
+
+
+<section class="section dark"><p class="eyebrow">POST-DEPLOY যাচাই</p><h2>Real workflow connect করার আগে health verify করুন</h2><div class="cards"><article><h3>Container state check করুন</h3><p>Run করুন <code>docker compose ps</code> এবং deployment healthy ধরার আগে confirm করুন application ও database service expectedভাবে চলছে।</p></article><article><h3>n8n health endpoint check করুন</h3><p>উপরের Compose example-এ port 5678 host-এ publish করা নেই। Public endpoint check করুন <code>curl -fsS https://n8n.example.com/healthz</code> hostname বদলানোর পর, এবং ব্যবহার করুন <code>docker compose ps</code> সঙ্গে service log যদি HTTPS বা database ready না থাকে।</p></article><article><h3>Application version pin করুন</h3><p>Unreviewed floating image update-কে maintenance strategy ভাববেন না। Running n8n version record করুন, release note পড়ুন এবং বদলানোর আগে backup নিন।</p></article><article><h3>PostgreSQL major version in-place bump করবেন না</h3><p>শুধু Postgres major image tag বদলালে existing data directory incompatible হতে পারে। Container recreation major-version migration করে ধরে না নিয়ে backup নিন এবং database upgrade procedure follow করুন।</p></article></div><p>বর্তমান official Docker Compose guide</p></section><section class="section"><p class="eyebrow">FAQ</p><h2>Docker দিয়ে n8n install: সাধারণ প্রশ্ন</h2><div class="faq">
+
+
+
+
+
+
+
+
 
 
 
@@ -1373,7 +2597,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <details><summary>PostgreSQL data store করলে persistent n8n volume কেন রাখব?</summary><p>Persistent n8n directory-তে গুরুত্বপূর্ণ instance state ও configuration থাকতে পারে। Database-ই একমাত্র recovery asset ধরে না নিয়ে deployment design অনুযায়ী এটি preserve করুন।</p></details>
+
+
+
+
+
+
+
+
 
 
 
@@ -1389,7 +2629,23 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <details><summary>Port 5678 public হওয়া উচিত?</summary><p>Normal production deployment-এ reverse proxy-তে HTTPS expose করুন এবং specific operational reason না থাকলে n8n application port internal রাখুন।</p></details>
+
+
+
+
+
+
+
+
 
 
 
@@ -1405,6 +2661,14 @@ docker compose ps</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <details><summary>External n8n task runner ও queue-mode worker কি একই?</summary><p>না। External task runner supported task code n8n main process থেকে আলাদা execute করে এবং shared authentication token ব্যবহার করে। Redis queue mode workflow execution distribute করে এবং তার নিজস্ব infrastructure requirement আছে। এই example external task runner দেখায়, Redis queue mode নয়। Runner image version n8n version-এর সঙ্গে match করুন।</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS option দেখুন</a></div>
 
 
@@ -1413,7 +2677,6 @@ docker compose ps</code></pre>
 
 
 
-<p><a href="n8n-vps-requirements.html">VPS requirements</a> · <a href="n8n-vps-security.html">Production security</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a> · <a href="n8n-queue-mode.html">Queue mode &amp; worker</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
 
 
 
@@ -1421,4 +2684,21 @@ docker compose ps</code></pre>
 
 
 
-<section class="section" data-best-vps-link="1"><h2>Provider compare করছেন?</h2><p>Provider choice, one-click setup, support boundary, backup, migration, region ও scaling-এর জন্য ব্যবহার করুন <a href="best-vps-for-n8n.html">Best VPS for n8n comparison</a>. Resource sizing-এর জন্য ফিরে যান <a href="index.html">মূল VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n-এর জন্য independent infrastructure guide।</span><p><a href="about.html">পরিচিতি</a> · <a href="contact.html">যোগাযোগ</a> · <a href="privacy.html">গোপনীয়তা</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">বাংলা ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
+
+<p><a href="n8n-vps-requirements.html">VPS রিকোয়ারমেন্ট</a> · <a href="n8n-vps-security.html">Production security</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a> · <a href="n8n-queue-mode.html">Queue mode &amp; worker</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="section" data-best-vps-link="1"><h2>Provider compare করছেন?</h2><p>Provider choice, one-click setup, support boundary, backup, migration, region ও scaling-এর জন্য ব্যবহার করুন <a href="best-vps-for-n8n.html">n8n-এর Best VPS comparison</a>. Resource sizing-এর জন্য ফিরে যান <a href="index.html">মূল VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n-এর জন্য independent infrastructure guide।</span><p><a href="about.html">পরিচিতি</a> · <a href="contact.html">যোগাযোগ</a> · <a href="privacy.html">গোপনীয়তা</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">বাংলা ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
