@@ -53,3 +53,5 @@ jobs:
             git commit -m "Complete Tamil localization from 11 English sitemap pages"
             git push origin HEAD:ta-complete-sitemap-20261009
           fi
+
+# retry after Tamil language-marker fix
