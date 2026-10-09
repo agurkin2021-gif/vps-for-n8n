@@ -40,7 +40,6 @@ def polish(i):
         else:return tag
         return re.sub(r'\bcontent=(["\'])(.*?)\1',lambda x:'content='+x.group(1)+html.escape(value,quote=True)+x.group(1),tag,flags=re.I|re.S)
     text=re.sub(r'<meta\b[^>]*>',meta,text,flags=re.I)
-    text=re.sub(r'(<h1\b[^>]*>)([\s\S]*?)(</h1>)',lambda m:m.group(1)+h1+m.group(3),text,count=1,flags=re.I)
     if signature(source)!=signature(text):raise AssertionError("HTML structure changed: "+tapath)
     validate(source,text,enpath,tapath)
     target.write_text(text,encoding="utf-8")
