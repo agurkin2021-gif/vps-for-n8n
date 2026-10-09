@@ -18,7 +18,7 @@ SENTENCE_UPDATES={
 "ఎప్పుడు సమ్మతిని తగ్గించండి":"సమాంతర పనుల పరిమితిని ఎప్పుడు తగ్గించాలి?",
 "PostgreSQL చూడండి":"PostgreSQL పనితీరును పర్యవేక్షించండి"}
 }
-HEADING=re.compile(r'(<h[2-4]\\b[^>]*>)([\\s\\S]*?)(</h[2-4]>)',re.I)
+HEADING=re.compile(r'(<h[2-4]\b[^>]*>)([\s\S]*?)(</h[2-4]>)',re.I)
 def main():
     for rel,replacements in SENTENCE_UPDATES.items():
         p=ROOT/rel
