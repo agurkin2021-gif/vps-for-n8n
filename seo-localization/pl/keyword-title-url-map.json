@@ -1,0 +1,117 @@
+{
+  "project": "VPS for n8n",
+  "repository": "agurkin2021-gif/vps-for-n8n",
+  "language": "pl",
+  "country_context": "Poland (Polish-language search intent)",
+  "created_on": "2026-10-08",
+  "stage": "SEO keyword / title / URL mapping ONLY",
+  "status": "reviewed_draft_not_published",
+  "english_reference": "main",
+  "existing_language_directories_untouched": true,
+  "public_html_pages_created": false,
+  "sitemap_or_hreflang_changed": false,
+  "validation_notes": [
+    "Eight unique destinations mapped one-to-one to the current English canonical page topics.",
+    "Polish wording supported by publicly accessible Polish-language articles, but search volume and exact Google rank positions are NOT claimed.",
+    "Polish home is /pl/ (index.html); other files have Polish ASCII-compatible slugs.",
+    "No Polish body text, HTML page or live URL exists yet. Do not treat the proposed URLs as published pages.",
+    "The list and sequence of all remaining languages must be separately fixed before subsequent languages."
+  ],
+  "checks": {
+    "language": "pl",
+    "pages": 8,
+    "unique_url_count": 8,
+    "all_urls_valid": true,
+    "all_titles_include_n8n": true,
+    "max_title_chars": 49
+  },
+  "pages": [
+    {
+      "english_path": "index.html",
+      "query": "VPS pod n8n",
+      "title": "VPS pod n8n od 0,07 USD/dzień – dobór serwera",
+      "relative_url": "/pl/",
+      "role": "commercial VPS landing / hosting and plan sizing",
+      "evidence_urls": [
+        "https://hosting-stron.pl/najlepszy-hosting-n8n.html",
+        "https://hitme.pl/n8n/"
+      ]
+    },
+    {
+      "english_path": "best-vps-for-n8n.html",
+      "query": "najlepszy VPS pod n8n",
+      "title": "Najlepszy VPS pod n8n – porównanie 6 dostawców",
+      "relative_url": "/pl/najlepszy-vps-pod-n8n.html",
+      "role": "provider comparison / buyer choice",
+      "evidence_urls": [
+        "https://www.kursn8n.pl/porownanie-n8n-hostingow",
+        "https://hosting-stron.pl/najlepszy-hosting-n8n.html"
+      ]
+    },
+    {
+      "english_path": "n8n-cloud-vs-self-hosted.html",
+      "query": "n8n Cloud czy self-hosting",
+      "title": "n8n Cloud czy self-hosting – koszty i kontrola",
+      "relative_url": "/pl/n8n-cloud-czy-self-hosting.html",
+      "role": "managed cloud versus self-hosted decision",
+      "evidence_urls": [
+        "https://aiadvisors.pl/guides/n8n-self-hosted-vs-cloud",
+        "https://klinweb.pl/blog-n8n-self-hosted-czy-cloud"
+      ]
+    },
+    {
+      "english_path": "n8n-vps-requirements.html",
+      "query": "wymagania n8n na VPS",
+      "title": "Wymagania n8n na VPS – CPU, RAM i dysk",
+      "relative_url": "/pl/wymagania-n8n-na-vps.html",
+      "role": "resource sizing requirements",
+      "evidence_urls": [
+        "https://www.kursn8n.pl/modul-1-instalacja-hosting"
+      ]
+    },
+    {
+      "english_path": "install-n8n-on-a-vps.html",
+      "query": "jak zainstalować n8n na VPS",
+      "title": "Jak zainstalować n8n na VPS – Docker i PostgreSQL",
+      "relative_url": "/pl/jak-zainstalowac-n8n-na-vps.html",
+      "role": "installation guide",
+      "evidence_urls": [
+        "https://blog.jsystems.pl/show_post/jak-postawic-n8n-na-wlasnym-serwerze/",
+        "https://smartcamp.ai/blog/self-hosted-n8n-na-wlasnym-vps-docker-traefik-kopie-zapasowe"
+      ]
+    },
+    {
+      "english_path": "n8n-backup-and-restore.html",
+      "query": "backup n8n i przywracanie",
+      "title": "Backup n8n – kopia zapasowa i przywracanie",
+      "relative_url": "/pl/backup-n8n-przywracanie.html",
+      "role": "backup and recovery",
+      "evidence_urls": [
+        "https://kursn8n.pl/porownanie-n8n-hostingow",
+        "https://smartcamp.ai/blog/self-hosted-n8n-na-wlasnym-vps-docker-traefik-kopie-zapasowe"
+      ]
+    },
+    {
+      "english_path": "secure-n8n-on-a-vps.html",
+      "query": "jak zabezpieczyć n8n na VPS",
+      "title": "Jak zabezpieczyć n8n na VPS – HTTPS i dostęp",
+      "relative_url": "/pl/jak-zabezpieczyc-n8n-na-vps.html",
+      "role": "production security",
+      "evidence_urls": [
+        "https://www.hauerpower.com/blog/n8n-dla-firmy-b2b-alternatywa-zapier-make",
+        "https://www.ssdnodes.com/learn/lang/pl/self-host-n8n-vps-docker-https"
+      ]
+    },
+    {
+      "english_path": "n8n-queue-mode.html",
+      "query": "tryb kolejkowy n8n",
+      "title": "Tryb kolejkowy n8n – Redis, workerzy i skalowanie",
+      "relative_url": "/pl/tryb-kolejkowy-n8n.html",
+      "role": "queue architecture / scaling",
+      "evidence_urls": [
+        "https://kursn8n.pl/slownik-pojec",
+        "https://www.nocodework.io/post/hosting-n8n-dla-firmy-porownanie"
+      ]
+    }
+  ]
+}
