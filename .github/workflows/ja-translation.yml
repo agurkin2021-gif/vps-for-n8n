@@ -20,7 +20,7 @@ jobs:
           PAGES=(best-vps-for-n8n.html about.html n8n-backup-restore.html contact.html install-n8n-vps-docker.html n8n-cloud-vs-self-hosted.html n8n-vps-requirements.html privacy.html n8n-vps-security.html n8n-queue-mode.html)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for i in ${!PAGES[@]}; do
+          for i in {1..9}; do
             PAGE_INDEX=$((i+1))
             echo "::group::PAGE $((PAGE_INDEX+1)) / 11"
             python -u _ja_translate_full.py "$PAGE_INDEX"
