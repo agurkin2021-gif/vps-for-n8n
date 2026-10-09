@@ -1,0 +1,32 @@
+name: Punjabi page one native editorial QA
+on:
+  push:
+    branches: [pa-complete-sitemap-20261009]
+    paths: [.github/workflows/pa-editorial-one.yml]
+permissions:
+  contents: write
+jobs:
+  page-one-editorial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pa-complete-sitemap-20261009
+      - name: Refine Punjabi homepage and verify technical parity
+        run: |
+          python -m py_compile _pa_editorial.py _pa_translate_full.py
+          python -u _pa_editorial.py 0
+          python - <<'PY'
+          from _pa_translate_full import PAGES, ROOT,validate
+          a,b=PAGES[0]
+          validate((ROOT/a).read_text(encoding="utf-8"),(ROOT/b).read_text(encoding="utf-8"),a,b)
+          print("PUNJABI_HOMEPAGE_EDITORIAL_AND_PARITY_PASS")
+          PY
+      - name: Commit reviewed homepage
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pa/index.html
+          git commit -m "Native Punjabi homepage SEO title and interface review"
+          git push origin HEAD:pa-complete-sitemap-20261009
