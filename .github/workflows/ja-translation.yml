@@ -1,4 +1,4 @@
-name: Japanese page localization - retry validated page 1
+name: Japanese page localization sequential
 on:
   push:
     branches: [ja-complete-20261009]
@@ -6,23 +6,37 @@ on:
 permissions:
   contents: write
 jobs:
-  translate-page-one:
+  remaining-pages:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ja-complete-20261009
-      - name: Validate and translate English homepage
+      - name: Translate verify and save each remaining English URL
         shell: bash
         run: |
-          python -m py_compile _ja_translate_full.py
-          python -u _ja_translate_full.py 0
-      - name: Save verified page one
-        shell: bash
-        run: |
+          python -m py_compile _ja_translate_full.py _ja_sync_nav.py
+          PAGES=(best-vps-for-n8n.html about.html n8n-backup-restore.html contact.html install-n8n-vps-docker.html n8n-cloud-vs-self-hosted.html n8n-vps-requirements.html privacy.html n8n-vps-security.html n8n-queue-mode.html)
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ja/index.html .github/ja-translation-cache.json
-          git commit -m "Translate and verify Japanese page 1 of 11"
-          git push origin HEAD:ja-complete-20261009
+          for i in ${!PAGES[@]}; do
+            PAGE_INDEX=$((i+1))
+            echo "::group::PAGE $((PAGE_INDEX+1)) / 11"
+            python -u _ja_translate_full.py "$PAGE_INDEX"
+            git add "ja/${PAGES[$i]}" .github/ja-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Translate verify save Japanese page $((PAGE_INDEX+1)) of 11"
+              git push origin HEAD:ja-complete-20261009
+            fi
+            echo "::endgroup::"
+          done
+      - name: Verify all language switchers and complete Japanese sitemap
+        shell: bash
+        run: |
+          python -u _ja_sync_nav.py
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Complete Japanese footer language switching and sitemap coverage"
+            git push origin HEAD:ja-complete-20261009
+          fi
