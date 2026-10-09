@@ -1,0 +1,71 @@
+name: Telugu sequential HTML localization and publication QA
+on:
+  push:
+    branches: [te-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/te-localization.yml
+permissions:
+  contents: write
+jobs:
+  translate-pages-sequentially:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: te-complete-sitemap-20261009
+      - name: Confirm authoritative sitemap and prepare scripts
+        shell: bash
+        run: |
+          python -m py_compile _te_translate_full.py _te_editorial.py _te_publish_qa.py
+          python - <<'PY'
+          from _te_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("TELUGU_SOURCE_QA ENGLISH_PAGES=11")
+          PY
+      - name: PAGE N translate verify save before PAGE N+1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _te_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          from _te_editorial import polish
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,te) in enumerate(PAGES):
+              print(f"TELUGU_PAGE_{idx+1}/11 OPEN {en}",flush=True)
+              process(en,te)
+              polish(idx)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/te).read_text(encoding="utf-8"),en,te)
+              subprocess.run(["git","add",te,".github/te-translation-cache.json"],check=True)
+              subprocess.run(["git","commit","-m",f"Translate verify and save Telugu PAGE {idx+1}/11"],check=True)
+              subprocess.run(["git","push","origin","HEAD:te-complete-sitemap-20261009"],check=True)
+              print(f"TELUGU_PAGE_{idx+1}/11 VERIFIED_SAVED {te}",flush=True)
+          PY
+      - name: Integrate Telugu on all other languages and validate sitemap
+        shell: bash
+        run: |
+          python -u _te_publish_qa.py
+          git diff --binary > /tmp/te-first-qa.diff
+          python -u _te_publish_qa.py
+          git diff --binary > /tmp/te-second-qa.diff
+          cmp /tmp/te-first-qa.diff /tmp/te-second-qa.diff
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Telugu to every language selector and reciprocal hreflang; sitemap QA"
+            git push origin HEAD:te-complete-sitemap-20261009
+          fi
+      - name: Save verified translation fragments if an incomplete page fails
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/te-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/te-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Telugu strings after interrupted page"
+              git push origin HEAD:te-complete-sitemap-20261009
+            fi
+          fi
