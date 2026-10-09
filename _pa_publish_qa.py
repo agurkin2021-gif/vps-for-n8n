@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Finalize Punjabi localization on existing HTML pages without altering content or code."""
+from __future__ import annotations
+from pathlib import Path
+import re, html, json, collections
+import xml.etree.ElementTree as ET
+
+ROOT=Path(__file__).resolve().parent
+BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+PAIRS=[
+ ("index.html","pa/index.html"),
+ ("best-vps-for-n8n.html","pa/best-vps-for-n8n.html"),
+ ("about.html","pa/about.html"),
+ ("n8n-backup-and-restore.html","pa/n8n-backup-restore.html"),
+ ("contact.html","pa/contact.html"),
+ ("install-n8n-on-a-vps.html","pa/install-n8n-vps-docker.html"),
+ ("n8n-cloud-vs-self-hosted.html","pa/n8n-cloud-vs-self-hosted.html"),
+ ("n8n-vps-requirements.html","pa/n8n-vps-requirements.html"),
+ ("privacy.html","pa/privacy.html"),
+ ("secure-n8n-on-a-vps.html","pa/n8n-vps-security.html"),
+ ("n8n-queue-mode.html","pa/n8n-queue-mode.html")
+]
+LANGS=[
+ ("en","English",""),("es","Español","es"),("ru","Русский","ru"),
+ ("pt-BR","Português","pt-br"),("de","Deutsch","de"),
+ ("hi","हिन्दी","hi"),("bn","বাংলা","bn"),("ja","日本語","ja"),
+ ("pa","ਪੰਜਾਬੀ","pa"),("mr","मराठी","mr"),("te","తెలుగు","te"),
+ ("ta","தமிழ்","ta"),("tr","Türkçe","tr"),("vi","Tiếng Việt","vi"),
+ ("ko","한국어","ko"),("fr","Français","fr"),("it","Italiano","it"),
+ ("pl","Polski","pl")
+]
+LABEL_TO_LANG={label:code for code,label,_ in LANGS}
+PREFIXES={prefix:code for code,_,prefix in LANGS if prefix}
+MENU=re.compile(r'(<div\b[^>]*class=["\'][^"\']*\blang-menu\b[^"\']*["\'][^>]*>)([\s\S]*?)(</div>)',re.I)
+ANCHOR=re.compile(r'(<a\b[^>]*>)([^<>]*)(</a>)',re.I)
+LINK=re.compile(r'<link\b[^>]*>',re.I)
+PA_TITLE="ਪੰਜਾਬੀ"
+
+def category(path):
+    name=path.rsplit("/",1)[-1].lower()
+    if name=="index.html":return "home"
+    if re.search(r"^(?:about|acerca-de|ueber-uns|o-projekte?|o-proekte|sobre|o-nas)\.html$",name):return "about"
+    if re.search(r"^(?:contact|contacto|contato|kontakty|kontakt)\.html$",name):return "contact"
+    if re.search(r"^(?:privacy|privacidad|privacidade|datenschutz|politika-konfidencialnosti|polityka-prywatnosci)\.html$",name):return "privacy"
+    if re.search(r"(?:best-vps|bester-vps|mejor-vps|melhor-vps|luchshiy-vps|najlepszy-vps|meilleur-vps|miglior-vps|vps-n8n-tot-nhat)",name):return "best"
+    if re.search(r"(?:backup|copias-seguridad|sauvegarde-restauration|rezervnoe|yedekleme|sao-luu|wiederherstellung)",name):return "backup"
+    if re.search(r"(?:install|instalar|installer|ustanovka|jak-zainstalowac|cai-n8n|docker-kurulumu)",name):return "install"
+    if "n8n-cloud" in name:return "cloud"
+    if re.search(r"(?:requirements|anforderungen|requisitos|trebovaniya|gereksinimleri|wymagania|configuration-vps|cau-hinh)",name):return "requirements"
+    if re.search(r"(?:security|secure-n8n|sicherheit|seguridad|seguranca|bezopasnost|securite|bao-mat|jak-zabezpieczyc|guvenlik|sicurezza)",name):return "security"
+    if re.search(r"(?:queue-mode|modo-cola|modo-fila|rezhim-ocheredi|tryb-kolejkowy)",name):return "queue"
+    if "n8n-hosting-india" in name:return "hosting-india"
+    return None
+
+def locale(path):
+    prefix=path.partition("/")[0]
+    return PREFIXES.get(prefix,"en")
+
+def canonical(path):
+    if path=="index.html":return BASE
+    if path.endswith("/index.html"):return BASE+path[:-10]
+    return BASE+path
+
+def set_href(tag,url):
+    if re.search(r'\bhref=["\'][^"\']*["\']',tag,re.I):
+        return re.sub(r'\bhref=(["\']).*?\1',lambda m:"href="+m.group(1)+url+m.group(1),tag,count=1,flags=re.I)
+    return tag.replace("<a",'<a href="'+url+'"',1)
+
+def build_registry():
+    pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html")
+                 if ".git" not in f.parts and f.name!="404.html")
+    reg={}
+    for path in pages:
+        tp=category(path)
+        if tp is None:continue
+        key=(locale(path),tp)
+        if key not in reg:reg[key]=path
+    for en,pa in PAIRS:
+        tp=category(en)
+        reg[("en",tp)]=en
+        reg[("pa",tp)]=pa
+    return pages,reg
+
+PAGES,REG=build_registry()
+def dest(code,tp):
+    path=REG.get((code,tp)) or REG.get((code,"home"))
+    return canonical(path) if path else BASE
+
+def do_menu(match,path):
+    opening,inner,closing=match.groups()
+    current=locale(path)
+    tp=category(path)
+    labels_found=[]
+    def rewrite(m):
+        tag,label,close=m.groups()
+        name=html.unescape(label).strip()
+        code=LABEL_TO_LANG.get(name)
+        if code is None:return m.group()
+        labels_found.append(name)
+        tag=set_href(tag,dest(code,tp))
+        tag=re.sub(r'\s+aria-current=(["\'])page\1','',tag,flags=re.I)
+        if code==current and dest(code,tp)==canonical(path):
+            tag=tag[:-1]+' aria-current="page">'
+        if code=="pa" and not re.search(r'\blang=',tag):
+            tag=tag[:-1]+' lang="pa">'
+        return tag+label+close
+    inner=ANCHOR.sub(rewrite,inner)
+    if PA_TITLE not in labels_found:
+        new='<a href="'+dest("pa",tp)+'" hreflang="pa" lang="pa">'+PA_TITLE+'</a>'
+        ja=re.search(r'<a\b[^>]*>\s*日本語\s*</a>',inner)
+        if ja:
+            inner=inner[:ja.end()]+new+inner[ja.end():]
+        else:
+            inner+=new
+    if labels_found.count(PA_TITLE)>1:
+        seen=[False]
+        def once(m):
+            if html.unescape(m.group(2)).strip()!=PA_TITLE:return m.group()
+            if seen[0]:return ""
+            seen[0]=True
+            return m.group()
+        inner=ANCHOR.sub(once,inner)
+    return opening+inner+closing
+
+def do_link(m,path):
+    tag=m.group()
+    hit=re.search(r'\bhreflang=(["\'])([^"\']+)\1',tag,re.I)
+    if not hit:return tag
+    code=hit.group(2).lower()
+    tp=category(path)
+    if code=="ja":
+        href=re.search(r'\bhref=(["\'])(.*?)\1',tag,re.I)
+        if href and ("/pa/" in href.group(2) or href.group(2).endswith("/pa")):
+            # Recover the Japanese URL overwritten by the previous footer synchronizer.
+            tag=set_href(tag,dest("ja",tp))
+    elif code=="pa":
+        if (("pa",tp) in REG):
+            tag=set_href(tag,dest("pa",tp))
+        elif locale(path)=="pa":
+            tag=set_href(tag,canonical(path))
+        else:
+            # An alternate to an unrelated Punjabi homepage is not a valid hreflang equivalent.
+            return ""
+    elif code in ("en","x-default") and path=="pa/index.html":
+        tag=set_href(tag,BASE)
+    return tag
+
+def transform(path,source):
+    if path=="404.html":return source
+    if "footer-lang-switch" not in source:
+        return source
+    out=source
+    if path.startswith("pa/") and ("pa/"+path.split("/",1)[1] in [b for _,b in PAIRS]):
+        out=re.sub(r'(<html\b[^>]*\blang=["\'])ja(["\'])',r'\1pa\2',out,count=1,flags=re.I)
+    out=MENU.sub(lambda m:do_menu(m,path),out)
+    out=LINK.sub(lambda m:do_link(m,path),out)
+    if ("pa",category(path)) in REG and not re.search(r'<link\b[^>]*hreflang=["\']pa["\']',out,re.I):
+        out=out.replace("</head>",'<link rel="alternate" hreflang="pa" href="'+dest("pa",category(path))+'"/></head>',1)
+    return out
+
+def sig(source):
+    return [("/" if m.group()[1:2]=="/" else "")+m.group(1).lower()
+            for m in re.finditer(r'</?([a-z][\w-]*)\b[^>]*>',source,re.I)
+            if m.group(1).lower() not in ("link","meta")]
+def scripts(source):
+    return [m.group(1) for m in re.finditer(r'<script\b(?![^>]*application/ld\+json)[^>]*>([\s\S]*?)</script>',source,re.I)]
+def styles(source):
+    return [m.group(1) for m in re.finditer(r'<style\b[^>]*>([\s\S]*?)</style>',source,re.I)]
+def visible(source):
+    source=re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>',"",source,flags=re.I)
+    return html.unescape(re.sub(r'<[^>]*>'," ",source))
+def prices(source):
+    return collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(source),re.I))
+
+def audit(changed):
+    errors=[]
+    for index,(en,pa) in enumerate(PAIRS,1):
+        source=(ROOT/en).read_text(encoding="utf-8")
+        output=(ROOT/pa).read_text(encoding="utf-8")
+        if sig(source)!=sig(output):errors.append(pa+": HTML structure differs")
+        if styles(source)!=styles(output):errors.append(pa+": inline CSS differs")
+        if scripts(source)!=scripts(output):errors.append(pa+": JavaScript differs")
+        if prices(source)!=prices(output):errors.append(pa+": prices differ")
+        if not re.search(r'<html\b[^>]*\blang=["\']pa["\']',output,re.I):errors.append(pa+": html lang is not pa")
+        if len(re.findall(r'<h1(?:\s|>)',output,re.I))!=1:errors.append(pa+": H1 count")
+        if canonical(pa) not in output:errors.append(pa+": missing self-canonical")
+        if len(re.findall(r'[\u0a00-\u0a7f]',visible(output)))<5:errors.append(pa+": Punjabi missing")
+        for attr in ("alt","aria-label","placeholder","aria-valuetext"):
+            if len(re.findall(r'\b'+attr+r'=["\']',source,re.I))!=len(re.findall(r'\b'+attr+r'=["\']',output,re.I)):
+                errors.append(pa+": missing "+attr)
+        for text in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',output,re.S|re.I):
+            try:json.loads(text)
+            except Exception as exc:errors.append(pa+": invalid JSON-LD "+str(exc))
+        print("PUNJABI_PAGE_QA "+str(index)+"/11 "+pa+(" PASS" if not errors else " checked"),flush=True)
+    valid=0;total=0
+    for path in PAGES:
+        text=(ROOT/path).read_text(encoding="utf-8")
+        if "footer-lang-switch" not in text:continue
+        total+=1
+        ft=text[text.find("<footer"):]
+        ft_menu=MENU.search(ft)
+        if not ft_menu or PA_TITLE not in ft_menu.group(2):
+            errors.append(path+": Punjabi absent in footer")
+        for block in MENU.finditer(text):
+            if PA_TITLE not in block.group(2):errors.append(path+": Punjabi absent in selector")
+            for m in ANCHOR.finditer(block.group(2)):
+                label=html.unescape(m.group(2)).strip()
+                code=LABEL_TO_LANG.get(label)
+                if not code:continue
+                href=re.search(r'\bhref=(["\'])(.*?)\1',m.group(1),re.I)
+                expected=dest(code,category(path))
+                if not href or href.group(2)!=expected:
+                    errors.append(path+": incorrect "+label+" menu link")
+            valid+=1
+        if re.search(r'<link\b[^>]*hreflang=["\']ja["\'][^>]*href=["\'][^"\']*/pa/',text,re.I):
+            errors.append(path+": ja points to Punjabi")
+        if re.search(r'<link\b[^>]*href=["\'][^"\']*/pa/[^"\']*["\'][^>]*hreflang=["\']ja["\']',text,re.I):
+            errors.append(path+": ja points to Punjabi")
+    sm=ET.parse(ROOT/"sitemap.xml")
+    urls=[x.text for x in sm.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+    en_expected={canonical(en) for en,_ in PAIRS}
+    pa_expected={canonical(pa) for _,pa in PAIRS}
+    if not en_expected.issubset(set(urls)):errors.append("Sitemap missing an English original")
+    if not pa_expected.issubset(set(urls)):errors.append("Sitemap missing a Punjabi equivalent")
+    if len(en_expected)!=len(pa_expected):errors.append("Sitemap page counts differ")
+    if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
+    print("PUNJABI_QA english="+str(len(en_expected))+" translated="+str(len(pa_expected))
+          +" footer_pages="+str(total)+" menus="+str(valid)+" changed="+str(changed)
+          +" issues="+str(len(errors)),flush=True)
+    if errors:raise AssertionError("\n".join(errors[:75]))
+
+def main():
+    changed=0
+    for path in PAGES:
+        f=ROOT/path
+        s=f.read_text(encoding="utf-8")
+        out=transform(path,s)
+        if out!=s:
+            f.write_text(out,encoding="utf-8")
+            changed+=1
+    audit(changed)
+
+if __name__=="__main__":main()
