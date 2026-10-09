@@ -1,0 +1,53 @@
+name: Telugu final reciprocal hreflang, footer and source-parity audit
+on:
+  push:
+    branches: [te-complete-sitemap-20261009]
+    paths: [.github/workflows/te-final-audit.yml]
+permissions:
+  contents: read
+jobs:
+  final-site-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: te-complete-sitemap-20261009
+      - name: Validate every English/Telugu original and all footer dropdowns
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+          from _te_translate_full import PAGES,ROOT,BASE,verify_source_sitemap,validate
+          from _te_publish_qa import canonical,audit,REG,LANGS,MENU
+          assert verify_source_sitemap()==len(PAGES)==11
+          def alternate(text,lang):
+              for tag in re.findall(r'<link\b[^>]*>',text,re.I):
+                  code=re.search(r'\bhreflang=(["\'])([^"\']+)\1',tag,re.I)
+                  if code and code.group(2).lower()==lang.lower():
+                      href=re.search(r'\bhref=(["\'])([^"\']+)\1',tag,re.I)
+                      if href:return href.group(2)
+              return None
+          for idx,(en,te) in enumerate(PAGES,1):
+              source=(ROOT/en).read_text(encoding="utf-8")
+              translation=(ROOT/te).read_text(encoding="utf-8")
+              validate(source,translation,en,te)
+              assert alternate(source,"te")==canonical(te),(en,"English points to wrong Telugu URL")
+              assert alternate(translation,"en")==canonical(en),(te,"Telugu points to wrong English URL")
+              assert re.search(r'<title>[^<]+</title>',translation,re.I),(te,"empty Title")
+              assert re.search(r'<html\b[^>]*lang=["\']te',translation,re.I),(te,"wrong html lang")
+              print(f"TELUGU_FINAL_PAGE_PASS {idx}/11 {te}",flush=True)
+          urls=[e.text for e in ET.parse(ROOT/"sitemap.xml").findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+          te_urls=[u for u in urls if u.startswith(BASE+"te/")]
+          assert len(te_urls)==13,(len(te_urls),"Telugu expected 11 EN counterparts plus 2 regional pages")
+          assert len(set(urls))==len(urls), "sitemap has duplicates"
+          audit(0)
+          print("TELUGU_FINAL_SITEMAP=13; ENGLISH_MATCHED=11; RECIPROCAL_HREFLANG=11/11; ISSUES=0",flush=True)
+          PY
+      - name: Ensure repeated language-switch sync is idempotent
+        shell: bash
+        run: |
+          python -u _te_publish_qa.py
+          git diff --exit-code
