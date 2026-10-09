@@ -11,6 +11,11 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Install Japanese font coverage for Chromium screenshots
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
       - name: Install Chromium automation
         run: |
           python -m pip install --quiet playwright
