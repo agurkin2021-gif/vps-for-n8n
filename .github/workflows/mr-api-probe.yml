@@ -1,0 +1,32 @@
+name: Marathi translation quality probe
+on:
+  push:
+    branches: [mr-translation-api-probe-20261009]
+    paths: [.github/workflows/mr-api-probe.yml]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Test translation endpoint, token masks and separated segments
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, urllib.parse, urllib.request,time
+          probes=[
+            "Which VPS fits your n8n workload?",
+            "Which §0§ fits your §1§ workload?",
+            "Which __TECH0__ fits your __TECH1__ workload?",
+            "Choose the 2 vCPU, 4 GB RAM and 80 GB Standard configuration for a modest n8n and PostgreSQL stack.",
+            "Save the database and encryption key.\n\n§§§\n\nCheck your backup before upgrading.",
+          ]
+          for idx,q in enumerate(probes,1):
+              url="https://translate.googleapis.com/translate_a/single?"+urllib.parse.urlencode(dict(client="gtx",sl="en",tl="mr",dt="t",q=q))
+              tic=time.monotonic()
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=30) as resp: o=json.load(resp)
+              tr="".join(x[0] or "" for x in o[0])
+              print(f"MR_API_PROBE {idx} elapsed={time.monotonic()-tic:.2f}s SRC={q!r} OUT={tr!r}",flush=True)
+          PY
