@@ -44,7 +44,7 @@ EXACT = {
     "View requirements": "आवश्यक संसाधने पाहा",
 }
 MASK_PATTERN = re.compile(
-    r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?:day|month|year|mo))?'
+    r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo)))?'
     r'|https?://[^\s<>"\']+'
     r'|\b(?:n8nVPS|VDSina|Hostinger|OVHcloud|Bluehost|DreamHost|Contabo|PostgreSQL|SQLite|Docker|GitHub|Cloudflare|Redis|Ubuntu|Linux|Caddy|ConoHa|XServer|n8n|SaaS)\b'
     r'|\b(?:N8N_[A-Z0-9_]+|EXECUTIONS_[A-Z0-9_]+|QUEUE_[A-Z0-9_]+|DB_[A-Z0-9_]+|POSTGRES_[A-Z0-9_]+|WEBHOOK_[A-Z0-9_]+)\b'
@@ -198,7 +198,7 @@ def _finish(items):
     translations=translate_group(items)
     for en,ja in zip(items,translations):
         if not ja.strip():raise ValueError("Empty translated sentence")
-        cache[en]=mr
+        cache[en]=ja
     CACHE_PATH.parent.mkdir(parents=True,exist_ok=True)
     CACHE_PATH.write_text(json.dumps(cache,ensure_ascii=False,separators=(',',':')),encoding="utf-8")
     print("MARATHI_SLOTS_VERIFIED",len(cache),flush=True)
@@ -397,7 +397,7 @@ def validate(src,out,enpath,japath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _pa_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _mr_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]

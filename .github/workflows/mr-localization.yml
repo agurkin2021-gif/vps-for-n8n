@@ -42,6 +42,14 @@ jobs:
           assert verify_source_sitemap()==len(PAGES)==11
           for idx,(en,mr) in enumerate(PAGES):
               print(f"PAGE {idx+1}/{len(PAGES)} OPEN {en}",flush=True)
+              if (ROOT/mr).exists():
+                  try:
+                      validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/mr).read_text(encoding="utf-8"),en,mr)
+                      if len((ROOT/mr).read_text(encoding="utf-8"))>=len((ROOT/en).read_text(encoding="utf-8"))*.75:
+                          print(f"PAGE {idx+1}/{len(PAGES)} ALREADY VERIFIED, RESUME {mr}",flush=True)
+                          continue
+                  except (AssertionError,ValueError,FileNotFoundError):
+                      pass
               process(en,mr)
               polish(idx)
               validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/mr).read_text(encoding="utf-8"),en,mr)

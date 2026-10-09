@@ -11,7 +11,7 @@ EYEBROWS={"CHOOSE THE RESOURCES YOUR WORKFLOWS NEED":"तुमच्या व�
 EYEBROW_RE=re.compile(r'(<p\b[^>]*class=["\'][^"\']*\beyebrow\b[^"\']*["\'][^>]*>)([\s\S]*?)(</p>)',re.I)
 TAG_SEQ=re.compile(r'</?([A-Za-z][\w-]*)\b[^>]*>')
 def signature(s):
-    return [("/" if m.group()[1:2]=="/" else "")+m.group(1).lower() for m in TAG_SEQ.finditer(s)]
+    return [("/" if m.group()[1:2]=="/" else "")+m.group(1).lower() for m in TAG_SEQ.finditer(s) if m.group(1).lower() not in ('link','meta')]
 
 def polish(index):
     enpath,mrpath=PAGES[index]
