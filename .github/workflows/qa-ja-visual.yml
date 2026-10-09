@@ -1,0 +1,152 @@
+name: Visual QA of Japanese publishing
+on:
+  push:
+    branches: [qa-ja-visual-20261009]
+    paths: [.github/workflows/qa-ja-visual.yml]
+permissions:
+  contents: write
+jobs:
+  visual-browser-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium automation
+        run: |
+          python -m pip install --quiet playwright
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python -m playwright install chromium
+          fi
+      - name: Check deployed pages in real desktop and mobile Chromium
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, traceback, sys
+          from playwright.sync_api import sync_playwright
+          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          JA=[
+            "ja/","ja/best-vps-for-n8n.html","ja/about.html","ja/n8n-backup-restore.html",
+            "ja/contact.html","ja/install-n8n-vps-docker.html","ja/n8n-cloud-vs-self-hosted.html",
+            "ja/n8n-vps-requirements.html","ja/privacy.html","ja/n8n-vps-security.html","ja/n8n-queue-mode.html"
+          ]
+          CROSS=[
+            ("de/bester-vps-fuer-n8n.html","ja/best-vps-for-n8n.html"),
+            ("es/mejor-vps-para-n8n.html","ja/best-vps-for-n8n.html"),
+            ("bn/about.html","ja/about.html"),
+            ("ru/rezervnoe-kopirovanie-n8n.html","ja/n8n-backup-restore.html"),
+          ]
+          out=pathlib.Path("qa-ja-images");out.mkdir(exist_ok=True)
+          results=[];errors=[]
+          def record(path,width,issue,details=None):
+            failure={"page":path,"width":width,"problem":issue,"details":details}
+            errors.append(failure)
+            print("FAIL",json.dumps(failure,ensure_ascii=False),flush=True)
+          def fresh(url):
+            return url + ("&" if "?" in url else "?") + "ja_visual_qa_20261009=1"
+          with sync_playwright() as p:
+            browser=None
+            try:
+              try:
+                browser=p.chromium.launch(channel="chrome",headless=True,args=["--no-sandbox"])
+                print("BROWSER google-chrome")
+              except Exception as e:
+                browser=p.chromium.launch(headless=True,args=["--no-sandbox"])
+                print("BROWSER bundled-chromium")
+              for width,height in [(390,844),(1280,800)]:
+                context=browser.new_context(viewport={"width":width,"height":height},device_scale_factor=1,locale="ja-JP")
+                for path in JA:
+                  page=context.new_page()
+                  try:
+                    resp=page.goto(fresh(BASE+path),wait_until="domcontentloaded",timeout=35000)
+                    page.wait_for_timeout(250)
+                    status=resp.status if resp else -1
+                    if status!=200:record(path,width,"HTTP status",status)
+                    lang=page.locator("html").get_attribute("lang")
+                    if lang!="ja":record(path,width,"Wrong html lang",lang)
+                    h1=page.locator("h1").count()
+                    if h1!=1:record(path,width,"H1 count",h1)
+                    footer=page.locator("footer .footer-lang-switch")
+                    if footer.count()!=1:record(path,width,"footer language switch missing",footer.count())
+                    hmenu=page.locator("header .lang-switch")
+                    if hmenu.count()!=1:record(path,width,"header language switch missing",hmenu.count())
+                    dims=page.evaluate("""() => ({inner:window.innerWidth,html:document.documentElement.scrollWidth,body:document.body.scrollWidth})""")
+                    over=max(dims["html"],dims["body"])-dims["inner"]
+                    if over>2: record(path,width,"Horizontal page overflow",{"excessPx":over,**dims})
+                    if path=="ja/" and width==390:
+                      page.screenshot(path=str(out/"japanese_home_mobile_top.png"))
+                    if path=="ja/" and width==1280:
+                      page.screenshot(path=str(out/"japanese_home_desktop_top.png"))
+                    if footer.count():
+                      btn=footer.locator("button").first
+                      btn.scroll_into_view_if_needed(timeout=12000)
+                      btn.click(timeout=12000)
+                      menu=footer.locator(".lang-menu")
+                      if not menu.is_visible():record(path,width,"Footer dropdown does not open")
+                      current=menu.locator("a",has_text="日本語")
+                      if current.count()<1:record(path,width,"Japanese menu entry missing")
+                      en=menu.locator("a",has_text="English")
+                      if en.count()<1:record(path,width,"English menu entry missing")
+                      if path=="ja/" and width==390:
+                        page.screenshot(path=str(out/"japanese_home_mobile_footer_menu.png"))
+                      if path=="ja/about.html" and width==390:
+                        page.screenshot(path=str(out/"japanese_about_mobile_footer_menu.png"))
+                      if path=="ja/best-vps-for-n8n.html" and width==390:
+                        page.screenshot(path=str(out/"japanese_compare_mobile_footer_menu.png"))
+                      if path in ("ja/about.html","ja/best-vps-for-n8n.html") and width==390 and en.count()>0:
+                        en.first.click(timeout=12000)
+                        page.wait_for_url(lambda url: "/ja/" not in url,timeout=12000)
+                        dest=page.url.split("?")[0]
+                        want=BASE+("about.html" if path.endswith("about.html") else "best-vps-for-n8n.html")
+                        if dest!=want:record(path,width,"Wrong English equivalent on click",{"got":dest,"want":want})
+                    results.append({"path":path,"width":width,"status":status,"h1":h1,"lang":lang,"overPx":over})
+                  except Exception as e:
+                    record(path,width,"Browser exception",str(e)[:250])
+                  finally:
+                    page.close()
+                context.close()
+              context=browser.new_context(viewport={"width":390,"height":844},device_scale_factor=1)
+              for path,target in CROSS:
+                page=context.new_page()
+                try:
+                  response=page.goto(fresh(BASE+path),wait_until="domcontentloaded",timeout=35000)
+                  btn=page.locator("footer .footer-lang-switch button")
+                  btn.scroll_into_view_if_needed(timeout=15000)
+                  btn.click(timeout=15000)
+                  link=page.locator("footer .footer-lang-switch .lang-menu a",has_text="日本語")
+                  if link.count()<1:record(path,390,"Japanese language option absent")
+                  else:
+                    href=link.first.get_attribute("href")
+                    if not href or target not in href:
+                      record(path,390,"Wrong Japanese equivalent",{"href":href,"expected":target})
+                    link.first.click(timeout=15000)
+                    page.wait_for_url(lambda url: target in url, timeout=15000)
+                    if page.locator("html").get_attribute("lang")!="ja":record(path,390,"Language did not switch")
+                  results.append({"path":path,"width":390,"status":response.status if response else -1,"switchTarget":target})
+                except Exception as e:record(path,390,"Cross-language click exception",str(e)[:250])
+                finally:page.close()
+              context.close()
+            finally:
+              if browser:browser.close()
+          report={"checked":len(results),"failures":len(errors),"errors":errors,"results":results}
+          (out/"visual-qa-report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+          print("VISUAL_QA_SUMMARY",json.dumps({"checked":len(results),"failures":len(errors)},ensure_ascii=False))
+          if errors:sys.exit(1)
+          PY
+      - name: Keep QA screenshots and report on review branch
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ -d qa-ja-images ]; then
+            git add qa-ja-images/
+            if ! git diff --cached --quiet; then
+              git commit -m 'Visual QA: mobile and desktop screenshots, navigation report'
+              git push origin HEAD:qa-ja-visual-20261009
+            fi
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: japanese-visual-browser-results
+          path: qa-ja-images/
+          if-no-files-found: warn
