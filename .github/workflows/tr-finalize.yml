@@ -61,3 +61,5 @@ jobs:
             git commit -m "Finalize native Turkish localization and selectors"
             git push origin HEAD:tr-complete-sitemap-20261009
           fi
+
+# final retry after native Turkish homepage H1 order fix
