@@ -6,6 +6,9 @@ on:
     paths:
       - ".github/scripts/pl_exact_translate.py"
       - ".github/workflows/pl-exact.yml"
+concurrency:
+  group: pl-exact-source-translation
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
