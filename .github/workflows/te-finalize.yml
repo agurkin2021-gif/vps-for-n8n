@@ -1,0 +1,51 @@
+name: Telugu final editorial and global language-switch QA
+on:
+  push:
+    branches: [te-complete-sitemap-20261009]
+    paths: [.github/workflows/te-finalize.yml]
+permissions:
+  contents: write
+jobs:
+  review-integrate-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: te-complete-sitemap-20261009
+      - name: Compile scripts and validate source sitemap
+        run: |
+          python -m py_compile _te_translate_full.py _te_editorial.py _te_price_and_headings_fix.py _te_article_heading_fix.py _te_publish_qa.py
+          python - <<'PY'
+          from _te_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("TELUGU_SOURCE_PAGES=11")
+          PY
+      - name: Correct terminology, technical headings and USD price unit
+        run: |
+          python -u _te_price_and_headings_fix.py
+          python -u _te_article_heading_fix.py
+      - name: Compare each Telugu page with its English original
+        run: |
+          python -u - <<'PY'
+          from _te_translate_full import PAGES,ROOT,validate
+          for i,(en,te) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/te).read_text(encoding="utf-8"),en,te)
+              print(f"TELUGU_PAGE_PASSED {i}/{len(PAGES)} {te}",flush=True)
+          PY
+      - name: Insert Telugu into every header/footer, repair links and sitemap
+        run: |
+          python -u _te_publish_qa.py
+          git diff --binary > /tmp/first-te-pass.diff
+          python -u _te_publish_qa.py
+          git diff --binary > /tmp/second-te-pass.diff
+          cmp /tmp/first-te-pass.diff /tmp/second-te-pass.diff
+      - name: Commit source-faithful site-wide Telugu deployment
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate Telugu across full website: 11 source pages, exact links and sitemap"
+            git push origin HEAD:te-complete-sitemap-20261009
+          fi
