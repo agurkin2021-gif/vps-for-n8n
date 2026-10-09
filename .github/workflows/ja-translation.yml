@@ -25,7 +25,7 @@ jobs:
               source=(ROOT/en).read_text(encoding="utf-8")
               translation=(ROOT/ja).read_text(encoding="utf-8")
               validate(source,translation,en,ja)
-              assert len(re.findall(r"<h1(?:\\s|>)",translation,re.I)) == 1
+              assert len(re.findall(r"<h1\b",translation,re.I)) == 1
               assert 'footer-lang-switch' in translation
               print(f"FINAL PASS {index}/11: {ja}")
           PY
