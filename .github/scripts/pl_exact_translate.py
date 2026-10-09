@@ -90,7 +90,7 @@ def translate_attributes(s):
     attrs=("alt","aria-label","placeholder")
     pat=re.compile(r'(?P<name>\b(?:alt|aria-label|placeholder))="(?P<value>[^"]*)"')
     values=list(dict.fromkeys(m.group("value") for m in pat.finditer(s) if re.search("[A-Za-z]",m.group("value"))))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool: list(pool.map(translate_raw,values))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool: list(pool.map(translate_raw,values))
     def callback(m):
         original=m.group("value")
         if not re.search("[A-Za-z]",original):return m.group(0)
