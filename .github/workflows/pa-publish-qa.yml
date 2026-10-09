@@ -1,0 +1,31 @@
+name: Punjabi localization final QA and language-selector integration
+on:
+  push:
+    branches: [pa-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/pa-publish-qa.yml
+permissions:
+  contents: write
+jobs:
+  finalize-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pa-complete-sitemap-20261009
+      - name: Normalize Punjabi locale and persistent language switching
+        run: |
+          python -m py_compile _pa_publish_qa.py
+          python -u _pa_publish_qa.py
+      - name: Confirm idempotence and full page QA
+        run: python -u _pa_publish_qa.py
+      - name: Commit verified localized pages and menus
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Fix Punjabi HTML lang, reciprocal alternates and stable language selectors"
+            git push origin HEAD:pa-complete-sitemap-20261009
+          fi
