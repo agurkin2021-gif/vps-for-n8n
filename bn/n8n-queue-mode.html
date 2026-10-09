@@ -6,6 +6,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <html lang="bn"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n Queue Mode</title><meta content="n8n কখন queue mode চায়, Redis ও worker কীভাবে execution scale করে, worker concurrency, PostgreSQL requirement, monitoring ও VPS sizing সম্পর্কে জানুন।" name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html" rel="canonical"/><meta content="website" property="og:type"/><meta content="n8n Queue Mode" property="og:title"/><meta content="n8n কখন queue mode চায়, Redis ও worker কীভাবে execution scale করে, concurrency, PostgreSQL ও VPS sizing সম্পর্কে জানুন।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Queue Mode" name="twitter:title"/><meta content="n8n কখন queue mode চায়, Redis ও worker কীভাবে execution scale করে, concurrency, PostgreSQL ও VPS sizing সম্পর্কে জানুন।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"হোম","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Queue Mode","item":"https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html"}]}</script><link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html"/><link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/modo-cola-n8n.html"/><link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezhim-ocheredi-n8n.html"/><link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/modo-fila-n8n.html"/><link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-queue-mode.html"/><link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-queue-mode.html"/><link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html"/><link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-queue-mode.html"/><link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-queue-mode.html"/><link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-queue-mode.html"/><link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-queue-mode.html"/><link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-queue-mode.html"/><link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-queue-mode.html"/><link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/n8n-queue-mode.html"/><link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-queue-mode.html"/><link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/n8n-queue-mode.html"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/tryb-kolejkowy-n8n.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-queue-mode.html"/><style>
 /* Scoped only to the English n8n Queue Mode intro. */
 .n8n-queue-hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(330px,.92fr);column-gap:30px;align-items:center;min-height:460px}
@@ -19,19 +27,39 @@
 
 
 
-<section class="section n8n-queue-hero"><div class="n8n-queue-hero-copy"><p class="eyebrow">SCALING</p><h1>n8n Queue Mode</h1><p class="lead">Queue mode workflow execution-কে main n8n process থেকে আলাদা করে। Main instance trigger receive করে ও execution তৈরি করে, Redis queue coordinate করে, worker job execute করে এবং PostgreSQL shared workflow ও execution data store করে।</p></div><figure class="n8n-queue-hero-art"><img src="n8n-queue-mode-hero.svg" width="480" height="420" loading="eager" decoding="async" alt="n8n Queue Mode: main process Redis-এ job queue করে, দুই worker process execute করে, PostgreSQL shared persistent data দেয়।"/><figcaption>Main → Redis → Worker, shared PostgreSQL data-সহ।</figcaption></figure></section>
 
 
 
-<section class="section dark"><p class="eyebrow">QUICK DECISION</p><h2>আপনার আসলেই queue mode দরকার?</h2><div class="cards"><article><h3>Regular mode-এ থাকুন যখন</h3><p>একটি instance peak execution comfortably handle করে এবং CPU, RAM ও execution latency stable থাকে। Queue mode এমন component যোগ করে যা এখনও দরকার নেই।</p></article><article class="featured"><h3>Queue mode বিবেচনা করুন যখন</h3><p>Sustained parallel execution contention তৈরি করে, load-এ execution latency বাড়ে, অথবা multiple worker চালিয়ে execution capacity বাড়াতে হয়।</p></article><article><h3>প্রথমে vertically scale করুন যখন</h3><p>Bottleneck শুধু insufficient CPU বা RAM এবং একটি বড় instance এখনও workload cleanly সামলাতে পারে।</p></article><article><h3>Architecture বদলানোর আগে measure করুন</h3><p>Move justify করতে peak concurrency, CPU, RAM, execution duration, queue depth ও database pressure ব্যবহার করুন।</p></article></div></section>
+
+<section class="section n8n-queue-hero"><div class="n8n-queue-hero-copy"><p class="eyebrow">স্কেলিং</p><h1>n8n Queue Mode</h1><p class="lead">Queue mode workflow execution-কে main n8n process থেকে আলাদা করে। Main instance trigger receive করে ও execution তৈরি করে, Redis queue coordinate করে, worker job execute করে এবং PostgreSQL shared workflow ও execution data store করে।</p></div><figure class="n8n-queue-hero-art"><img src="n8n-queue-mode-hero.svg" width="480" height="420" loading="eager" decoding="async" alt="n8n Queue Mode: main process Redis-এ job queue করে, দুই worker process execute করে, PostgreSQL shared persistent data দেয়।"/><figcaption>Main → Redis → Worker, shared PostgreSQL data-সহ।</figcaption></figure></section>
 
 
 
-<section class="section"><p class="eyebrow">ARCHITECTURE</p><h2>n8n queue mode কীভাবে কাজ করে</h2><div class="requirements"><div><b>1 · Main</b><span>Timer, webhook ও workflow request receive করে এবং production execution নিজে করার বদলে execution তৈরি করে।</span></div><div><b>2 · Redis</b><span>Message broker হিসেবে কাজ করে। Pending execution message ধরে রাখে যাতে পরের available worker job claim করতে পারে।</span></div><div><b>3 · Worker</b><span>Execution ID receive করে, shared database থেকে workflow data load করে, workflow run করে এবং result write back করে।</span></div><div><b>4 · PostgreSQL</b><span>Shared persistent workflow ও execution data দেয়। Distributed queue mode SQLite-এর উপর supported নয়।</span></div></div></section>
 
 
 
-<section class="section dark"><p class="eyebrow">CORE REQUIREMENTS</p><h2>প্রতিটি queue-mode deployment-এর যা দরকার</h2><div class="cards"><article><h3>Redis</h3><p>সব main ও worker process-এর queue coordination-এ ব্যবহৃত Redis service-এ reliable access দরকার।</p></article><article><h3>PostgreSQL</h3><p>Main ও worker একই database share করবে। Queue mode distributed architecture এবং SQLite কেন্দ্র করে design করা উচিত নয়।</p></article><article><h3>Matching n8n configuration</h3><p>Main ও worker queue mode চালাবে এবং Redis, PostgreSQL ও encrypted credential access-এর দরকারি configuration share করবে।</p></article><article><h3>Worker capacity</h3><p>Worker যে workflow execute করে তার জন্য যথেষ্ট CPU ও RAM দরকার। Process যোগ করলে প্রতিটি execution-এর resource cost দূর হয় না।</p></article></div>
+
+<section class="section dark"><p class="eyebrow">দ্রুত সিদ্ধান্ত</p><h2>আপনার আসলেই queue mode দরকার?</h2><div class="cards"><article><h3>Regular mode-এ থাকুন যখন</h3><p>একটি instance peak execution comfortably handle করে এবং CPU, RAM ও execution latency stable থাকে। Queue mode এমন component যোগ করে যা এখনও দরকার নেই।</p></article><article class="featured"><h3>Queue mode বিবেচনা করুন যখন</h3><p>Sustained parallel execution contention তৈরি করে, load-এ execution latency বাড়ে, অথবা multiple worker চালিয়ে execution capacity বাড়াতে হয়।</p></article><article><h3>প্রথমে vertically scale করুন যখন</h3><p>Bottleneck শুধু insufficient CPU বা RAM এবং একটি বড় instance এখনও workload cleanly সামলাতে পারে।</p></article><article><h3>Architecture বদলানোর আগে measure করুন</h3><p>Move justify করতে peak concurrency, CPU, RAM, execution duration, queue depth ও database pressure ব্যবহার করুন।</p></article></div></section>
+
+
+
+
+
+
+
+<section class="section"><p class="eyebrow">আর্কিটেকচার</p><h2>n8n queue mode কীভাবে কাজ করে</h2><div class="requirements"><div><b>1 · Main</b><span>Timer, webhook ও workflow request receive করে এবং production execution নিজে করার বদলে execution তৈরি করে।</span></div><div><b>2 · Redis</b><span>Message broker হিসেবে কাজ করে। Pending execution message ধরে রাখে যাতে পরের available worker job claim করতে পারে।</span></div><div><b>3 · Worker</b><span>Execution ID receive করে, shared database থেকে workflow data load করে, workflow run করে এবং result write back করে।</span></div><div><b>4 · PostgreSQL</b><span>Shared persistent workflow ও execution data দেয়। Distributed queue mode SQLite-এর উপর supported নয়।</span></div></div></section>
+
+
+
+
+
+
+
+<section class="section dark"><p class="eyebrow">CORE রিকোয়ারমেন্ট</p><h2>প্রতিটি queue-mode deployment-এর যা দরকার</h2><div class="cards"><article><h3>Redis</h3><p>সব main ও worker process-এর queue coordination-এ ব্যবহৃত Redis service-এ reliable access দরকার।</p></article><article><h3>PostgreSQL</h3><p>Main ও worker একই database share করবে। Queue mode distributed architecture এবং SQLite কেন্দ্র করে design করা উচিত নয়।</p></article><article><h3>Matching n8n configuration</h3><p>Main ও worker queue mode চালাবে এবং Redis, PostgreSQL ও encrypted credential access-এর দরকারি configuration share করবে।</p></article><article><h3>Worker capacity</h3><p>Worker যে workflow execute করে তার জন্য যথেষ্ট CPU ও RAM দরকার। Process যোগ করলে প্রতিটি execution-এর resource cost দূর হয় না।</p></article></div>
+
+
+
+
 
 
 
@@ -39,7 +67,19 @@
 
 
 
+
+
+
+
 <p><strong>দ্বিতীয় editor নয়, executor launch করুন।</strong> Main-এর same pinned n8n image version ও shared setting ব্যবহার করে n8n worker service যোগ করুন, তবে চালান <code>worker</code> command দিয়ে। Service-এর নাম যদি <code>n8n-worker</code>, তাহলে start করুন <code>docker compose up -d n8n-worker</code>. এক worker-এ actual execution confirm করার পর ব্যবহার করতে পারেন <code>docker compose up -d --scale n8n-worker=2</code> সেই service থেকে second worker start করতে। এগুলো addition একটি <em>existing correctly configured</em> Compose stack-এ, standalone installation file নয়; existing persistent volume, HTTPS proxy, secret ও backup রাখুন।</p>
+
+
+
+
+
+
+
+
 
 
 
@@ -79,11 +119,23 @@ volumes:
 
 
 
+
+
+
+
 <p><strong>Existing SQLite instance convert করছেন?</strong> শুধু change করবেন না <code>DB_TYPE</code> এবং empty PostgreSQL database-এর বিরুদ্ধে start করবেন না: এতে old workflow ও credential migrate হয় না। Cutover-এর আগে source database, persistent <code>.n8n</code> directory ও original encryption key backup করুন; supported n8n export/import বা migration procedure ব্যবহার করুন, তারপর separate target-এ workflow ও encrypted credential verify করুন। Rollback-এর জন্য original file রাখুন এবং recovery preparation-এর জন্য নিচের Backup &amp; Restore guide ব্যবহার করুন। কখনো delete করবেন না <code>database.sqlite</code> shortcut হিসেবে।</p>
 
 
 
+
+
+
+
 </section>
+
+
+
+
 
 
 
@@ -91,7 +143,15 @@ volumes:
 
 
 
+
+
+
+
 <p><strong>কোন concurrency limit আসলে apply করে জানুন।</strong> Worker start করা যায় <code>n8n worker --concurrency=5</code>, অথবা Compose service-এর equivalent worker command দিয়ে। যদি <code>N8N_CONCURRENCY_PRODUCTION_LIMIT</code> explicitly এমন value-এ set করা হয় যা <code>-1</code>, তাহলে queue mode-এ সেটি precedence পায়; অন্যথায় n8n worker-এর <code>--concurrency</code> value বা default 10 ব্যবহার করে। Worker count-কে nominal default দিয়ে multiply করে guaranteed throughput বলবেন না: actual capacity job duration, CPU, memory, external API ও PostgreSQL connection-এর উপর নির্ভর করে।</p>
+
+
+
+
 
 
 
@@ -99,7 +159,15 @@ volumes:
 
 
 
-<section class="split"><div><p class="eyebrow">WEBHOOKS</p><h2>Queue mode execution handoff latency যোগ করতে পারে</h2><p>Main বা webhook process HTTP request receive করে, কিন্তু worker workflow execution করে। Redis-এর মাধ্যমে handoff কিছু overhead যোগ করে। Latency-sensitive webhook-এর জন্য বেশি worker automatically সব request দ্রুত করবে ধরে না নিয়ে end-to-end response time measure করুন।</p></div><div class="requirements"><div><b>Receive</b><span>Main/webhook process request accept করে।</span></div><div><b>Queue</b><span>Execution Redis-এ handoff হয়।</span></div><div><b>Execute</b><span>Available worker workflow চালায়।</span></div><div><b>Respond</b><span>দরকার হলে result queue path দিয়ে relay back হয়।</span></div></div>
+
+
+
+
+<section class="split"><div><p class="eyebrow">WEBHOOK</p><h2>Queue mode execution handoff latency যোগ করতে পারে</h2><p>Main বা webhook process HTTP request receive করে, কিন্তু worker workflow execution করে। Redis-এর মাধ্যমে handoff কিছু overhead যোগ করে। Latency-sensitive webhook-এর জন্য বেশি worker automatically সব request দ্রুত করবে ধরে না নিয়ে end-to-end response time measure করুন।</p></div><div class="requirements"><div><b>Receive</b><span>Main/webhook process request accept করে।</span></div><div><b>Queue</b><span>Execution Redis-এ handoff হয়।</span></div><div><b>Execute</b><span>Available worker workflow চালায়।</span></div><div><b>Respond</b><span>দরকার হলে result queue path দিয়ে relay back হয়।</span></div></div>
+
+
+
+
 
 
 
@@ -107,7 +175,15 @@ volumes:
 
 
 
+
+
+
+
 </section>
+
+
+
+
 
 
 
@@ -115,7 +191,15 @@ volumes:
 
 
 
+
+
+
+
 <p><strong>Large webhook response boundary।</strong> Current n8n documentation দেয় <code>N8N_WEBHOOK_RESPONSE_RELAY_SIZE_MAX</code> default <strong>64 MiB</strong> queue দিয়ে ফেরত পাঠানো worker response-এর জন্য। Redis in-flight একাধিক copy ধরে রাখতে পারে, তাই প্রতি concurrent large response-এর জন্য Redis memory-তে response size-এর প্রায় 1.5 গুণ budget করুন। Offloading ছাড়া oversized response worker যোগ করলেই magically faster না হয়ে fail করে।</p>
+
+
+
+
 
 
 
@@ -123,7 +207,15 @@ volumes:
 
 
 
+
+
+
+
 </section>
+
+
+
+
 
 
 
@@ -131,7 +223,15 @@ volumes:
 
 
 
+
+
+
+
 <p><strong>শুধু green container নয়, worker-এ execution verify করুন।</strong> Correctly configured Compose stack-এ check করুন <code>docker compose ps</code> এবং <code>docker compose logs --tail=100 n8n-worker</code> (service name আলাদা হলে replace করুন)। Harmless <em>published production</em> workflow scheduled trigger বা test webhook দিয়ে চালান, তারপর n8n Executions view-এর execution worker log-এর actual processing-এর সঙ্গে match করুন। Successfully open হওয়া editor, running Redis container বা queued execution একা <em>না</em> প্রমাণ করে না worker job perform করেছে।</p>
+
+
+
+
 
 
 
@@ -139,7 +239,15 @@ volumes:
 
 
 
+
+
+
+
 <p><strong>Manual run আলাদা test।</strong> Default-এ <code>OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS=false</code>, তাই queue mode correctly configured হলেও editor-এ manually workflow run main-এ execute হতে পারে। Set করুন <code>true</code> শুধু manual execution worker-এ পাঠাতে চান এবং staging environment-এ change check করেছেন হলে। Queue-mode worker n8n external task runner থেকেও আলাদা, যাদের Code-node execution-এর separate configuration requirement আছে।</p>
+
+
+
+
 
 
 
@@ -147,12 +255,24 @@ volumes:
 
 
 
-<section class="section dark"><p class="eyebrow">SCALING PATH</p><h2>একবারে এক bottleneck scale করুন</h2><div class="requirements"><div><b>Stage 1</b><span>PostgreSQL-সহ single n8n instance; peak CPU, RAM ও concurrency measure করুন।</span></div><div><b>Stage 2</b><span>Vertical scaling measured bottleneck cleanly solve করলে VPS resource বাড়ান।</span></div><div><b>Stage 3</b><span>Sustained parallel demand distributed execution justify করলে Redis ও worker introduce করুন।</span></div><div><b>Stage 4</b><span>PostgreSQL, Redis ও execution latency দেখতে দেখতে worker যোগ বা worker concurrency tune করুন।</span></div><div><b>Stage 5</b><span>Capacity, availability বা operational requirement added complexity justify করলেই component server জুড়ে separate করুন।</span></div></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Scaling চাইলে বেশি VPS capacity বেছে নিন</a></div><p id="affiliate-note"><small>Partner link: কেনাকাটায় আমরা commission পেতে পারি।</small></p></section>
 
 
 
-<section class="section dark"><p class="eyebrow">HIGH AVAILABILITY BOUNDARY</p><h2>Queue mode execution scale করে, কিন্তু main process automatically highly available করে না</h2><div class="cards"><article><h3>Encryption key share করুন</h3><p>প্রতিটি worker একই <code>N8N_ENCRYPTION_KEY</code> main instance-এর মতো ব্যবহার করবে যাতে worker workflow execution-এর required credential decrypt করতে পারে।</p></article><article><h3>Version aligned রাখুন</h3><p>Main, webhook ও worker process একই n8n version চালাবে। Mixed version rolling change-এর সময় incompatible behavior তৈরি করতে পারে।</p></article><article><h3>Webhook processor আলাদা scaling layer</h3><p>Incoming webhook volume bottleneck হলে dedicated webhook processor load balancer-এর পিছনে থাকতে পারে, worker execution handle করবে। Measured request volume justify না করলে এই layer যোগ করবেন না।</p></article><article><h3>Multi-main আলাদা feature</h3><p>High availability-এর জন্য multiple main process চালানো ordinary queue mode-এর সমান নয়। n8n বর্তমানে multi-main-কে additional load-balancer ও session requirement-সহ self-hosted Enterprise feature হিসেবে document করে।</p></article></div><p>Official queue-mode architecture ও configuration</p></section><section class="section"><p class="eyebrow">FAQ</p><h2>n8n queue mode: সাধারণ প্রশ্ন</h2><div class="faq"><details><summary>n8n queue mode-এর Redis দরকার?</summary><p>হ্যাঁ। Redis message broker যা main instance ও worker-এর মধ্যে pending execution coordinate করে।</p></details><details><summary>Queue mode SQLite ব্যবহার করতে পারে?</summary><p>Distributed queue-mode architecture-এর জন্য না। Main ও worker shared database access চায়, এবং n8n এই setup-এর database হিসেবে PostgreSQL document করে।</p></details><details><summary>কত worker চালাব?</summary><p>Universal count নেই। Measured concurrency ও worker utilization থেকে শুরু করুন, তারপর PostgreSQL, Redis, CPU, RAM ও queue depth monitor করতে করতে capacity যোগ করুন।</p></details><details><summary>n8n worker concurrency কী?</summary><p>এটি worker parallel-এ কত job process করতে পারে তার সংখ্যা। Current default 10, এবং n8n অনেক low-concurrency worker তৈরির বদলে 5 বা তার বেশি worker concurrency recommend করে।</p></details><details><summary>Small VPS-এ queue mode enable করা উচিত?</summary><p>শুধু workload justify করলে। একটি instance হিসেবে comfortably চলা small deployment Redis ও separate worker ছাড়া সাধারণত operate করা সহজ।</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS option দেখুন</a></div><p><a href="n8n-vps-requirements.html">VPS requirements</a> · <a href="index.html">VPS plan &amp; sizing</a> · <a href="n8n-vps-security.html">Production security</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
+
+<section class="section dark"><p class="eyebrow">স্কেলিং পথ</p><h2>একবারে এক bottleneck scale করুন</h2><div class="requirements"><div><b>Stage 1</b><span>PostgreSQL-সহ single n8n instance; peak CPU, RAM ও concurrency measure করুন।</span></div><div><b>Stage 2</b><span>Vertical scaling measured bottleneck cleanly solve করলে VPS resource বাড়ান।</span></div><div><b>Stage 3</b><span>Sustained parallel demand distributed execution justify করলে Redis ও worker introduce করুন।</span></div><div><b>Stage 4</b><span>PostgreSQL, Redis ও execution latency দেখতে দেখতে worker যোগ বা worker concurrency tune করুন।</span></div><div><b>Stage 5</b><span>Capacity, availability বা operational requirement added complexity justify করলেই component server জুড়ে separate করুন।</span></div></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Scaling চাইলে বেশি VPS capacity বেছে নিন</a></div><p id="affiliate-note"><small>Partner link: কেনাকাটায় আমরা commission পেতে পারি।</small></p></section>
 
 
 
-<section class="section" data-best-vps-link="1"><h2>Provider compare করছেন?</h2><p>Provider choice, one-click setup, support boundary, backup, migration, region ও scaling-এর জন্য ব্যবহার করুন <a href="best-vps-for-n8n.html">Best VPS for n8n comparison</a>. Resource sizing-এর জন্য ফিরে যান <a href="index.html">মূল VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n-এর জন্য independent infrastructure guide।</span><p><a href="about.html">পরিচিতি</a> · <a href="contact.html">যোগাযোগ</a> · <a href="privacy.html">গোপনীয়তা</a></p><p><a href="/vps-for-n8n/es/modo-cola-n8n.html">Español</a> · <a href="/vps-for-n8n/de/n8n-queue-mode.html">Deutsch</a> · <a href="/vps-for-n8n/pl/tryb-kolejkowy-n8n.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">বাংলা ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/n8n-queue-mode.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/modo-cola-n8n.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/rezhim-ocheredi-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/modo-fila-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/n8n-queue-mode.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/n8n-queue-mode.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/n8n-queue-mode.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/n8n-queue-mode.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/n8n-queue-mode.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/n8n-queue-mode.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/n8n-queue-mode.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-queue-mode.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/n8n-queue-mode.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/n8n-queue-mode.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/n8n-queue-mode.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/tryb-kolejkowy-n8n.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
+
+
+
+
+<section class="section dark"><p class="eyebrow">HIGH AVAILABILITY সীমা</p><h2>Queue mode execution scale করে, কিন্তু main process automatically highly available করে না</h2><div class="cards"><article><h3>Encryption key share করুন</h3><p>প্রতিটি worker একই <code>N8N_ENCRYPTION_KEY</code> main instance-এর মতো ব্যবহার করবে যাতে worker workflow execution-এর required credential decrypt করতে পারে।</p></article><article><h3>Version aligned রাখুন</h3><p>Main, webhook ও worker process একই n8n version চালাবে। Mixed version rolling change-এর সময় incompatible behavior তৈরি করতে পারে।</p></article><article><h3>Webhook processor আলাদা scaling layer</h3><p>Incoming webhook volume bottleneck হলে dedicated webhook processor load balancer-এর পিছনে থাকতে পারে, worker execution handle করবে। Measured request volume justify না করলে এই layer যোগ করবেন না।</p></article><article><h3>Multi-main আলাদা feature</h3><p>High availability-এর জন্য multiple main process চালানো ordinary queue mode-এর সমান নয়। n8n বর্তমানে multi-main-কে additional load-balancer ও session requirement-সহ self-hosted Enterprise feature হিসেবে document করে।</p></article></div><p>Official queue-mode architecture ও configuration</p></section><section class="section"><p class="eyebrow">FAQ</p><h2>n8n queue mode: সাধারণ প্রশ্ন</h2><div class="faq"><details><summary>n8n queue mode-এর Redis দরকার?</summary><p>হ্যাঁ। Redis message broker যা main instance ও worker-এর মধ্যে pending execution coordinate করে।</p></details><details><summary>Queue mode SQLite ব্যবহার করতে পারে?</summary><p>Distributed queue-mode architecture-এর জন্য না। Main ও worker shared database access চায়, এবং n8n এই setup-এর database হিসেবে PostgreSQL document করে।</p></details><details><summary>কত worker চালাব?</summary><p>Universal count নেই। Measured concurrency ও worker utilization থেকে শুরু করুন, তারপর PostgreSQL, Redis, CPU, RAM ও queue depth monitor করতে করতে capacity যোগ করুন।</p></details><details><summary>n8n worker concurrency কী?</summary><p>এটি worker parallel-এ কত job process করতে পারে তার সংখ্যা। Current default 10, এবং n8n অনেক low-concurrency worker তৈরির বদলে 5 বা তার বেশি worker concurrency recommend করে।</p></details><details><summary>Small VPS-এ queue mode enable করা উচিত?</summary><p>শুধু workload justify করলে। একটি instance হিসেবে comfortably চলা small deployment Redis ও separate worker ছাড়া সাধারণত operate করা সহজ।</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS option দেখুন</a></div><p><a href="n8n-vps-requirements.html">VPS রিকোয়ারমেন্ট</a> · <a href="index.html">VPS plan &amp; sizing</a> · <a href="n8n-vps-security.html">Production security</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a> · <a href="index.html">মূল n8n VPS guide</a></p></section>
+
+
+
+
+
+
+
+<section class="section" data-best-vps-link="1"><h2>Provider compare করছেন?</h2><p>Provider choice, one-click setup, support boundary, backup, migration, region ও scaling-এর জন্য ব্যবহার করুন <a href="best-vps-for-n8n.html">n8n-এর Best VPS comparison</a>. Resource sizing-এর জন্য ফিরে যান <a href="index.html">মূল VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n-এর জন্য independent infrastructure guide।</span><p><a href="about.html">পরিচিতি</a> · <a href="contact.html">যোগাযোগ</a> · <a href="privacy.html">গোপনীয়তা</a></p><p><a href="/vps-for-n8n/es/modo-cola-n8n.html">Español</a> · <a href="/vps-for-n8n/de/n8n-queue-mode.html">Deutsch</a> · <a href="/vps-for-n8n/pl/tryb-kolejkowy-n8n.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">বাংলা ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/n8n-queue-mode.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/modo-cola-n8n.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/rezhim-ocheredi-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/modo-fila-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/n8n-queue-mode.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/n8n-queue-mode.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/n8n-queue-mode.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/n8n-queue-mode.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/n8n-queue-mode.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/n8n-queue-mode.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/n8n-queue-mode.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-queue-mode.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/n8n-queue-mode.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/n8n-queue-mode.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/n8n-queue-mode.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/tryb-kolejkowy-n8n.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
