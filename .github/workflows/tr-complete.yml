@@ -1,0 +1,67 @@
+name: Turkish complete source-faithful localization
+on:
+  push:
+    branches: [tr-complete-sitemap-20261009]
+    paths: [.github/workflows/tr-complete.yml]
+permissions:
+  contents: write
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: tr-complete-sitemap-20261009
+          fetch-depth: 0
+
+      - name: Validate Turkish scripts and authoritative English sitemap
+        run: |
+          python -m py_compile _tr_translate_full.py _tr_publish_qa.py
+          python - <<'PY'
+          from _tr_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("TURKISH_SOURCE_PAGES=11")
+          PY
+
+      - name: Translate, verify and save each page sequentially
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 0 10); do
+            echo "TURKISH_PAGE_START $((i+1))/11"
+            python -u _tr_translate_full.py "$i"
+            git add tr/ .github/tr-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Turkish page $((i+1))/11: translate and verify English sitemap source"
+              git push origin HEAD:tr-complete-sitemap-20261009
+            fi
+            echo "TURKISH_PAGE_SAVED $((i+1))/11"
+          done
+
+      - name: Integrate Turkish in all selectors and sitemap
+        run: |
+          python -u _tr_publish_qa.py
+          git diff --binary > /tmp/tr-first.diff
+          python -u _tr_publish_qa.py
+          git diff --binary > /tmp/tr-second.diff
+          cmp /tmp/tr-first.diff /tmp/tr-second.diff
+
+      - name: Final 11-page source parity verification
+        run: |
+          python -u - <<'PY'
+          from _tr_translate_full import PAGES,ROOT,validate
+          for i,(en,tr) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/tr).read_text(encoding="utf-8"),en,tr)
+              print(f"TURKISH_FINAL_PAGE_PASS {i}/11 {tr}")
+          PY
+
+      - name: Commit and publish verified Turkish integration branch
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate complete Turkish localization site-wide"
+            git push origin HEAD:tr-complete-sitemap-20261009
+          fi
+
+# retry after canonical English homepage hreflang normalization
