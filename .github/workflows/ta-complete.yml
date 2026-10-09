@@ -57,3 +57,5 @@ jobs:
 # retry after Tamil language-marker fix
 
 # retry after preserving nested H1 markup
+
+# retry after Tamil publish-QA and exact price fixes
