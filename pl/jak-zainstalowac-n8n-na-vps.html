@@ -370,14 +370,14 @@
 
 
 
-<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+<pre><code># Świeża oficjalna instalacja Ubuntu 22.04 / 24.04 / 26.04
 sudo apt update
 sudo apt install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Register Docker's signed apt repository
+# Zarejestruj podpisane repozytorium apt Docker
 sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
@@ -433,8 +433,8 @@ openssl rand -hex 32</code></pre>
 
 
 
-<pre><code># .env — replace the three example secrets
-# Pin a maintained n8n release; keep n8n and runner equal.
+<pre><code># .env — zastąp trzy przykładowe sekrety
+# Przypnij wspieraną wersję n8n; utrzymuj tę samą wersję n8n i runnera.
 N8N_VERSION=2.42.5
 N8N_HOST=n8n.example.com
 GENERIC_TIMEZONE=Etc/UTC
@@ -606,11 +606,11 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
-<pre><code># Back up the database, encryption key, instance data,
-# and files before changing the pinned versions.
+<pre><code># Wykonaj backup bazy, klucza szyfrowania i danych instancji,
+# oraz plików przed zmianą przypiętych wersji.
 docker compose exec -T postgres \
   pg_dump -U n8n -d n8n &gt; n8n-db.sql
-# After securing the backup outside this VPS:
+# Po zabezpieczeniu backupu poza tym VPS:
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
