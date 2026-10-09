@@ -336,7 +336,7 @@ def validate(src,out,enpath,japath):
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):
         raise AssertionError("H1 count differs")
     def visible(x):
-        return re.sub(r'<[^>]*>',' ',re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',x,flags=re.I))
+        return html.unescape(re.sub(r'<[^>]*>',' ',re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',x,flags=re.I)))
     n1=collections.Counter(NUMBER.findall(visible(src)))
     n2=collections.Counter(NUMBER.findall(visible(out)))
     if n1-n2:
