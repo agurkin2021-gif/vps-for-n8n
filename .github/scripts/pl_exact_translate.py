@@ -133,9 +133,8 @@ def patch_urls_and_metadata(s,en_path,pl_path,title,h1):
     # English root H1 translates automatically; replace with pre-approved wording while keeping original tags.
     h=re.search(r'<h1\b[^>]*>([\s\S]*?)</h1>',s)
     if h:
-        if "<" in h.group(1):
-            s=s[:h.start(1)]+h1+s[h.end(1):]
-        else:
+        # Keep inline <em>/<span> inside English H1; localize its text, not its markup.
+        if "<" not in h.group(1):
             s=s[:h.start(1)]+h1+s[h.end(1):]
     # If original English figure had no clickable surface, preserve it unchanged (no invented CTA).
     # JSON-LD remains English source data for now and needs correct language/url fields.
