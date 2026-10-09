@@ -24,7 +24,7 @@ LANGS=[
  ("en","English",""),("es","Español","es"),("ru","Русский","ru"),
  ("pt-BR","Português","pt-br"),("de","Deutsch","de"),
  ("hi","हिन्दी","hi"),("bn","বাংলা","bn"),("ja","日本語","ja"),
- ("pa","मराठी","pa"),("mr","मराठी","mr"),("te","తెలుగు","te"),
+ ("pa","ਪੰਜਾਬੀ","pa"),("mr","मराठी","mr"),("te","తెలుగు","te"),
  ("ta","தமிழ்","ta"),("tr","Türkçe","tr"),("vi","Tiếng Việt","vi"),
  ("ko","한국어","ko"),("fr","Français","fr"),("it","Italiano","it"),
  ("pl","Polski","pl")
