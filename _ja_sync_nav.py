@@ -60,7 +60,7 @@ def rewrite_menu(m,want):
 def process_file(f:Path):
     original=f.read_text(encoding="utf-8")
     # Obsolete noindex redirect stubs have no footer or user-facing language menu.
-    if re.search(r'http-equiv=["\\\']refresh["\\\']',original,re.I) and "noindex" in original.lower():return False,True
+    if "noindex" in original.lower() and "refresh" in original.lower() and "http-equiv" in original.lower():return False,True
     if f.relative_to(ROOT).as_posix().startswith("ja/"):return False,True
     relative=f.relative_to(ROOT).as_posix()
     target,has_equivalent=match_ja_page(relative)
