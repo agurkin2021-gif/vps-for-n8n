@@ -300,7 +300,7 @@ def json_values(v) -> list[str]:
 def patch_json(v,enpath,japath):
     if isinstance(v,dict):
         for k,x in v.items():
-            if k=="inLanguage" and x=="en":v[k]="te"
+            if k=="inLanguage" and x=="en":v[k]="ta"
             elif k in TEXT_FIELDS and isinstance(x,str):
                 if eligible(x):v[k]=EXACT.get(x,cache[x]) if x not in EXACT else EXACT[x]
             elif k in ("item","url") and isinstance(x,str) and x==BASE+enpath:
@@ -377,7 +377,7 @@ def process(enpath,japath):
     output=re.sub(r'(<a\b[^>]*>)(English|తెలుగు)</a>',fix_language_link,output)
     # Tamil alternate must be present even on English source pages missing the tag.
     if not re.search(r'<link\b[^>]*hreflang=["\']ta["\']',output,re.I):
-        output=output.replace("</head>",'<link rel="alternate" hreflang="te" href="'+BASE+japath+'"/></head>',1)
+        output=output.replace("</head>",'<link rel="alternate" hreflang="ta" href="'+BASE+japath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"ta/index.html",BASE+"ta/")
     validate(source,output,enpath,japath)
@@ -394,7 +394,7 @@ def validate(src,out,enpath,japath):
         raise AssertionError(f"CSS changed: {enpath}")
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
         raise AssertionError(f"JavaScript changed: {enpath}")
-    if not re.search(r'<html\b[^>]*lang=["\']te',out,re.I):
+    if not re.search(r'<html\b[^>]*lang=["\']ta',out,re.I):
         raise AssertionError("lang ta missing")
     canonical = BASE + ("ta/" if japath == "ta/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
