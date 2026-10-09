@@ -1,2 +1,263 @@
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n Backup और Restore: production recovery</title><meta content="n8n backup में database, persistent data और encryption key को साथ सुरक्षित रखना जरूरी है।" name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" rel="canonical"/><link href="../favicon.svg" rel="icon"/><link href="../styles.css" rel="stylesheet"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html" hreflang="de" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" hreflang="x-default" rel="alternate"/><link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html"/><link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html"/><link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html"><link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html"></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu"><a href="../n8n-backup-and-restore.html">English</a><a href="../es/copias-seguridad-restauracion-n8n.html">Español</a><a href="/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html">Русский</a><a href="../pt-br/backup-restauracao-n8n.html">Português</a><a href="../de/n8n-backup-wiederherstellung.html">Deutsch</a><a href="../hi/n8n-backup-restore.html" aria-current="page">हिन्दी</a><a href="../bn/n8n-backup-restore.html">বাংলা</a><a href="../ja/n8n-backup-restore.html">日本語</a><a href="../pa/n8n-backup-restore.html">ਪੰਜਾਬੀ</a><a href="../mr/n8n-backup-restore.html">मराठी</a><a href="../te/n8n-backup-restore.html">తెలుగు</a><a href="../ta/n8n-backup-restore.html">தமிழ்</a><a href="../tr/n8n-yedekleme-geri-yukleme.html">Türkçe</a><a href="../vi/sao-luu-khoi-phuc-n8n.html">Tiếng Việt</a><a href="../ko/n8n-backup-restore.html">한국어</a><a href="../fr/sauvegarde-restauration-n8n.html">Français</a></div></div></header><main><section class="section"><h1>n8n Backup और Restore</h1><p class="lead">n8n backup में database, persistent data और encryption key को साथ सुरक्षित रखना जरूरी है।</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS विकल्प देखें</a></div></section><section class="section dark"><h2>Restore test क्यों जरूरी है</h2><p>सिर्फ workflow export पर्याप्त नहीं। PostgreSQL/database, persistent volumes/config और encryption key का off-server backup रखें।</p></section><section class="section"><h2>Production में मुख्य बातें</h2><p class="intro">Backup तभी उपयोगी है जब restore काम करे। नियमित test restore करें और encryption key खोने से credentials unreadable होने के जोखिम को रोकें।</p></section><section class="section"><h2>Production में मुख्य बातें</h2><p class="intro">Database और volumes के साथ N8N_ENCRYPTION_KEY को सुरक्षित रखें। नई instance या migration में वही key न होने पर encrypted credentials restore होकर भी पढ़े नहीं जा सकते। नियमित test restore करें।</p></section><section class="section dark"><p><a href="index.html">n8n के लिए VPS चुनते समय CPU, RAM, NVMe, Docker, PostgreSQL, HTTPS और workload को साथ में देखें।</a> · <a href="best-vps-for-n8n.html">Best VPS for n8n workload, concurrency, storage और scaling पर निर्भर करता है।</a> · <a href="n8n-vps-requirements.html">n8n के VPS requirements executions, payload, PostgreSQL, retention और binary data पर निर्भर करते हैं।</a> · <a href="n8n-cloud-vs-self-hosted.html">n8n Cloud और self-hosted VPS को cost, maintenance, data control और scaling पर compare करें।</a> · <a href="n8n-queue-mode.html">n8n queue mode Redis और workers के साथ executions को scale करता है।</a> · <a href="n8n-vps-security.html">Self-hosted n8n के लिए HTTPS, firewall, SSH hardening, updates और secret protection जरूरी हैं।</a> · <a href="n8n-backup-restore.html">n8n backup में database, persistent data और encryption key को साथ सुरक्षित रखना जरूरी है।</a> · <a href="install-n8n-vps-docker.html">VPS पर n8n को Docker, PostgreSQL, domain, HTTPS और reverse proxy के साथ production के लिए deploy करें।</a> · <a href="n8n-hosting-india.html">n8n Hosting India</a></p></section><section class="section dark" data-intent-completion="1"><p class="eyebrow">मुख्य technical decisions</p><h2>Restore योग्य backup बनाएं</h2><div class="cards"><article><h3>1</h3><p>Database, N8N_ENCRYPTION_KEY, .n8n data और binary data को एक recovery set की तरह backup करें।</p></article><article><h3>2</h3><p>Workflow/credential export full instance backup नहीं है; users, roles, history, variables और settings छूट सकते हैं।</p></article><article><h3>3</h3><p>Restore पर owner/project assignment, ID collisions और workflow activation state verify करें।</p></article><article><h3>4</h3><p>RPO/RTO तय करें, off-server copy रखें और isolated environment में restore drill करें।</p></article></div><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS विकल्प देखें</a></div></section><section class="section" data-intent-completion="1"><p class="eyebrow">FAQ</p><h2>Restore योग्य backup बनाएं: FAQ</h2><div class="faq"><details><summary>क्या 1 GB वास्तविक VPS है?</summary><p>हाँ। यह हल्के workload के लिए वास्तविक entry VPS है; सीमा केवल कम resource headroom है।</p></details><details><summary>2 GB क्यों बेहतर light baseline है?</summary><p>Docker, OS और छोटे peaks के लिए अधिक headroom मिलता है।</p></details><details><summary>Scale से पहले measurement क्यों?</summary><p>CPU, RAM, disk और latency वास्तविक bottleneck दिखाते हैं।</p></details></div><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS विकल्प देखें</a></div></section></main><footer><b>n8nVPS</b><span>Independent infrastructure guide for self-hosted n8n.</span><p><a href="../about.html">About</a> · <a href="../contact.html">Contact</a> · <a href="../privacy.html">Privacy</a></p><div class="lang-switch footer-lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" lang="en">English</a><a href="/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" lang="hi" aria-current="page">हिन्दी</a><a href="/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/n8n-backup-restore.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/n8n-backup-restore.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/sauvegarde-restauration-n8n.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
+
+
+
+<html lang="hi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n Backup और Restore</title><meta content="VPS पर self-hosted n8n का backup और restore करें: PostgreSQL या SQLite, workflows, credentials, encryption key, binary data, off-server copies और restore testing।" name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" rel="canonical"/>
+
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html"/>
+
+<link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html"/>
+
+<link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html"/>
+
+<link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html"/>
+
+<link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html"/>
+
+<link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html"/>
+
+<link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html"/>
+
+<link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html"/>
+
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html"/><meta content="website" property="og:type"/><meta content="n8n Backup और Restore" property="og:title"/><meta content="Self-hosted n8n backup और restore: database, workflows, credentials, encryption key, binary data और restore testing।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Backup और Restore" name="twitter:title"/><meta content="Self-hosted n8n backup और restore: database, workflows, credentials, encryption key, binary data और restore testing।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"मुख्य पृष्ठ","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Backup और Restore","item":"https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html"}]}</script><style id="backup-hero-visual-styles">
+.backup-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);align-items:center;gap:36px;min-height:465px}
+.backup-hero-copy{min-width:0}
+.backup-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.backup-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.backup-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 19px 29px rgba(16,28,48,.13));transition:transform .18s ease}
+.backup-hero-art a:hover svg,.backup-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.backup-hero-art a:focus-visible{outline:3px solid #ff6b4a}
+.backup-hero .actions{margin:28px 0 10px}
+.backup-hero .backup-affiliate-note{font-size:13px;line-height:1.55;color:#64748b;margin:0}
+@media(max-width:770px){.backup-hero{grid-template-columns:1fr;min-height:0;gap:18px}.backup-hero-art a{max-width:405px}}
+@media(max-width:450px){.backup-hero-art a{max-width:330px}.backup-hero{gap:12px}}
+@media(prefers-reduced-motion:reduce){.backup-hero-art svg{transition:none}}
+</style></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu"><a href="n8n-backup-restore.html" aria-current="page">English</a><a href="es/copias-seguridad-restauracion-n8n.html">Español</a><a href="/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html">Русский</a><a href="pt-br/backup-restauracao-n8n.html">Português</a><a href="/vps-for-n8n/de/n8n-backup-wiederherstellung.html">Deutsch</a><a href="/vps-for-n8n/hi/n8n-backup-restore.html" aria-current="page">हिन्दी</a><a href="bn/n8n-backup-restore.html">বাংলা</a><a href="ja/n8n-backup-restore.html">日本語</a><a href="pa/n8n-backup-restore.html">ਪੰਜਾਬੀ</a><a href="mr/n8n-backup-restore.html">मराठी</a><a href="te/n8n-backup-restore.html">తెలుగు</a><a href="ta/n8n-backup-restore.html">தமிழ்</a><a href="tr/n8n-yedekleme-geri-yukleme.html">Türkçe</a><a href="vi/sao-luu-khoi-phuc-n8n.html">Tiếng Việt</a><a href="ko/n8n-backup-restore.html">한국어</a><a href="fr/sauvegarde-restauration-n8n.html">Français</a><a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html">Polski</a></div></div></header><main>
+
+<section class="section backup-hero"><div class="backup-hero-copy"><p class="eyebrow">BACKUP &amp; RECOVERY</p><h1>n8n Backup और Restore</h1><p class="lead">Self-hosted n8n का backup और restore करने के लिए SQLite database या consistent PostgreSQL dump, persistent .n8n folder और original encryption key, deployment configuration तथा सभी external binary या mounted-file dependencies सुरक्षित रखें। VPS के बाहर encrypted copy रखें और अलग instance पर recovery test करें। Selective recovery के लिए CLI workflow और credential exports उपयोग करें; केवल JSON exports full server backup नहीं हैं।</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note">n8n के लिए VPS चुनें</a></div><p class="backup-affiliate-note" id="backup-hero-affiliate-note">Partner link: खरीदारी पर हमें commission मिल सकता है।</p></div><div class="backup-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note" aria-label="n8n backup और restore के लिए VPS hosting options देखें"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 490" fill="none" aria-hidden="true" focusable="false">
+
+<defs>
+
+<linearGradient id="br-bg" x1="22" y1="20" x2="476" y2="459" gradientUnits="userSpaceOnUse"><stop stop-color="#29384E"/><stop offset="1" stop-color="#121B29"/></linearGradient>
+
+<linearGradient id="br-server" x1="183" y1="155" x2="317" y2="351" gradientUnits="userSpaceOnUse"><stop stop-color="#304158"/><stop offset="1" stop-color="#172436"/></linearGradient>
+
+</defs>
+
+<rect x="18" y="25" width="464" height="440" rx="34" fill="url(#br-bg)"/>
+
+<rect x="35" y="42" width="430" height="406" rx="24" stroke="#7890A9" stroke-opacity=".38" stroke-width="1.8"/>
+
+<circle cx="250" cy="245" r="169" stroke="#516A88" stroke-opacity=".26" stroke-width="2.2" stroke-dasharray="5 11"/>
+
+<path d="M169 107C204 87 241 79 280 84C358 95 412 159 415 236" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round"/>
+
+<path d="M394 218L415 241L434 214" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+<path d="M333 385C296 404 258 412 220 406C141 394 88 329 84 253" stroke="#FF815F" stroke-width="10" stroke-linecap="round"/>
+
+<path d="M104 270L83 247L65 274" stroke="#FF815F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+<g stroke="#718FA4" stroke-width="2.8" stroke-dasharray="5 9" stroke-linecap="round">
+
+<path d="M250 140V119"/><path d="M170 211L132 183"/><path d="M330 211L371 183"/><path d="M172 313L133 350"/><path d="M328 313L371 350"/>
+
+</g>
+
+<g transform="translate(177 150)">
+
+<rect x="0" y="0" width="146" height="192" rx="22" fill="url(#br-server)" stroke="#8499B3" stroke-width="3"/>
+
+<rect x="17" y="22" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+
+<rect x="17" y="76" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+
+<rect x="17" y="130" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+
+<g stroke="#8EA6C0" stroke-width="6" stroke-linecap="round"><path d="M33 37H77M33 49H66"/><path d="M33 91H77M33 103H66"/><path d="M33 145H77M33 157H66"/></g>
+
+<g fill="#FF8A66"><circle cx="107" cy="43" r="6"/><circle cx="107" cy="97" r="6"/><circle cx="107" cy="151" r="6"/></g>
+
+<path d="M73 193V211M46 214H101" stroke="#869CB5" stroke-width="8" stroke-linecap="round"/>
+
+</g>
+
+<g transform="translate(197 65)">
+
+<rect x="0" y="0" width="106" height="83" rx="20" fill="#284247" stroke="#8BE1CA" stroke-width="2.6"/>
+
+<path d="M34 40V30C34 8 72 8 72 30V40" stroke="#9DE9D3" stroke-width="5" stroke-linecap="round"/>
+
+<rect x="27" y="38" width="52" height="31" rx="9" stroke="#9DE9D3" stroke-width="4"/>
+
+<circle cx="53" cy="52" r="4" fill="#9DE9D3"/><path d="M53 55V60" stroke="#9DE9D3" stroke-width="3" stroke-linecap="round"/>
+
+</g>
+
+<g transform="translate(39 148)">
+
+<rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+<path d="M30 22H68L81 35V74H30Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
+
+<path d="M68 22V35H81M40 48H70M40 60H64" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+</g>
+
+<g transform="translate(349 148)">
+
+<rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+<ellipse cx="55" cy="28" rx="27" ry="10" stroke="#FF7959" stroke-width="3.4" fill="#FFE8E0"/>
+
+<path d="M28 29V66C28 81 82 81 82 66V29M28 47C31 61 80 61 82 47" stroke="#FF7959" stroke-width="3.4"/>
+
+</g>
+
+<g transform="translate(38 332)">
+
+<rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+<path d="M25 24H86V70H25Z" stroke="#FF7959" stroke-width="3.5"/>
+
+<path d="M38 51L48 61L73 36" stroke="#FF7959" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"/>
+
+</g>
+
+<g transform="translate(351 332)">
+
+<rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+<path d="M34 62C21 62 17 49 25 40C27 26 43 20 55 27C67 18 84 28 85 42C98 48 91 63 81 63H34Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
+
+<path d="M50 44V64M42 55L50 65L59 55" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+</g>
+
+<g fill="#FF8764"><circle cx="170" cy="211" r="5"/><circle cx="330" cy="211" r="5"/><circle cx="172" cy="313" r="5"/><circle cx="328" cy="313" r="5"/></g>
+
+</svg></a></div></section>
+
+<section class="section dark"><p class="eyebrow">QUICK CHECKLIST</p><h2>n8n backup में क्या सुरक्षित होना चाहिए</h2><div class="cards"><article><h3>Database</h3><p>PostgreSQL database या instance द्वारा उपयोग की जाने वाली SQLite database file का backup लें। Database में workflows, credentials और execution data जैसे core n8n state होते हैं।</p></article><article class="featured"><h3>Encryption key</h3><p>ठीक वही n8n encryption key अलग और सुरक्षित रखें। Restored encrypted credentials उसी key पर निर्भर करते हैं।</p></article><article><h3>Persistent files</h3><p>Persistent n8n data directory और वे सभी mounted files, binary-data storage या workflow assets शामिल करें जिन पर deployment निर्भर है।</p></article><article><h3>Deployment configuration</h3><p>Stack rebuild करने के लिए जरूरी Compose/configuration files और non-secret configuration सुरक्षित रखें। Secrets को उचित access controls से protect करें।</p></article></div></section>
+
+<section class="section"><p class="eyebrow">दो BACKUP LEVELS</p><h2>Logical export बनाम complete disaster recovery</h2><div class="cards"><article><h3>Workflow &amp; credential export</h3><p>n8n CLI exports migration, versioned workflow copies और selective restoration के लिए उपयोगी हैं। Credentials encrypted form में export करके बाद में matching encryption key के साथ import किए जा सकते हैं। केवल एक workflow recover करने के लिए workflow editor के three-dot menu से JSON Download करें, फिर नए review workflow या isolated instance में Import from File करें। Live workflow replace करने से पहले credentials, workflow IDs और node parameters जाँचें: workflow JSON restore करने से पूरा server restore नहीं होता।</p></article><article><h3>Entity export</h3><p>CLI supported database types के बीच data move करने के लिए database entities export कर सकती है। Execution-history tables optional हैं क्योंकि वे बहुत बड़े हो सकते हैं।</p></article><article><h3>Full instance recovery</h3><p>Dead-server scenario के लिए actual database, encryption key, persistent data और deployment dependencies सुरक्षित रखें। Workflow JSON export से पूरी instance reconstruct हो जाएगी, ऐसा न मानें।</p></article><article><h3>Provider snapshot</h3><p>VPS snapshot अतिरिक्त recovery layer के रूप में उपयोगी है, लेकिन यह एकमात्र copy नहीं होना चाहिए और independently verified application/database backup की जगह नहीं लेना चाहिए।</p></article></div></section>
+
+<section class="section dark"><p class="eyebrow">DATABASE</p><h2>Database का consistent backup लें</h2><div class="cards"><article><h3>PostgreSQL</h3><p>Consistent PostgreSQL backup method उपयोग करें और backup को VPS से बाहर रखें। उसी failed disk पर database copy disaster recovery नहीं है।</p></article><article><h3>SQLite</h3><p>यदि deployment SQLite उपयोग करता है, तो persistent n8n data directory की database file सुरक्षित रखें। Database actively modify हो रही हो तो unsafe state में copy न करें।</p></article><article><h3>Execution history</h3><p>तय करें कि historical execution data recovery objective का हिस्सा है या नहीं। इससे backups काफी बड़े हो सकते हैं, इसलिए retention और compliance requirements के आधार पर निर्णय लें।</p></article><article><h3>Database version</h3><p>Source deployment में उपयोग database engine और version record करें ताकि compatible recovery environment तैयार किया जा सके।</p></article></div>
+
+<p><strong>Docker Compose VPS पर PostgreSQL।</strong> यदि PostgreSQL service का नाम <code>postgres</code> और database/user दोनों <code>n8n</code>, तो नीचे का command host पर consistent PostgreSQL custom-format dump बनाता है। चलाने से पहले actual Compose file देखें और database credentials तथा service names adjust करें। <code>pg_dump</code> PostgreSQL चलने के दौरान logically consistent snapshot बना सकता है; यह <strong>नहीं</strong> अलग <code>.n8n</code> user folder या external binary data का backup नहीं लेता।</p>
+
+<pre><code># Docker Compose project में service, DB और user names adapt करें
+docker compose exec -T postgres pg_dump -U n8n -d n8n -Fc &gt; n8n-postgres.dump
+test -s n8n-postgres.dump
+# जाँचें कि archive की object list readable है
+docker compose exec -T postgres pg_restore --list &lt; n8n-postgres.dump</code></pre>
+
+<p>Archive-list check स्पष्ट format problems पकड़ती है, लेकिन यह साबित नहीं करती कि data restore हो सकता है। Encrypted copy off-server रखें और restore rehearsal करें। Database-specific options के लिए official PostgreSQL pg_dump documentation देखें।</p>
+
+<p><strong>Docker पर SQLite।</strong> Default SQLite deployment में <code>database.sqlite</code> और generated encryption-key config persistent <code>.n8n</code> folder के अंदर रहते हैं (आम तौर पर mount होता है <code>/home/node/.n8n</code> )। SQLite की simple live copy को consistent न मानें। Folder copy करने से पहले n8n और अन्य database writers रोकें, या interruption संभव न हो तो SQLite का supported online backup mechanism उपयोग करें:</p>
+
+<pre><code># केवल SQLite और default /home/node/.n8n mount के लिए
+# SQLite database copy करने से पहले n8n और अन्य writers रोकें
+docker compose stop n8n
+docker compose cp n8n:/home/node/.n8n ./n8n-user-folder-backup
+docker compose start n8n</code></pre>
+
+<p>ये दिखाए गए service और path के illustrative commands हैं, universal volume layout नहीं। Copied folder शुरू में उसी VPS पर रहता है; उसे off-server transfer और protect करें। Queue workers या अन्य writers हों तो उन्हें भी रोकें और actual deployment design follow करें। n8n की current full-backup guidance SQLite consistency requirement document करती है।</p><p><strong>Default SQLite folder को clean target पर restore करना:</strong> पहले n8n service और सभी database writers रोकें। Compatible n8n service container और destination volume बनने के बाद backed-up <code>.n8n</code> contents <em>वापस</em> उसी persistent directory में copy करें। इससे target files overwrite होंगी, इसलिए ऐसी instance पर न चलाएँ जिसका data रखना है:</p>
+
+<pre><code># केवल intended CLEAN recovery instance पर चलाएँ
+docker compose stop n8n
+docker compose cp ./n8n-user-folder-backup/. n8n:/home/node/.n8n/
+# अगले command से पहले n8n container user के ownership और permissions verify करें
+# Restored files n8n द्वारा readable/writable होने के बाद ही start करें
+docker compose start n8n
+# Check logs, restored credentials and workflow triggers</code></pre>
+
+<p>Docker stopped containers में copy कर सकता है, लेकिन destination ownership original से अलग हो सकती है; start करने से पहले सुनिश्चित करें कि restored configuration और database file n8n process द्वारा readable/writable हों। यदि actual Compose configuration अलग path या bind mount उपयोग करती है, copy को उसके अनुसार adapt करें। Docker Compose copy reference। Separate PostgreSQL database वाले deployments में केवल n8n folder restore करना पर्याप्त नहीं है।</p></section>
+
+<section class="split"><div><p class="eyebrow">CRITICAL SECRET</p><h2>Encryption key recovery का हिस्सा है</h2><p>n8n stored credentials को instance encryption key से encrypt करता है। Matching key के बिना database या encrypted credential export restore होने पर workflows saved credentials उपयोग नहीं कर पाएँगे।</p><p>यदि N8N_ENCRYPTION_KEY set किया है, ठीक वही secret restore करें। अन्यथा generated key persistent .n8n/config file में होता है; backup या rebuild के समय उस config को protect करें। Recovery keys VPS के बाहर सुरक्षित रखें। Queue mode में सभी main और worker processes को वही key उपयोग करनी चाहिए।</p></div><div class="requirements"><div><b>करें</b><span>Production में उपयोग हुई exact key की protected copy रखें।</span></div><div><b>करें</b><span>Credentials test करने से पहले verify करें कि recovery environment वही key उपयोग करता है।</span></div><div><b>न करें</b><span>Server rebuild के बाद newly generated key पर निर्भर न रहें।</span></div><div><b>न करें</b><span>Key को public repository में commit न करें और unprotected backup के साथ न रखें।</span></div></div></section>
+
+<section class="section dark"><p class="eyebrow">FILES &amp; BINARY DATA</p><h2>Database backup हर workflow dependency cover नहीं कर सकता</h2><div class="cards"><article><h3>Persistent .n8n data</h3><p>Actual .n8n user folder locate और preserve करें, केवल container image नहीं। Typical Docker deployment में यह /home/node/.n8n पर mounted होता है; Docker के बाहर default ~/.n8n है। यदि N8N_USER_FOLDER configured है, n8n दिए गए parent directory के अंदर .n8n बनाता है। इसकी config key और installation द्वारा उपयोग local SQLite, binary या filesystem execution data शामिल करें।</p></article><article><h3>Mounted workflow files</h3><p>यदि workflows host-mounted directories read/write करते हैं, उन directories का अलग backup लें। उनके बिना n8n restore करने पर valid workflows भी टूट सकते हैं।</p></article><article><h3>Binary data</h3><p>Storage mode identify करें और हर external dependency restore करें। Filesystem-based binary या execution data .n8n या custom directory में हो सकता है; S3/Azure Blob या अन्य configured external storage के लिए अपनी recoverable copy और access settings चाहिए। केवल database dump उन files की जगह नहीं ले सकता।</p></article><article><h3>Community nodes</h3><p>Community packages और versions record करें और N8N_CUSTOM_EXTENSIONS से configured additional custom node directories का backup लें। ये directories .n8n के बाहर हो सकती हैं; केवल database और user-folder restore करने पर custom-node workflows unusable रह सकते हैं।</p></article></div></section>
+
+<section class="section"><p class="eyebrow">OFF-SERVER STRATEGY</p><h2>उसी VPS पर backup केवल local copy है</h2><div class="requirements"><div><b>Local copy</b><span>Quick rollback के लिए उपयोगी, लेकिन server loss, disk failure और destructive mistakes से vulnerable।</span></div><div><b>Off-server copy</b><span>कम से कम एक backup production VPS से independent storage में रखें।</span></div><div><b>Versioned copies</b><span>Multiple recovery points retain करें ताकि corruption या खराब change अकेले usable backup को overwrite न कर दे।</span></div><div><b>Access control</b><span>Backups में credentials, workflow logic और sensitive business data हो सकते हैं। उन्हें उचित रूप से encrypt और restrict करें।</span></div><div><b>Monitoring</b><span>Scheduled backups fail हों या नए recovery points बनना बंद हों तो alert करें।</span></div></div>
+
+<p><strong>Schedule को measurable बनाएँ।</strong> हर successful backup का timestamp, transfer completion, file size, source database version, encryption-key recovery location और latest successful restore test record करें। Missing, failed या unexpectedly empty files पर alert करें। Backup archives को VPS से बाहर भेजने से पहले encrypt करें और recovery secrets का access restrict करें। Multiple dated recovery points उस स्थिति से बचाते हैं जब corruption का पता newest copy द्वारा last healthy copy overwrite करने के बाद चले।</p>
+
+<p>उदाहरण के लिए यदि आप अधिकतम छह घंटे के changes खोना tolerate कर सकते हैं, तो successful six-hour backup schedule सिर्फ starting point है, guarantee नहीं: failed jobs और delayed off-server replication actual loss बढ़ा सकते हैं। Universal 7-day या 30-day policy मानने के बजाय retention और restore cadence अपने RPO/RTO और data requirements के अनुसार तय करें।</p></section>
+
+<section class="section dark"><p class="eyebrow">RESTORE ORDER</p><h2>Controlled sequence में recover करें</h2><div class="requirements"><div><b>1 · तैयार करें</b><span>Compatible server, database और container/runtime environment provision करें।</span></div><div><b>2 · Secrets restore करें</b><span>Original n8n encryption key और required deployment secrets सुरक्षित रूप से configure करें।</span></div><div><b>3 · Database restore करें</b><span>PostgreSQL या SQLite recover करें और verify करें कि n8n expected data से connect कर सकता है।</span></div><div><b>4 · Files restore करें</b><span>Persistent directories, binary data और mounted workflow assets recover करें।</span></div><div><b>5 · n8n start करें</b><span>Expected hostname, database और environment configuration के साथ application start करें।</span></div><div><b>6 · Validate करें</b><span>Confirm करें कि users, workflows और credentials load होते हैं, फिर representative workflows और webhook paths execute करें।</span></div></div>
+
+<p><strong>PostgreSQL disaster-recovery example:</strong> एक <em>अलग, clean restore target</em> जिसमें पहले से सही database role और खाली <code>n8n</code> database हो, पहले start करें <em>सिर्फ</em> PostgreSQL। <strong>Import से पहले healthy होने तक wait करें:</strong>  <code>docker compose up -d</code> अकेला return कर सकता है जबकि PostgreSQL अभी initialize हो रहा हो, इसलिए अगला <code>pg_restore</code> fail हो सकता है। Example उपयोग करता है <code>--wait</code> modern Compose installation पर और separately check करता है <code>pg_isready</code>. Reliable wait के लिए appropriate PostgreSQL healthcheck configure करें या आगे बढ़ने से पहले readiness explicitly confirm करें। इस command को populated production database पर न चलाएँ और database तथा matching <code>.n8n</code> key/data restore होने से पहले n8n start न करें।</p>
+
+<pre><code># केवल FRESH, EMPTY TARGET DATABASE में RESTORE करें
+# Postgres Compose service, database और user names adapt करें
+docker compose up -d --wait postgres
+docker compose exec -T postgres pg_isready -U n8n -d n8n
+docker compose exec -T postgres pg_restore --exit-on-error --no-owner --no-acl -U n8n -d n8n &lt; n8n-postgres.dump</code></pre>
+
+<p>Destination में compatible PostgreSQL version, role privileges, extensions और original n8n configuration होना चाहिए। Restore करें <code>.n8n</code> backup mechanism से सही persistent volume या bind mount पर, ownership और permissions preserve करते हुए। External binary files, custom extensions, Compose और secrets configuration restore करें, फिर compatible version पर n8n start करके logs जाँचें। केवल database restore करने से key recover नहीं होती: PostgreSQL deployment key को <code>.n8n/config</code> में रखता है, जब तक आपने explicitly configure न किया हो <code>N8N_ENCRYPTION_KEY</code>. pg_restore reference · n8n full-instance restore sequence.</p>
+
+<div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Clean server चाहिए तो recovery VPS चुनें</a></div><p id="affiliate-note"><small>Partner link: खरीदारी पर हमें commission मिल सकता है।</small></p></section>
+
+<section class="section"><p class="eyebrow">RESTORE TEST</p><h2>Restore सफल होने तक backup proven नहीं है</h2><div class="cards"><article><h3>Clean environment पर test करें</h3><p>Real drill यह साबित करे कि backup production server पर छूटी undeclared files पर निर्भर हुए बिना instance rebuild कर सकता है।</p></article><article><h3>Credentials जाँचें</h3><p>Workflow खुल जाना पर्याप्त नहीं। Confirm करें कि restored encrypted credentials वास्तव में decrypt होते हैं और successfully authenticate करते हैं।</p></article><article><h3>Representative workflows चलाएँ</h3><p>सिर्फ trivial automation validate करने के बजाय webhooks, external APIs, mounted files और community nodes पर निर्भर workflows test करें।</p></article><article><h3>Recovery time मापें</h3><p>Restore में कितना समय लगता है और कौन-से manual steps बाकी रहते हैं, record करें। इससे assumed backup operational recovery procedure बनता है।</p></article></div>
+
+<h3>Verified restore drill: SQLite और PostgreSQL</h3>
+
+<p><strong>Test environment:</strong> n8n <code>2.42.5</code> disposable GitHub Actions runner पर isolated Docker containers में, synthetic two-node workflow के साथ। ये checks चलीं <time datetime="2026-10-08">8 October 2026</time>, customer या production n8n server पर नहीं।</p>
+
+<div class="requirements"><div><b>SQLite: PASS</b><span>Test workflow import/export किया, सभी writers रोके, SQLite-backed persistent <code>.n8n</code> folder और generated encryption key archive किए, clean volume में restore किया, n8n start किया, फिर recovered workflow re-export और execute किया।</span></div><div><b>PostgreSQL: PASS</b><span>उसी test workflow को import किया, custom-format <code>pg_dump</code>, बनाया और inspect किया, फिर <code>pg_restore</code> से new empty PostgreSQL database में restore किया, अलग <code>.n8n</code> folder restore किया, फिर recovered workflow re-export और execute किया।</span></div><div><b>PASS क्या साबित करता है</b><span>Tested backup paths ने workflow, उसके दो nodes और connections preserve किए और recovery के बाद execution allow की। ये reproducible functional smoke tests हैं, workload benchmarks नहीं।</span></div><div><b>क्या test नहीं हुआ</b><span>Real credentials की decryption/authentication, production webhooks, queue-mode workers और Redis, S3/Azure binary storage, custom nodes, user/project access या live production instance recovery test नहीं हुई। वास्तव में उपयोग हर dependency के लिए अलग drill चलाएँ।</span></div></div>
+
+<p><strong>कैसे reproduce करें:</strong> Disposable n8n installation उपयोग करें, harmless two-node workflow बनाएँ, applicable database + persistent-folder backup लें, clean volume/database में restore करें, फिर restored workflow के nodes, connections और actual execution verify करें। Production system पर disaster recovery proven मानने से पहले encrypted credentials, webhooks और external files भी check करें।</p>
+
+<p><strong>Restore drill acceptance checklist:</strong> isolated domain/environment उपयोग करें; users/workflows मौजूद हों, एक existing encrypted credential बिना re-entry authenticate करे, production webhook intended restored workflow invoke करे, mounted files और binary attachments readable रहें, required community-node integrations load हों। Backup age, measured downtime और off-server accessibility confirm करें। Essential check fail हो तो recovery point को <em>unverified</em> mark करें, backup को complete report न करें।</p></section>
+
+<section class="section dark"><p class="eyebrow">CLI BACKUP LIMITS</p><h2>जानें workflow और credential exports क्या restore नहीं करते</h2><div class="cards"><article><h3>CLI exports full instance backup नहीं हैं</h3><p>Workflow और credential backup exports में users/roles, execution history/logs, variables या encryption key जैसी instance settings शामिल नहीं होतीं।</p></article><article><h3>Fresh-instance restore में owner चाहिए</h3><p>Clean instance पर credentials import करने से पहले owner setup पूरा करें। Multi-user या project restores में सही user/project assignment भी चाहिए हो सकता है।</p></article><article><h3>Imported IDs existing items overwrite कर सकते हैं</h3><p>Workflow और credential exports original IDs preserve करते हैं। Same IDs वाली instance में import करने पर existing items replace हो सकते हैं।</p></article><article><h3>Imported workflows को सोच-समझकर publish करें</h3><p>CLI imports सामान्यतः workflows inactive छोड़ती हैं। n8n 2.x में हर imported workflow की published state जाँचें और केवल intended workflows publish करें; self-hosted Server CLI n8n publish:workflow --id=YOUR_WORKFLOW_ID भी support करती है। n8n चल रहा हो तो Server CLI publish/unpublish changes restart के बाद लागू होते हैं। Scheduled triggers/production webhooks verify या traffic switch करने से पहले restart करें।</p></article></div>
+
+<p><strong>Docker Compose के लिए bulk export example:</strong> यदि n8n service का नाम <code>n8n</code>, तो नीचे official CLI backups चला सकते हैं। Output path जानबूझकर mounted persistent <code>.n8n</code> directory के अंदर है क्योंकि container recreate होने पर arbitrary directories गायब हो सकती हैं। Confirm करें कि directory n8n container user द्वारा writable है। Workflow और credential JSON को <strong>अलग directories</strong>में रखें—दोनों types एक directory share करें तो n8n import problem document करता है।</p>
+
+<p><strong>n8n 2.x draft बनाम published backup:</strong> सामान्य <code>--backup</code> workflow export current drafts capture करता है; ये production में published versions से अलग हो सकते हैं। किसी workflow का actual published version preserve करने के लिए इसे separately export करें <code>docker compose exec -T n8n n8n export:workflow --id=WORKFLOW_ID --published --output=/home/node/.n8n/backups/published-workflow.json</code>, यह सुनिश्चित करने के बाद कि output folder मौजूद और writable है। CLI historical version भी export कर सकती है <code>--version=VERSION_ID</code>. इन captures को full backup के साथ off-server रखें; draft JSON को live published state का record न मानें।</p>
+
+<pre><code># Docker Compose project से execute करें; n8n service मौजूद होनी चाहिए
+# Workflow और credential backups अलग folders में रखें
+docker compose exec -T n8n n8n export:workflow --backup --output=/home/node/.n8n/backups/workflows/
+docker compose exec -T n8n n8n export:credentials --backup --output=/home/node/.n8n/backups/credentials/
+# Saved export directories को container से बाहर host पर copy करें
+mkdir -p ~/n8n-recovery
+docker compose cp n8n:/home/node/.n8n/backups ~/n8n-recovery/cli</code></pre>
+
+<p>Copied <code>~/n8n-recovery/cli</code> directory तब तक VPS पर है जब तक उसे secured independent backup location पर move नहीं करते। Credential export default रूप से encrypted है और import पर matching encryption key चाहिए। उपयोग न करें <code>--decrypted</code> सिवाय strictly controlled migration के: यह secrets plaintext में लिखता है। Sensitive workflow logic या credentials वाले exports को public GitHub repository में कभी commit न करें। कुछ third-party GitHub credential-backup templates जानबूझकर decrypted secrets export करते हैं; private repository access restriction है, encryption नहीं। हर template की actual export settings/storage permissions inspect करें, off-server transfer से पहले secrets encrypt करें और unintended plaintext upload से exposed credentials rotate करें।</p>
+
+<p><strong>Bulk import example:</strong> clean target पर owner setup पूरा करें, original encryption key दें और सुनिश्चित करें saved backup files recovery VPS पर उपलब्ध हों। नीचे destination folder बनता है और <code>workflows/</code> और <code>credentials/</code> subfolders host से n8n container में copy होते हैं; Docker volume layout अलग हो तो paths adapt करें:</p>
+
+<pre><code># केवल intended CLEAN recovery instance पर चलाएँ
+docker compose exec -T n8n mkdir -p /home/node/.n8n/backups
+docker compose cp ~/n8n-recovery/cli/. n8n:/home/node/.n8n/backups/</code></pre>
+
+<p>n8n container user के लिए file ownership/access जाँचें। Verified rollback के बिना populated production instance पर import न करें: workflow और credential IDs existing entries overwrite कर सकते हैं। फिर चलाएँ:</p>
+
+<pre><code># Fresh-instance owner setup और सही key देने के बाद
+# Saved cli/ contents को target n8n service की .n8n/backups/ में वापस copy करें
+docker compose exec -T n8n n8n import:workflow --separate --input=/home/node/.n8n/backups/workflows/
+docker compose exec -T n8n n8n import:credentials --separate --input=/home/node/.n8n/backups/credentials/</code></pre>
+
+<p>Imported IDs existing workflows/credentials replace कर सकते हैं; dry runs के लिए isolated test instance उपयोग करें और बाद में credentials तथा activation/publishing states जाँचें। n8n 2.x में JSON draft restore होना अपने-आप यह साबित नहीं करता कि workflow published है और scheduled triggers चला सकता है। <strong>Import safety:</strong> non-multi-main n8n instance पर पहले active cron triggers CLI import के बाद restart तक चलते रह सकते हैं। Restored jobs enable करने से पहले production triggers रोकें/isolate करें और n8n restart करें; duplicate execution न हो यह verify करें। CLI exports <em>नहीं</em> original users, execution logs, instance variables या encryption key contain नहीं करतीं। <code>--backup</code> sets <code>--all --pretty --separate</code>, 'full instance' नहीं। Sources: current official n8n backup/restore guide और n8n CLI command reference।</p>
+
+<p><strong>GitHub या Google Drive templates से bulk restore:</strong> यह केवल workflow JSON के लिए alternative है, instance database, users, encrypted credential values या encryption key के लिए नहीं। API-based template चलाने से पहले n8n API/storage permissions, selected backup version और target instance verify करें; देखें matching IDs update और deleted workflows recreate होते हैं या नहीं तथा workflow publishing कैसे handle होती है। सभी templates target में missing ID recreate नहीं करते; automatic restore पर निर्भर होने से पहले scenario को isolation में test करें।</p></section><section class="section dark"><p class="eyebrow">FAQ</p><h2>n8n backup और restore: आम सवाल</h2><div class="faq"><details><summary>क्या workflows export करना n8n backup के लिए पर्याप्त है?</summary><p>नहीं। Workflow exports useful logical copies हैं, लेकिन complete recovery में credentials, matching encryption key, database state, persistent files और binary-data storage भी चाहिए हो सकते हैं।</p></details><details><summary>Database होने पर भी n8n encryption key चाहिए?</summary><p>हाँ, यदि database में stored encrypted credentials usable रखने हैं। Original key सुरक्षित रखें।</p></details><details><summary>PostgreSQL backup लें या workflows और credentials export करें?</summary><p>Disaster recovery के लिए database और encryption key protect करें। Logical exports अतिरिक्त migration/selective-recovery layer के रूप में उपयोगी हैं, instance के हर हिस्से का substitute नहीं।</p></details><details><summary>क्या VPS snapshot ही एकमात्र backup हो सकता है?</summary><p>इसे एक recovery layer मानना बेहतर है। Independent off-server backup रखें ताकि provider, account, server या snapshot failure सभी recovery points एक साथ न हटाए।</p></details><details><summary>कैसे पता चले backup काम करता है?</summary><p>इसे clean test environment में restore करें, credentials decrypt होते हैं यह verify करें और representative workflows चलाएँ। केवल successful backup job recoverability साबित नहीं करती।</p></details><details><summary>क्या GitHub या Google Drive workflow backups में saved credential secrets शामिल होते हैं?</summary><p>Workflow-only JSON backups में n8n credential store द्वारा managed secret values या instance encryption key शामिल नहीं होते। लेकिन exported JSON credential names/IDs और node parameters में सीधे लिखे secrets, जैसे authentication headers, expose कर सकता है। Upload/share से पहले exported JSON inspect और protect करें। Full recovery के लिए database और original key का backup लें या tested restore के साथ supported encrypted credential CLI exports उपयोग करें। Workflow-only GitHub/Google Drive template full disaster recovery नहीं है।</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS options देखें</a></div><p><a href="n8n-vps-security.html>Production security</a> · <a href="install-n8n-vps-docker.html">Docker installation</a> · <a href="n8n-vps-requirements.html">VPS requirements</a> · <a href="n8n-queue-mode.html">Queue mode &amp; workers</a> · <a href="index.html">मुख्य n8n VPS guide</a></p></section>
+
+<section class="section"><p class="eyebrow">RECOVERY OBJECTIVES</p><h2>Incident से पहले RPO और RTO define करें</h2><p><strong>RPO</strong> recent changes का maximum tolerable loss है। इसे newest usable independently stored recovery point से मापें; exports/transfers fail हों तो scheduled six-hour job six-hour RPO establish नहीं करती। <strong>RTO</strong> maximum tolerable outage है। इसे clean restore drill में मापें, जिसमें secrets retrieve करना, external files restore करना, credentials recheck करना और recovered workflows publish करना शामिल हो—सिर्फ container start करना नहीं।</p></section><section class="section"><p class="eyebrow">RECOVERY KEY</p><h2>Rebuild से पहले original encryption key खोजें</h2><p>यदि production में <code>N8N_ENCRYPTION_KEY</code>, set था तो ठीक वही environment secret preserve करें। यदि नहीं, original persistent .n8n/config में generated key preserve करें। Encrypted credentials import करने से पहले देखें recovered instance वास्तव में कौन-सा source उपयोग करती है; fresh generated key old database के credentials decrypt नहीं कर सकती।</p></section><section class="section" data-best-vps-link="1"><h2>Providers compare कर रहे हैं?</h2><p>Provider choice, one-click setup, support boundaries, backups, migration, region और scaling के लिए <a href="best-vps-for-n8n.html">Best VPS for n8n comparison</a>. Resource sizing के लिए वापस जाएँ <a href="index.html">मुख्य VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n के लिए independent infrastructure guide।</span><p><a href="about.html">परिचय</a> · <a href="contact.html">संपर्क</a> · <a href="privacy.html">गोपनीयता</a></p><p><a href="/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html">Español</a> · <a href="/vps-for-n8n/de/n8n-backup-wiederherstellung.html">Deutsch</a> · <a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/n8n-backup-restore.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/n8n-backup-restore.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/sauvegarde-restauration-n8n.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
