@@ -1,0 +1,241 @@
+{
+  "checked": 26,
+  "failures": 3,
+  "errors": [
+    {
+      "page": "ja/n8n-backup-restore.html",
+      "width": 390,
+      "problem": "Horizontal page overflow",
+      "details": {
+        "excessPx": 719,
+        "inner": 390,
+        "html": 1109,
+        "body": 1109
+      }
+    },
+    {
+      "page": "ja/install-n8n-vps-docker.html",
+      "width": 390,
+      "problem": "Horizontal page overflow",
+      "details": {
+        "excessPx": 591,
+        "inner": 390,
+        "html": 981,
+        "body": 981
+      }
+    },
+    {
+      "page": "ja/n8n-queue-mode.html",
+      "width": 390,
+      "problem": "Horizontal page overflow",
+      "details": {
+        "excessPx": 353,
+        "inner": 390,
+        "html": 743,
+        "body": 743
+      }
+    }
+  ],
+  "results": [
+    {
+      "path": "ja/",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/best-vps-for-n8n.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/about.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-backup-restore.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 719
+    },
+    {
+      "path": "ja/contact.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/install-n8n-vps-docker.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 591
+    },
+    {
+      "path": "ja/n8n-cloud-vs-self-hosted.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-vps-requirements.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/privacy.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-vps-security.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-queue-mode.html",
+      "width": 390,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 353
+    },
+    {
+      "path": "ja/",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/best-vps-for-n8n.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/about.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-backup-restore.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/contact.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/install-n8n-vps-docker.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-cloud-vs-self-hosted.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-vps-requirements.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/privacy.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-vps-security.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "ja/n8n-queue-mode.html",
+      "width": 1280,
+      "status": 200,
+      "h1": 1,
+      "lang": "ja",
+      "overPx": 0
+    },
+    {
+      "path": "de/bester-vps-fuer-n8n.html",
+      "width": 390,
+      "status": 200,
+      "switchTarget": "ja/best-vps-for-n8n.html"
+    },
+    {
+      "path": "es/mejor-vps-para-n8n.html",
+      "width": 390,
+      "status": 200,
+      "switchTarget": "ja/best-vps-for-n8n.html"
+    },
+    {
+      "path": "bn/about.html",
+      "width": 390,
+      "status": 200,
+      "switchTarget": "ja/about.html"
+    },
+    {
+      "path": "ru/rezervnoe-kopirovanie-n8n.html",
+      "width": 390,
+      "status": 200,
+      "switchTarget": "ja/n8n-backup-restore.html"
+    }
+  ]
+}
