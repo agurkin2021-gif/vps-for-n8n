@@ -15,7 +15,7 @@ jobs:
           ref: ta-complete-sitemap-20261009
       - name: Validate translator and authoritative English sitemap
         run: |
-          python -m py_compile _ta_translate_full.py _ta_editorial.py _ta_publish_qa.py
+          python -m py_compile _ta_translate_full.py _ta_publish_qa.py
           python - <<'PY'
           from _ta_translate_full import verify_source_sitemap,PAGES
           assert verify_source_sitemap()==len(PAGES)==11
@@ -26,7 +26,6 @@ jobs:
           for i in $(seq 0 10); do
             echo "TAMIL_PAGE_START $((i+1))/11"
             python -u _ta_translate_full.py "$i"
-            python -u _ta_editorial.py "$i"
             echo "TAMIL_PAGE_DONE $((i+1))/11"
           done
       - name: Synchronize Tamil in every language switcher and sitemap
@@ -58,4 +57,4 @@ jobs:
 
 # retry after preserving nested H1 markup
 
-# retry after Tamil publish-QA and exact price fixes
+# source-faithful run without editorial overrides
