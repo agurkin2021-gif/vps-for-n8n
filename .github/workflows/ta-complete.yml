@@ -1,0 +1,60 @@
+name: Tamil complete source-faithful localization
+on:
+  push:
+    branches: [ta-complete-sitemap-20261009]
+    paths: [.github/workflows/ta-complete.yml]
+permissions:
+  contents: write
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ta-complete-sitemap-20261009
+      - name: Validate translator and authoritative English sitemap
+        run: |
+          python -m py_compile _ta_translate_full.py _ta_publish_qa.py
+          python - <<'PY'
+          from _ta_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("TAMIL_SOURCE_PAGES=11")
+          PY
+      - name: Translate and verify each page sequentially
+        run: |
+          for i in $(seq 0 10); do
+            echo "TAMIL_PAGE_START $((i+1))/11"
+            python -u _ta_translate_full.py "$i"
+            echo "TAMIL_PAGE_DONE $((i+1))/11"
+          done
+      - name: Synchronize Tamil in every language switcher and sitemap
+        run: |
+          python -u _ta_publish_qa.py
+          git diff --binary > /tmp/first-ta-pass.diff
+          python -u _ta_publish_qa.py
+          git diff --binary > /tmp/second-ta-pass.diff
+          cmp /tmp/first-ta-pass.diff /tmp/second-ta-pass.diff
+      - name: Final 11-page source parity verification
+        run: |
+          python - <<'PY'
+          from _ta_translate_full import PAGES,ROOT,validate
+          for i,(en,ta) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/ta).read_text(encoding="utf-8"),en,ta)
+              print(f"TAMIL_FINAL_PAGE_PASS {i}/11 {ta}")
+          PY
+      - name: Commit complete Tamil localization
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Complete Tamil localization from 11 English sitemap pages"
+            git push origin HEAD:ta-complete-sitemap-20261009
+          fi
+
+# retry after Tamil language-marker fix
+
+# retry after preserving nested H1 markup
+
+# source-faithful run without editorial overrides
