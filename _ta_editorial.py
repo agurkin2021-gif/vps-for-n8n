@@ -5,7 +5,7 @@ import html,re,sys
 from _ta_translate_full import PAGES,ROOT,validate
 
 SEO=[
-["n8n-க்கு VPS $0.07/நாள் முதல் — திட்டங்கள் மற்றும் சர்வர் தேர்வு","n8n-க்கு VPS","$0.07/நாள் முதல் கிடைக்கும் n8n VPS திட்டங்களை ஒப்பிடுங்கள். CPU, RAM, storage, traffic மற்றும் production workload தேவைகளுக்கு ஏற்ற server configuration-ஐ தேர்வு செய்யுங்கள்."],
+["n8n-க்கு VPS $0.07/day முதல் — திட்டங்கள் மற்றும் சர்வர் தேர்வு","n8n-க்கு VPS","$0.07/day முதல் கிடைக்கும் n8n VPS திட்டங்களை ஒப்பிடுங்கள். CPU, RAM, storage, traffic மற்றும் production workload தேவைகளுக்கு ஏற்ற server configuration-ஐ தேர்வு செய்யுங்கள்."],
 ["2026-ல் n8n-க்கு சிறந்த VPS — 6 வழங்குநர்கள் ஒப்பீடு","n8n-க்கு சிறந்த VPS","Setup, control, backup, support, migration, region மற்றும் scaling அடிப்படையில் n8n-க்கு ஏற்ற 6 VPS விருப்பங்களை ஒப்பிடுங்கள்."],
 ["n8nVPS பற்றி | n8nVPS","n8nVPS பற்றி","Self-hosted n8n-க்கு VPS sizing மற்றும் production infrastructure குறித்து வழங்கும் சுயாதீன வழிகாட்டியான n8nVPS பற்றி அறியுங்கள்."],
 ["n8n Backup மற்றும் Restore — முழுமையான வழிகாட்டி","n8n Backup மற்றும் Restore","Self-hosted n8n-க்கான database, workflows, credentials, encryption key, binary data, off-server copies மற்றும் restore testing பற்றிய backup வழிகாட்டி."],
