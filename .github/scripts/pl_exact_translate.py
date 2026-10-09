@@ -35,8 +35,9 @@ def translate_raw(raw):
     if not core or len(core)>4500: return raw
     if core in CACHE: return leading+CACHE[core]+trailing
     last=None
-    for attempt in range(5):
+    for attempt in range(9):
         try:
+            time.sleep(0.75)
             result=translator().translate(core)
             if not result or not str(result).strip(): raise ValueError("empty translation")
             result=str(result)
@@ -46,7 +47,9 @@ def translate_raw(raw):
             return leading+result+trailing
         except Exception as exc:
             last=exc
-            time.sleep(min(12,0.75*(2**attempt)))
+            wait=min(90, 5*(attempt+1)) if "too many requests" in str(exc).lower() else min(18,1.2*(2**attempt))
+            print("  translation retry",attempt+1,"wait",wait,"error",str(exc)[:100],flush=True)
+            time.sleep(wait)
     raise RuntimeError("Translation failed: "+core[:100]+"; "+str(last))
 class TextPositions(HTMLParser):
     def __init__(self,src):
@@ -73,7 +76,7 @@ def modify_text(original):
     p=TextPositions(original);p.feed(original)
     unique=list(dict.fromkeys(data.strip() for _,_,data in p.spans if data.strip()))
     print("  visible text nodes",len(p.spans),"distinct",len(unique),flush=True)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
         list(pool.map(translate_raw,unique))
     out=original
     for a,b,s in reversed(p.spans):
