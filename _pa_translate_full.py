@@ -117,6 +117,33 @@ def restore_numbers(s: str, stored):
         raise ValueError(f"Unresolved technical sentinels: {s[:160]!r}")
     return s
 
+def preserve_exact_when_model_drops_token(raw: str) -> str:
+    """Conservative fallback: translate only natural-language spans and reinsert each technical token verbatim."""
+    from _pa_offline_runtime import translate_batch
+    pieces=[]
+    prev=0
+    for match in MASK_PATTERN.finditer(raw):
+        pieces.append((False,raw[prev:match.start()]))
+        pieces.append((True,match.group()))
+        prev=match.end()
+    pieces.append((False,raw[prev:]))
+    phrases=[p.strip() for tech,p in pieces if not tech and eligible(p.strip())]
+    translations=iter(translate_batch(phrases))
+    output=[]
+    for tech,piece in pieces:
+        if tech or not eligible(piece.strip()):
+            output.append(piece)
+            continue
+        leading=piece[:len(piece)-len(piece.lstrip())]
+        trailing=piece[len(piece.rstrip()):]
+        output.append(leading+next(translations).strip()+trailing)
+    result="".join(output)
+    for token in set(match.group() for match in MASK_PATTERN.finditer(raw)):
+        if result.count(token)!=raw.count(token):
+            raise AssertionError("Fallback altered technical value: "+token)
+    print("PUNJABI_SAFE_FALLBACK",raw[:105],flush=True)
+    return result
+
 def translate_group(items: list[str]) -> list[str]:
     # Translate independent HTML text slots in batches; never concatenate meanings.
     from _pa_offline_runtime import translate_batch
@@ -133,7 +160,10 @@ def translate_group(items: list[str]) -> list[str]:
         for raw in items:
             masked,stored=mark_numbers(raw)
             output=translate_batch([masked])[0].strip()
-            translated.append(restore_numbers(output,stored))
+            try:
+                translated.append(restore_numbers(output,stored))
+            except ValueError:
+                translated.append(preserve_exact_when_model_drops_token(raw))
     if len(translated)!=len(items):raise AssertionError("Translation missing a text slot")
     requests_made+=len(items)
     return translated
