@@ -163,29 +163,29 @@
 
 <p><strong>PostgreSQL na VPS z Docker Compose.</strong> Jeśli usługa PostgreSQL nazywa się <code>postgres</code> a baza/użytkownik to <code>n8n</code>, poniższe polecenie tworzy na hoście spójny dump PostgreSQL w formacie custom. Przed uruchomieniem sprawdź rzeczywisty plik Compose i dostosuj dane uwierzytelniające bazy oraz nazwy usług. <code>pg_dump</code> może utworzyć logicznie spójny snapshot podczas działania PostgreSQL; nie tworzy jednak backupu <strong>nie</strong> oddzielnego <code>.n8n</code> folderu użytkownika ani zewnętrznych danych binarnych.</p>
 
-<pre><code># In the Docker Compose project; adapt service, DB and user names
+<pre><code># W projekcie Docker Compose; dostosuj nazwy usługi, bazy i użytkownika
 docker compose exec -T postgres pg_dump -U n8n -d n8n -Fc &gt; n8n-postgres.dump
 test -s n8n-postgres.dump
-# Check that the archive has a readable object list
+# Sprawdź, czy archiwum ma czytelną listę obiektów
 docker compose exec -T postgres pg_restore --list &lt; n8n-postgres.dump</code></pre>
 
 <p>Sprawdzenie listy archiwum wykrywa oczywiste problemy z formatem, ale nie dowodzi, że dane da się odtworzyć. Przechowuj zaszyfrowaną kopię poza serwerem i przećwicz przywracanie. Dla opcji zależnych od bazy korzystaj z oficjalnej dokumentacji PostgreSQL pg_dump.</p>
 
 <p><strong>SQLite w Dockerze.</strong> Dla domyślnego wdrożenia SQLite <code>database.sqlite</code> oraz konfiguracja wygenerowanego klucza szyfrowania znajdują się w trwałym folderze <code>.n8n</code> (zwykle montowanym w <code>/home/node/.n8n</code>). Nigdy nie traktuj zwykłej kopii działającej bazy SQLite jako spójnej. Zatrzymaj n8n i inne procesy zapisujące do bazy przed kopiowaniem folderu albo użyj obsługiwanego mechanizmu backupu online SQLite, gdy przerwa jest niemożliwa:</p>
 
-<pre><code># Only for SQLite and the default /home/node/.n8n mount
-# Stop n8n (and any other writers) before copying an SQLite database
+<pre><code># Tylko dla SQLite i domyślnego montowania /home/node/.n8n
+# Zatrzymaj n8n (i inne procesy zapisujące) przed kopiowaniem bazy SQLite
 docker compose stop n8n
 docker compose cp n8n:/home/node/.n8n ./n8n-user-folder-backup
 docker compose start n8n</code></pre>
 
 <p>To przykładowe polecenia dla pokazanej usługi i ścieżki, a nie uniwersalny układ wolumenów. Skopiowany folder początkowo nadal znajduje się na tym samym VPS; przenieś go i zabezpiecz poza serwerem. Jeśli istnieją workery kolejki lub inne procesy zapisujące, również je wycisz i postępuj zgodnie z faktycznym projektem wdrożenia. Aktualne wytyczne n8n dotyczące pełnego backupu opisują wymóg spójności SQLite.</p><p><strong>Przywracanie domyślnego folderu SQLite na czysty cel:</strong> najpierw zatrzymaj usługę n8n i wszystkie procesy zapisujące do bazy. Gdy istnieje zgodny kontener usługi n8n i jego wolumen docelowy, skopiuj zapisane <code>.n8n</code> dane <em>z powrotem</em> do tego samego trwałego katalogu. Operacja nadpisuje pliki docelowe, więc nie uruchamiaj jej na instancji z danymi, które musisz zachować:</p>
 
-<pre><code># Run only on the intended CLEAN recovery instance
+<pre><code># Uruchamiaj tylko na przeznaczonej do tego CZYSTEJ instancji odzyskiwania
 docker compose stop n8n
 docker compose cp ./n8n-user-folder-backup/. n8n:/home/node/.n8n/
-# Verify ownership and permissions for the n8n container user BEFORE the next command
-# Start only after restored files are readable/writable by n8n
+# PRZED kolejnym poleceniem sprawdź właściciela i uprawnienia dla użytkownika kontenera n8n
+# Uruchom dopiero, gdy przywrócone pliki są czytelne i zapisywalne przez n8n
 docker compose start n8n
 # Check logs, restored credentials and workflow triggers</code></pre>
 
@@ -205,8 +205,8 @@ docker compose start n8n
 
 <p><strong>Przykład odzyskiwania PostgreSQL po awarii:</strong> na <em>oddzielnym, czystym środowisku odtwarzania</em> które ma już poprawną rolę bazy i pustą <code>n8n</code> bazę, uruchom <em>tylko</em> PostgreSQL. <strong>Przed importem poczekaj, aż będzie gotowe:</strong>  <code>docker compose up -d</code> może zakończyć się, gdy PostgreSQL nadal się inicjalizuje, przez co kolejne <code>pg_restore</code> może się nie udać. Przykład używa <code>--wait</code> w nowoczesnej instalacji Compose i niezależnie sprawdza <code>pg_isready</code>. Skonfiguruj odpowiedni healthcheck PostgreSQL dla niezawodnego oczekiwania albo jawnie potwierdź gotowość przed przejściem dalej. Nie kieruj tego polecenia na zapełnioną bazę produkcyjną i nie uruchamiaj n8n przed przywróceniem bazy oraz pasującego <code>.n8n</code> klucza/danych.</p>
 
-<pre><code># RESTORE ONLY TO A FRESH, EMPTY TARGET DATABASE
-# Adapt Postgres Compose service, database and user names
+<pre><code># PRZYWRACAJ TYLKO DO ŚWIEŻEJ, PUSTEJ BAZY DOCELOWEJ
+# Dostosuj nazwy usługi Postgres Compose, bazy i użytkownika
 docker compose up -d --wait postgres
 docker compose exec -T postgres pg_isready -U n8n -d n8n
 docker compose exec -T postgres pg_restore --exit-on-error --no-owner --no-acl -U n8n -d n8n &lt; n8n-postgres.dump</code></pre>
@@ -233,11 +233,11 @@ docker compose exec -T postgres pg_restore --exit-on-error --no-owner --no-acl -
 
 <p><strong>n8n 2.x: backup wersji roboczej a opublikowanej:</strong> zwykły <code>--backup</code> eksport workflow zapisuje aktualne wersje robocze; mogą różnić się od wersji opublikowanych w produkcji. Aby zachować rzeczywiście opublikowaną wersję konkretnego workflow, wyeksportuj ją oddzielnie za pomocą <code>docker compose exec -T n8n n8n export:workflow --id=WORKFLOW_ID --published --output=/home/node/.n8n/backups/published-workflow.json</code>, po upewnieniu się, że folder wyjściowy istnieje i jest zapisywalny. CLI może również wyeksportować wersję historyczną przy użyciu <code>--version=VERSION_ID</code>. Przechowuj te kopie poza serwerem razem z pełnym backupem; nie zakładaj, że JSON wersji roboczej odzwierciedla opublikowany stan produkcyjny.</p>
 
-<pre><code># Execute from your Docker Compose project; the n8n service must exist
-# Keep workflow and credential backups in DIFFERENT folders
+<pre><code># Uruchom z projektu Docker Compose; usługa n8n musi istnieć
+# Przechowuj backupy workflow i credentials w ODDZIELNYCH folderach
 docker compose exec -T n8n n8n export:workflow --backup --output=/home/node/.n8n/backups/workflows/
 docker compose exec -T n8n n8n export:credentials --backup --output=/home/node/.n8n/backups/credentials/
-# Copy the saved export directories OUT of the container to the host
+# Skopiuj zapisane katalogi eksportu Z kontenera na hosta
 mkdir -p ~/n8n-recovery
 docker compose cp n8n:/home/node/.n8n/backups ~/n8n-recovery/cli</code></pre>
 
@@ -245,14 +245,14 @@ docker compose cp n8n:/home/node/.n8n/backups ~/n8n-recovery/cli</code></pre>
 
 <p><strong>Przykład importu zbiorczego:</strong> na czystym celu zakończ konfigurację ownera, podaj oryginalny klucz szyfrowania i upewnij się, że zapisane pliki backupu są dostępne na tym VPS do odzyskiwania. Poniższe polecenia tworzą folder docelowy i kopiują <code>workflows/</code> oraz <code>credentials/</code> podfoldery z hosta do kontenera n8n; dostosuj ścieżki, jeśli układ wolumenów Docker jest inny:</p>
 
-<pre><code># Run only on the intended CLEAN recovery instance
+<pre><code># Uruchamiaj tylko na przeznaczonej do tego CZYSTEJ instancji odzyskiwania
 docker compose exec -T n8n mkdir -p /home/node/.n8n/backups
 docker compose cp ~/n8n-recovery/cli/. n8n:/home/node/.n8n/backups/</code></pre>
 
 <p>Sprawdź właściciela plików i dostęp użytkownika kontenera n8n. Nie importuj na zapełnioną instancję produkcyjną bez zweryfikowanego rollbacku: ID workflow i credentials mogą nadpisać istniejące wpisy. Następnie uruchom:</p>
 
-<pre><code># After fresh-instance owner setup AND providing the correct key
-# Copy saved cli/ contents back under the target n8n service's .n8n/backups/
+<pre><code># Po skonfigurowaniu ownera świeżej instancji ORAZ podaniu poprawnego klucza
+# Skopiuj zapisane dane cli/ z powrotem do .n8n/backups/ docelowej usługi n8n
 docker compose exec -T n8n n8n import:workflow --separate --input=/home/node/.n8n/backups/workflows/
 docker compose exec -T n8n n8n import:credentials --separate --input=/home/node/.n8n/backups/credentials/</code></pre>
 
