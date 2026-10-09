@@ -25,3 +25,7 @@
 @media(max-width:560px){.fr-home main>.hero,.fr-home main>.section,.fr-home main>.split{width:calc(100% - 20px);margin-left:auto;margin-right:auto}.fr-home main>.section,.fr-home main>.split,.fr-home main>.section.dark{padding-left:20px;padding-right:20px}}
 /* CSS fallback for language dropdowns on static pages without a click handler. */
 .lang-switch:not(:has(> button[aria-expanded])):focus-within .lang-menu{display:grid}
+
+/* Japanese technical guides: keep long commands inside horizontally scrollable code blocks on narrow screens. */
+html[lang="ja"] pre{max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+html[lang="ja"] pre>code{white-space:pre}
