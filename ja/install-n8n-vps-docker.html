@@ -2,7 +2,7 @@
 
 <html lang="ja"><head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>VPS に n8n をインストールする</title>
+<title>VPSにn8nをインストールする方法</title>
 <meta content="Docker Compose、PostgreSQL、永続ストレージ、HTTPS、リバース プロキシ、および正しい Webhook 構成を備えた VPS に n8n をインストールします。" name="description"/>
 <meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" rel="canonical"/>
 <link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
@@ -21,7 +21,7 @@
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
 <link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
-<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="VPS に n8n をインストールする" property="og:title"/><meta content="Docker Compose、PostgreSQL、永続ストレージ、HTTPS、リバース プロキシ、Webhook 構成を使用して n8n をインストールします。" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="VPS に n8n をインストールする" name="twitter:title"/><meta content="Docker Compose、PostgreSQL、永続ストレージ、HTTPS、リバース プロキシ、Webhook 構成を使用して n8n をインストールします。" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://agurkin2021-gif.github.io/vps-for-n8n/ja/"},{"@type":"ListItem","position":2,"name":"VPS に n8n をインストールする","item":"https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="VPSにn8nをインストールする方法" property="og:title"/><meta content="Docker Compose、PostgreSQL、永続ストレージ、HTTPS、リバース プロキシ、Webhook 構成を使用して n8n をインストールします。" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="VPSにn8nをインストールする方法" name="twitter:title"/><meta content="Docker Compose、PostgreSQL、永続ストレージ、HTTPS、リバース プロキシ、Webhook 構成を使用して n8n をインストールします。" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://agurkin2021-gif.github.io/vps-for-n8n/ja/"},{"@type":"ListItem","position":2,"name":"VPS に n8n をインストールする","item":"https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
 .install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
 .install-n8n-hero-copy{min-width:0}
 .install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
@@ -35,7 +35,7 @@
 @media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
 </style></head><body>
 <header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">日本語 ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="es/instalar-n8n-vps-docker.html">Español</a><a href="/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="pt-br/instalar-n8n-vps-docker.html">Português</a><a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="hi/install-n8n-vps-docker.html">हिन्दी</a><a href="/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" aria-current="page">日本語</a><a href="pa/install-n8n-vps-docker.html">ਪੰਜਾਬੀ</a><a href="mr/install-n8n-vps-docker.html">मराठी</a><a href="te/install-n8n-vps-docker.html">తెలుగు</a><a href="ta/install-n8n-vps-docker.html">தமிழ்</a><a href="tr/n8n-vps-docker-kurulumu.html">Türkçe</a><a href="vi/cai-n8n-tren-vps.html">Tiếng Việt</a><a href="ko/install-n8n-vps-docker.html">한국어</a><a href="fr/installer-n8n-vps-docker.html">Français</a><a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></div></div></header><main>
-<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">DOCKER INSTALLATION</p><h1>VPS に n8n をインストールする</h1><p class="lead">Docker Compose と PostgreSQL を使用して n8n を VPS にインストールします。運用環境のデプロイメントには、永続的なアプリケーションとデータベースのデータ、安定したデータも必要です。 <code>N8N_ENCRYPTION_KEY</code>、パブリック ホスト名、HTTPS、および正しい Webhook 構成。実稼働ワークフローをアクティブ化する前に、これらの部分を確認してください。</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">n8n 用の VPS を選択する</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">パートナーリンク: 購入から手数料を得る場合があります。</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="n8n をインストールするための VPS を選択する"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">Dockerによるインストール</p><h1>VPSにn8nをインストールする</h1><p class="lead">Docker Compose と PostgreSQL を使用して n8n を VPS にインストールします。運用環境のデプロイメントには、永続的なアプリケーションとデータベースのデータ、安定したデータも必要です。 <code>N8N_ENCRYPTION_KEY</code>、パブリック ホスト名、HTTPS、および正しい Webhook 構成。実稼働ワークフローをアクティブ化する前に、これらの部分を確認してください。</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">n8n 用の VPS を選択する</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">パートナーリンク: 購入から手数料を得る場合があります。</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="n8n をインストールするための VPS を選択する"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
 <defs>
 <linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
 <linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
@@ -82,20 +82,20 @@
 </g>
 <g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
 </svg></a></div></section>
-<section class="section dark"><p class="eyebrow">PREREQUISITES</p><h2>n8nを起動する前にVPSを準備する</h2><div class="cards">
+<section class="section dark"><p class="eyebrow">事前準備</p><h2>n8nを起動する前にVPSを準備する</h2><div class="cards">
 <article><h3>Linux VPS</h3><p>n8n、PostgreSQL、Docker、およびリバース プロキシ向けにサイズを維持した Linux サーバーを使用します。</p></article>
 <article><h3>DNS</h3><p>TLS 証明書を発行して Webhook URL を公開する前に、VPS でドメインまたはサブドメインを指定します。</p></article>
 <article><h3>Docker Compose</h3><p>オペレーティング システムでサポートされているパッケージを使用して、Docker エンジンと Compose プラグインをインストールします。</p></article>
 <article><h3>ファイアウォール</h3><p>必要な管理ポートと Web ポートのみを公開します。 PostgreSQL と内部アプリケーション サービスを非公開に保ちます。</p></article></div>
 <p><strong>すでに Web サイトをホストしている VPS にインストールしますか?</strong> CPU、RAM、ストレージが許可する場合は、制御するサーバーに n8n を追加できます。ただし、Nginx、Apache、Caddy、または別のリバース プロキシがすでにポート 80/443 を所有している場合は、次のようにします。 <strong>そうではない</strong> 以下のサンプル Caddy コンテナを変更せずに開始します。ポートが競合します。代わりに、適切なプライベート ネットワークを使用して既存のリバース プロキシ経由で新しい n8n サブドメインをルーティングするか、Compose の正確な例にクリーンな VPS を使用します。他のサイトとその TLS 構成を保持します。この例では、ポート 80/443 が使用可能であることを前提としています。</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">n8n 用の Linux VPS を選択する</a></div><p id="affiliate-note"><small>パートナーリンク: 購入から手数料を得る場合があります。</small></p></section>
-<section class="section"><p class="eyebrow">DEPLOYMENT STACK</p><h2>構成するコンポーネント</h2><div class="requirements">
+<section class="section"><p class="eyebrow">導入する構成</p><h2>構成するコンポーネント</h2><div class="requirements">
 <div><b>リバースプロキシ</b><span>パブリック HTTPS トラフィックを受信し、それを n8n に転送します。</span></div>
 <div><b>n8n</b><span>永続的なアプリケーション データを使用してエディター、トリガー、ワークフローを実行します。</span></div>
 <div><b>PostgreSQL</b><span>運用環境のワークフロー、認証情報、および実行状態を保存します。</span></div>
 <div><b>永続ボリューム</b><span>アプリケーションとデータベースの状態を使い捨てコンテナの外に保持します。</span></div>
 <div><b>パブリックDNS</b><span>エディターと Webhook プロバイダーによって使用されるホスト名を VPS にマッピングします。</span></div>
 </div></section>
-<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">コピーアンド ADAPT INSTALLATION</p><h2>Docker Compose を使用して VPS に n8n をインストールする</h2>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">コピーして調整するインストール手順</p><h2>Docker Compose を使用して VPS に n8n をインストールする</h2>
 <p>この例を使用して、n8n デプロイメントを構築します。 <strong>自己管理型 Linux VPS</strong>。 n8n のインストールと保守は自分で行います。当社のパートナーを通じてサーバーを選択した場合、プリインストールされた n8n インスタンスは含まれません。この例では、n8n、PostgreSQL、外部タスク ランナー、および Caddy HTTPS をプライベート Compose ネットワークで組み合わせています。設定テンプレートですので、 <strong>ライブテストされた展開を主張するものではありません</strong>.</p>
 <p><strong>代わりに最速の新規インストールをご希望ですか?</strong> n8n は、公式の 1 行の Docker セットアップも提供します。スクリプトをダウンロードして確認できます。 <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> 走る前に <code>sh get-n8n.sh</code>。このオプションは、ローカル URL で SQLite を使用して初期インスタンスを起動し、n8n Assistant サンドボックス サービスを含みます。それはです <strong>同じではない</strong> この public-HTTPS の PostgreSQL ベースの VPS デプロイメントとして。公式の完全なサンドボックス スタックには、リーン n8n インストールよりも多くの RAM と CPU が必要です (Compose ガイドでは、少なくとも 4 GB RAM / 2 vCPU と指定されています)。インターネットに接続された実稼働 VPS の場合は、以下の手動で構成されたスタックを続行します。</p>
 <h3>1。 Docker、DNS、アクセスの準備</h3>
@@ -251,49 +251,49 @@ docker compose ps</code></pre>
 <p>固定されたものを変更する <code>N8N_VERSION</code> リリースノートを読んだ後にのみ。 n8n イメージとランナー イメージは両方とも一緒に進む必要があります。 <strong>走らないでください <code>docker compose down -v</code></strong> 定期メンテナンス中に名前付きデータ ボリュームが削除されるためです。 PostgreSQL のメジャー バージョンの変更には、データベースのアップグレードまたはダンプ/復元計画が必要です。 Postgres 18 イメージを別のメジャー タグに置き換えることは、自動移行ではありません。</p>
 <p>信頼できる参考文献: n8n Docker Compose ガイド、n8n リバースプロキシ/Webhook 構成、および公式 PostgreSQL 導入ノート。インフラストラクチャ ベンチマークやプロバイダー固有のプリインストール機能は想定されていません。</p>
 </section>
-<section class="section dark"><p class="eyebrow">CONFIGURATION</p><h2>シークレットとパブリック URL を意図的に設定する</h2><div class="cards">
+<section class="section dark"><p class="eyebrow">設定</p><h2>シークレットとパブリック URL を意図的に設定する</h2><div class="cards">
 <article><h3>暗号化キー</h3><p>本番認証情報を保存する前に、強力な n8n 暗号化キーを設定して保存します。回復後も同じキーが必要です。</p></article>
 <article><h3>PostgreSQL 認証情報</h3><p>専用のデータベース資格情報を使用し、パスワードをパブリック ソース管理の外に保管します。</p></article>
 <article><h3>パブリックホスト名</h3><p>内部コンテナ アドレスではなく、実際の外部ホスト名と HTTPS オリジンを構成します。</p></article>
 <article><h3>Webhook URL</h3><p>セット <code>N8N_WEBHOOK_URL</code> 公的にアクセス可能なHTTPS ベース URL に設定し、 <code>N8N_PROXY_HOPS=1</code> 信頼できるリバース プロキシが 1 つある場合。 <code>WEBHOOK_URL</code> n8n 2.35.0 以降では非推奨のエイリアスです。古いチュートリアルからコピーすることは避けてください。</p></article>
 </div></section>
-<section class="section"><p class="eyebrow">PERSISTENCE</p><h2>n8n と PostgreSQL を別々に永続化する</h2><div class="cards">
+<section class="section"><p class="eyebrow">データの永続化</p><h2>n8n と PostgreSQL を別々に永続化する</h2><div class="cards">
 <article><h3>n8nデータ</h3><p>n8n データ ディレクトリの永続ストレージをマウントして、重要なインスタンスの状態がコンテナーの再作成に残るようにします。</p></article>
 <article><h3>PostgreSQL データ</h3><p>データベース ディレクトリを PostgreSQL コンテナから独立して永続化します。</p></article>
 <article><h3>ファイル権限</h3><p>ホストストレージを不必要に許容せずに、マウントされたパスを対象のコンテナユーザーが書き込みできるようにします。</p></article>
 <article><h3>ワークフローファイル</h3><p>実稼働ワークフローが依存するマウントされたファイルまたはバイナリ データ ストレージを永続化します。</p></article></div></section>
-<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>n8n をプライベート データベース サービスに接続する</h2><div class="requirements">
+<section class="section dark"><p class="eyebrow">PostgreSQL</p><h2>n8n をプライベート データベース サービスに接続する</h2><div class="requirements">
 <div><b>データベースの種類</b><span>誤って SQLite にフォールバックするのではなく、PostgreSQL 用に n8n を構成します。</span></div>
 <div><b>ホスト</b><span>プライベート Docker ネットワーク上で PostgreSQL サービス名を使用します。</span></div>
 <div><b>資格情報</b><span>目的のデータベース、アプリケーション ユーザー、パスワードを一致させます。</span></div>
 <div><b>準備完了</b><span>n8n が正常に初期化されることを期待する前に、PostgreSQL の準備が整うまで待ちます。</span></div>
 <div><b>ネットワーク</b><span>コンテナー間のデータベース アクセスには、パブリック PostgreSQL ポートは必要ありません。</span></div>
 </div></section>
-<section class="section"><p class="eyebrow">HTTPS &amp; PROXY</p><h2>パブリック n8n URL を HTTPS の後ろに置きます</h2><div class="cards">
+<section class="section"><p class="eyebrow">HTTPSとリバースプロキシ</p><h2>パブリック n8n URL を HTTPS の後ろに置きます</h2><div class="cards">
 <article><h3>リバースプロキシ</h3><p>Nginx、Caddy、または Traefik をパブリック エントリ ポイントとして使用し、トラフィックをプライベート n8n サービスに転送します。</p></article>
 <article><h3>TLS</h3><p>パブリック ホスト名に対して有効な証明書を発行し、HTTP トラフィックを HTTPS にリダイレクトします。</p></article>
 <article><h3>転送されたヘッダー</h3><p>n8n が必要とするホスト、プロトコル、クライアント情報を渡し、予想されるプロキシ ホップ カウントを構成します。</p></article>
 <article><h3>Webhook の検証</h3><p>VPS の外部から Webhook をトリガーし、n8n が外部から到達可能な HTTPS URL を生成することを確認します。</p></article></div>
 <p><a href="n8n-vps-security.html">完全な運用セキュリティ チェックリスト</a></p></section>
-<section class="section dark"><p class="eyebrow">FIRST START</p><h2>運用環境で使用する前に永続性を検証する</h2><div class="requirements">
+<section class="section dark"><p class="eyebrow">初回起動</p><h2>運用環境で使用する前に永続性を検証する</h2><div class="requirements">
 <div><b>コンテナ</b><span>n8n、PostgreSQL、およびプロキシが起動および再起動後に正常な状態を維持していることを確認します。</span></div>
 <div><b>編集者</b><span>パブリック HTTPS ホスト名を開き、認証が正しく機能することを確認します。</span></div>
 <div><b>データベース</b><span>テスト状態を作成し、コンテナーを再作成し、状態が持続することを確認します。</span></div>
 <div><b>Webhook</b><span>外部 Webhook テストを実行して、DNS、TLS、プロキシ、およびパブリック コールバック URL を検証します。</span></div>
 <div><b>資格情報</b><span>n8n の再起動後も、暗号化された認証情報が引き続き使用できることを確認します。</span></div>
 </div></section>
-<section class="section"><p class="eyebrow">UPDATES</p><h2>コンテナをバックアップとして扱わずに Docker デプロイメントをアップグレードする</h2><div class="cards">
+<section class="section"><p class="eyebrow">アップデート</p><h2>コンテナをバックアップとして扱わずに Docker デプロイメントをアップグレードする</h2><div class="cards">
 <article><h3>リリースノートを読む</h3><p>アップグレードする前に、特にバージョンをスキップする場合は、n8n の重要な変更を確認してください。</p></article>
 <article><h3>まずバックアップしてください</h3><p>本番イメージを変更する前に、回復可能なデータベースとインスタンスのバックアップを作成してください。</p></article>
 <article><h3>安全に再作成する</h3><p>選択したイメージをプルし、永続ボリュームを維持しながらアプリケーション コンテナを再作成します。</p></article>
 <article><h3>アップグレード後に確認する</h3><p>導入が正常であると宣言する前に、ログ、編集者アクセス、資格情報、および代表的なワークフローを確認してください。</p></article></div>
 <p><a href="n8n-backup-restore.html">バックアップと復元ガイド</a></p></section>
-<section class="section dark"><p class="eyebrow">COMMON FAILURES</p><h2>n8n Docker インストールがローカルでは機能するのに本番環境では失敗する理由</h2><div class="cards">
+<section class="section dark"><p class="eyebrow">よくある問題</p><h2>n8n Docker インストールがローカルでは機能するのに本番環境では失敗する理由</h2><div class="cards">
 <article><h3>間違った Webhook URL</h3><p>コールバックは、パブリック HTTPS オリジンではなく、ローカルホスト、HTTP、または内部ホスト名を指します。</p></article>
 <article><h3>持続性が欠けている</h3><p>コンテナーが再作成されると、アプリケーションまたはデータベースの状態が失われます。</p></article>
 <article><h3>暗号化キーを紛失した</h3><p>新しいインスタンスでは別のキーが使用されるため、保存された認証情報は再構築後に使用できなくなります。</p></article>
 <article><h3>パブリックデータベースポート</h3><p>PostgreSQL は、n8n のみが到達する必要があるにもかかわらず、不必要に公開されます。</p></article></div></section>
-<section class="section dark"><p class="eyebrow">POST-DEPLOY VERIFICATION</p><h2>実際のワークフローを接続する前に健全性を確認する</h2><div class="cards"><article><h3>コンテナの状態を確認する</h3><p>走る <code>docker compose ps</code> デプロイメントを正常なものとして扱う前に、アプリケーションとデータベースのサービスが期待どおりに実行されていることを確認します。</p></article><article><h3>n8n ヘルスエンドポイントを確認する</h3><p>上記の Compose の例では、ポート 5678 はホスト上で公開されていません。次のコマンドでパブリック エンドポイントを確認します。 <code>curl -fsS https://n8n.example.com/healthz</code> ホスト名を変更した後、使用します <code>docker compose ps</code> HTTPS またはデータベースの準備ができていない場合は、サービス ログも追加します。</p></article><article><h3>アプリケーションのバージョンを固定する</h3><p>未レビューのフローティング イメージの更新をメンテナンス戦略として扱わないでください。実行している n8n バージョンを記録し、リリース ノートを読み、変更する前にバックアップしてください。</p></article><article><h3>PostgreSQL のメジャー バージョンを適切な場所に追加しないでください</h3><p>Postgres のメジャー イメージ タグのみを変更すると、既存のデータ ディレクトリと互換性がなくなる可能性があります。コンテナーの再作成によってメジャー バージョンの移行が実行されると想定するのではなく、バックアップしてデータベースのアップグレード手順に従います。</p></article></div><p>現在の公式 Docker Compose ガイド</p></section><section class="section"><p class="eyebrow">よくある質問</p><h2>Docker を使用した n8n のインストール: よくある質問</h2><div class="faq">
+<section class="section dark"><p class="eyebrow">デプロイ後の確認</p><h2>実際のワークフローを接続する前に健全性を確認する</h2><div class="cards"><article><h3>コンテナの状態を確認する</h3><p>走る <code>docker compose ps</code> デプロイメントを正常なものとして扱う前に、アプリケーションとデータベースのサービスが期待どおりに実行されていることを確認します。</p></article><article><h3>n8n ヘルスエンドポイントを確認する</h3><p>上記の Compose の例では、ポート 5678 はホスト上で公開されていません。次のコマンドでパブリック エンドポイントを確認します。 <code>curl -fsS https://n8n.example.com/healthz</code> ホスト名を変更した後、使用します <code>docker compose ps</code> HTTPS またはデータベースの準備ができていない場合は、サービス ログも追加します。</p></article><article><h3>アプリケーションのバージョンを固定する</h3><p>未レビューのフローティング イメージの更新をメンテナンス戦略として扱わないでください。実行している n8n バージョンを記録し、リリース ノートを読み、変更する前にバックアップしてください。</p></article><article><h3>PostgreSQL のメジャー バージョンを適切な場所に追加しないでください</h3><p>Postgres のメジャー イメージ タグのみを変更すると、既存のデータ ディレクトリと互換性がなくなる可能性があります。コンテナーの再作成によってメジャー バージョンの移行が実行されると想定するのではなく、バックアップしてデータベースのアップグレード手順に従います。</p></article></div><p>現在の公式 Docker Compose ガイド</p></section><section class="section"><p class="eyebrow">よくある質問</p><h2>Docker を使用した n8n のインストール: よくある質問</h2><div class="faq">
 <details><summary>Docker を使用する場合、n8n には PostgreSQL が必要ですか?</summary><p>Docker は PostgreSQL を必要とせず、小規模なデプロイメントでは SQLite を使用できます。実稼働指向の VPS 導入の場合、PostgreSQL はより強力なデータベース基盤を提供し、その後のキューモード スケーリングをサポートします。</p></details>
 <details><summary>PostgreSQL にデータが保存されている場合、なぜ永続的な n8n ボリュームを保持するのでしょうか?</summary><p>永続的な n8n ディレクトリには、重要なインスタンスの状態と構成が含まれる場合があります。データベースが唯一の回復資産であると想定するのではなく、展開設計に従って保存してください。</p></details>
 <details><summary>Webhook に localhost が表示されるのはなぜですか?</summary><p>内部コンテナのアドレスはパブリック オリジンとは異なります。外部ホスト名、プロトコル、Webhook URL を構成し、リバース プロキシが必要なヘッダーを確実に渡すようにします。</p></details>
