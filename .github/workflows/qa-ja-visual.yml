@@ -71,7 +71,12 @@ jobs:
                     if hmenu.count()!=1:record(path,width,"header language switch missing",hmenu.count())
                     dims=page.evaluate("""() => ({inner:window.innerWidth,html:document.documentElement.scrollWidth,body:document.body.scrollWidth})""")
                     over=max(dims["html"],dims["body"])-dims["inner"]
-                    if over>2: record(path,width,"Horizontal page overflow",{"excessPx":over,**dims})
+                    if over>2:
+                      offenders=page.evaluate("""() => Array.from(document.body.querySelectorAll('*')).map((e,i)=>{
+                        const r=e.getBoundingClientRect(),st=getComputedStyle(e);
+                        return {i,tag:e.tagName,cls:String(e.className||'').slice(0,85),right:Math.round(r.right),width:Math.round(r.width),scroll:e.scrollWidth,overflowX:st.overflowX,whiteSpace:st.whiteSpace,text:(e.textContent||'').trim().slice(0,65)};
+                      }).filter(x=>x.right>window.innerWidth+8 && x.width>0).sort((a,b)=>b.right-a.right).slice(0,22)""")
+                      record(path,width,"Horizontal page overflow",{"excessPx":over,**dims,"offenders":offenders})
                     if path=="ja/" and width==390:
                       page.screenshot(path=str(out/"japanese_home_mobile_top.png"))
                     if path=="ja/" and width==1280:
