@@ -1,0 +1,28 @@
+name: Sequential Punjabi translation
+on:
+  push:
+    branches: [pa-complete-sitemap-20261009]
+    paths: [.github/workflows/pa-translation.yml]
+permissions:
+  contents: write
+jobs:
+  page-one:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: pa-complete-sitemap-20261009
+      - name: Translate and verify English homepage as Punjabi
+        shell: bash
+        run: |
+          python -m py_compile _pa_translate_full.py
+          python -u _pa_translate_full.py 0
+      - name: Save verified page 1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pa/index.html .github/pa-translation-cache.json
+          git commit -m "Translate verify save Punjabi page 1 of 11"
+          git push origin HEAD:pa-complete-sitemap-20261009
