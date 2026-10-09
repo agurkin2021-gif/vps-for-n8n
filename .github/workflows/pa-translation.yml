@@ -1,4 +1,4 @@
-name: Sequential Punjabi translation (offline)
+name: Sequential Punjabi translation (offline, resumable)
 on:
   push:
     branches: [pa-complete-sitemap-20261009]
@@ -34,3 +34,17 @@ jobs:
           git add pa/index.html .github/pa-translation-cache.json
           git commit -m "Translate verify save Punjabi page 1 of 11"
           git push origin HEAD:pa-complete-sitemap-20261009
+
+      - name: Preserve verified translation cache on failure
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/pa-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/pa-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Punjabi text slots after translation error"
+              git push origin HEAD:pa-complete-sitemap-20261009
+            fi
+          fi
