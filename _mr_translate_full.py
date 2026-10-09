@@ -44,7 +44,7 @@ EXACT = {
     "View requirements": "आवश्यक संसाधने पाहा",
 }
 MASK_PATTERN = re.compile(
-    r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo)))?'
+    r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo))?'
     r'|https?://[^\s<>"\']+'
     r'|\b(?:n8nVPS|VDSina|Hostinger|OVHcloud|Bluehost|DreamHost|Contabo|PostgreSQL|SQLite|Docker|GitHub|Cloudflare|Redis|Ubuntu|Linux|Caddy|ConoHa|XServer|n8n|SaaS)\b'
     r'|\b(?:N8N_[A-Z0-9_]+|EXECUTIONS_[A-Z0-9_]+|QUEUE_[A-Z0-9_]+|DB_[A-Z0-9_]+|POSTGRES_[A-Z0-9_]+|WEBHOOK_[A-Z0-9_]+)\b'
