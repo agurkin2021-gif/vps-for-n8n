@@ -92,6 +92,10 @@ jobs:
                       btn.click(timeout=12000)
                       menu=footer.locator(".lang-menu")
                       if not menu.is_visible():record(path,width,"Footer dropdown does not open")
+                      else:
+                        menu_box=menu.bounding_box()
+                        if menu_box and (menu_box["x"] < -1 or menu_box["x"]+menu_box["width"] > width+1):
+                          record(path,width,"Footer dropdown clipped outside viewport",menu_box)
                       current=menu.locator("a",has_text="日本語")
                       if current.count()<1:record(path,width,"Japanese menu entry missing")
                       en=menu.locator("a",has_text="English")
