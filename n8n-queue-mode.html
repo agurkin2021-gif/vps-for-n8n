@@ -7,6 +7,36 @@
 <section class="section dark"><p class="eyebrow">CORE REQUIREMENTS</p><h2>What every queue-mode deployment needs</h2><div class="cards"><article><h3>Redis</h3><p>All main and worker processes need reliable access to the Redis service used for queue coordination.</p></article><article><h3>PostgreSQL</h3><p>Main and workers must share the database. Queue mode is a distributed architecture and should not be designed around SQLite.</p></article><article><h3>Matching n8n configuration</h3><p>Main and workers must run queue mode and share the configuration needed to access Redis, PostgreSQL and encrypted credentials.</p></article><article><h3>Worker capacity</h3><p>Workers need enough CPU and RAM for the workflows they execute. Adding processes does not remove the resource cost of each execution.</p></article></div>
 <p><strong>Enable queue mode on an existing self-hosted stack.</strong> First confirm that the n8n main service and every worker can reach the same PostgreSQL database and Redis over a private network. Set <code>EXECUTIONS_MODE=queue</code> on both main and workers, and supply <code>QUEUE_BULL_REDIS_HOST=redis</code> and <code>QUEUE_BULL_REDIS_PORT=6379</code> when <code>redis</code> is your actual Compose service name. Use <code>DB_TYPE=postgresdb</code>, <code>DB_POSTGRESDB_HOST=postgres</code> and matching <code>DB_POSTGRESDB_DATABASE</code>, <code>DB_POSTGRESDB_USER</code> and <code>DB_POSTGRESDB_PASSWORD</code> on every process; replace the example service names with yours. Provide the exact existing <code>N8N_ENCRYPTION_KEY</code> to all of them. Never publish Redis or PostgreSQL host ports merely to connect containers on the same Compose network.</p>
 <p><strong>Launch an executor, not a second editor.</strong> Add an n8n worker service using the same pinned n8n image version and shared settings as main, but run it with the <code>worker</code> command. If you named that service <code>n8n-worker</code>, start it with <code>docker compose up -d n8n-worker</code>. After confirming actual execution on one worker, you can use <code>docker compose up -d --scale n8n-worker=2</code> to start a second worker from that service. These are additions to an <em>existing correctly configured</em> Compose stack, not a standalone installation file; keep your existing persistent volumes, HTTPS proxy, secrets and backups.</p>
+
+<p><strong>Queue-mode Compose fragment for an existing stack.</strong> Merge the example below into your current <code>compose.yaml</code>; it is <em>not</em> a complete stand-alone deployment. It assumes you already have persistent, private <code>postgres</code> and <code>n8n</code> services, an existing <code>N8N_VERSION</code> pin in your environment and your own protected <code>POSTGRES_PASSWORD</code> and original <code>N8N_ENCRYPTION_KEY</code>. Match its names, volumes, database and n8n version to the existing project. Add the queue-mode Redis settings and <code>EXECUTIONS_MODE=queue</code> to the existing main service too, as described above.</p>
+<pre><code># Merge with the existing services; do not replace your full Compose file.
+services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+  n8n-worker:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    command: worker --concurrency=5
+    restart: unless-stopped
+    environment:
+      EXECUTIONS_MODE: queue
+      QUEUE_BULL_REDIS_HOST: redis
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+    depends_on:
+      - redis
+      - postgres
+volumes:
+  redis_data:
+</code></pre>
+<p>No host port is published for Redis or the worker in this fragment. Redis append-only persistence is an extra recovery layer, <em>not</em> a substitute for off-server backups. Keep the existing HTTPS and authentication configuration unchanged. For Code nodes requiring external task runners, configure the runner processes for your worker deployment separately; queue mode itself does not replace task runners.</p>
 <p><strong>Converting an existing SQLite instance?</strong> Do not simply change <code>DB_TYPE</code> and start against an empty PostgreSQL database: doing so does not migrate the old workflows and credentials. Before any cutover, back up the source database, persistent <code>.n8n</code> directory and original encryption key; use a supported n8n export/import or migration procedure, then verify workflows and encrypted credentials on a separate target. Keep the original files for rollback and use the Backup &amp; Restore guide linked below for recovery preparation. Never delete <code>database.sqlite</code> as a shortcut.</p>
 </section>
 <section class="section"><p class="eyebrow">WORKER CONCURRENCY</p><h2>Workers scale both by count and by jobs per worker</h2><p class="intro">Each worker can process multiple jobs concurrently. n8n's current default worker concurrency is 10 and its documentation recommends concurrency of 5 or higher. Very low concurrency combined with many workers can create unnecessary database connections and exhaust the database connection pool.</p><div class="cards"><article><h3>Increase concurrency when</h3><p>A worker has spare CPU and RAM and the workflows are mostly waiting on external services rather than saturating compute or memory.</p></article><article><h3>Add workers when</h3><p>One worker process becomes a bottleneck and the database, Redis and infrastructure have capacity for more parallel execution.</p></article><article><h3>Reduce concurrency when</h3><p>Individual workflows are memory-heavy or CPU-heavy and parallel jobs cause contention, OOM pressure or unstable execution times.</p></article><article><h3>Watch PostgreSQL</h3><p>More workers and more concurrency increase database activity. Scaling execution capacity without database capacity can move the bottleneck rather than remove it.</p></article></div>
