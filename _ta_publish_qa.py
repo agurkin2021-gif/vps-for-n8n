@@ -165,7 +165,7 @@ def transform(path,source):
         return source
     out=source
     if path.startswith("ta/") and ("ta/"+path.split("/",1)[1] in [b for _,b in PAIRS]):
-        out=re.sub(r'(<html\b[^>]*\blang=["\'])(?:ja|en)(["\'])',r'\1te\2',out,count=1,flags=re.I)
+        out=re.sub(r'(<html\b[^>]*\blang=["\'])(?:ja|en)(["\'])',r'\1ta\2',out,count=1,flags=re.I)
     out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
     if ("ta",category(path)) in REG and not re.search(r'<link\b[^>]*hreflang=["\']ta["\']',out,re.I):
@@ -214,7 +214,7 @@ def audit(changed):
             errors.append(pa+": FAQ detail count differs")
         if sum(1 for _ in re.finditer(r'<img\b',source,re.I))!=sum(1 for _ in re.finditer(r'<img\b',output,re.I)):
             errors.append(pa+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']te["\']',output,re.I):errors.append(pa+": html lang is not ta")
+        if not re.search(r'<html\b[^>]*\blang=["\']ta["\']',output,re.I):errors.append(pa+": html lang is not ta")
         if len(re.findall(r'<h1(?:\s|>)',output,re.I))!=1:errors.append(pa+": H1 count")
         if canonical(pa) not in output:errors.append(pa+": missing self-canonical")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(pa+": noindex")
