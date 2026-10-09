@@ -90,51 +90,31 @@ def mark_numbers(s: str):
 
 def restore_numbers(s: str, stored):
     for idx, token in enumerate(stored):
-        pat = r"§\s*" + str(idx) + r"\s*§"
+        pat = r"§\s*" + str(idx) + r"(?!\d)(?:\s*§)?"
         s, n = re.subn(pat, lambda _m: token, s)
         if n != 1:
             raise ValueError(f"Technical token {idx} disappeared or duplicated: {s[:150]!r}")
     return s
 
-def remote_translate(s: str) -> str:
-    global requests_made
-    query = urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"pa","dt":"t","q":s})
-    url = "https://translate.googleapis.com/translate_a/single?" + query
-    error=None
-    for attempt in range(6):
-        try:
-            req=urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0 (compatible; localization-audit/1.0)"})
-            with urllib.request.urlopen(req, timeout=35) as response:
-                obj=json.load(response)
-            requests_made += 1
-            text="".join(part[0] or "" for part in obj[0] if part and part[0] is not None)
-            if not text.strip():
-                raise ValueError("Empty Punjabi translation")
-            return text
-        except Exception as exc:
-            error=exc
-            print(f"translate_retry={attempt} detail={type(exc).__name__}: {str(exc)[:180]}", flush=True)
-            time.sleep(min(30, 2**attempt + 0.4))
-    raise RuntimeError("Translation service failed after retries") from error
-
 def translate_group(items: list[str]) -> list[str]:
+    # Translate independent HTML text slots in batches; never concatenate meanings.
+    from _pa_offline_runtime import translate_batch
+    global requests_made
     preps=[mark_numbers(x) for x in items]
-    joint=SEP.join(p for p,_ in preps)
     try:
-        if len(joint)>3800: raise ValueError("batch too long")
-        output=remote_translate(joint)
-        parts=output.split("§§§")
-        if len(parts)!=len(items):
-            raise ValueError(f"Segment marker count {len(parts)} vs {len(items)}")
-        translated=[restore_numbers(v.strip(), stored) for v,(_,stored) in zip(parts,preps)]
-    except Exception as e:
+        results=translate_batch([p for p,_ in preps])
+        translated=[restore_numbers(v.strip(), stored) for v,(_,stored) in zip(results,preps)]
+    except Exception as exc:
         if len(items)==1:
             raise
-        print(f"batch_fallback size={len(items)}: {e}",flush=True)
+        print("PUNJABI_BATCH_FALLBACK",len(items),str(exc)[:250],flush=True)
         translated=[]
-        for item in items:
-            p,nums=mark_numbers(item)
-            translated.append(restore_numbers(remote_translate(p).strip(),nums))
+        for raw in items:
+            masked,stored=mark_numbers(raw)
+            output=translate_batch([masked])[0].strip()
+            translated.append(restore_numbers(output,stored))
+    if len(translated)!=len(items):raise AssertionError("Translation missing a text slot")
+    requests_made+=len(items)
     return translated
 
 def translate_candidates(strings: set[str]):
