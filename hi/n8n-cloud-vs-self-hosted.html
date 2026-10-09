@@ -1,12 +1,5 @@
 <!DOCTYPE html>
-
-
-
-
-
-
-
-<html lang="hi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण</title><meta content="Cost, infrastructure control, maintenance, data location, scaling और technical responsibility के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" rel="canonical"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" hreflang="en" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/es/n8n-cloud-vs-autoalojado.html" hreflang="es" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/n8n-cloud-vs-self-hosted.html" hreflang="ru" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/n8n-cloud-vs-self-hosted.html" hreflang="pt-BR" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-cloud-vs-self-hosted.html" hreflang="de" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/" hreflang="hi" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html" hreflang="pl" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" hreflang="x-default" rel="alternate"/><meta content="website" property="og:type"/><meta content="n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण" property="og:title"/><meta content="Cost, infrastructure control, maintenance, data location और scaling के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण" name="twitter:title"/><meta content="Cost, infrastructure control, maintenance, data location और scaling के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"मुख्य पृष्ठ","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Cloud vs Self-Hosted","item":"https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html"}]}</script><link href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/" hreflang="bn" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/" hreflang="ja" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/" hreflang="pa" rel="alternate"/><link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-cloud-vs-self-hosted.html"/><link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/n8n-cloud-vs-self-host.html"/><link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-cloud-vs-self-hosted.html"><link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/n8n-cloud-vs-auto-heberge.html"><style id="cloud-vs-vps-styles">
+<html lang="hi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण</title><meta content="Cost, infrastructure control, maintenance, data location, scaling और technical responsibility के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-cloud-vs-self-hosted.html" rel="canonical"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-cloud-vs-self-hosted.html" hreflang="en" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/es/n8n-cloud-vs-autoalojado.html" hreflang="es" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/n8n-cloud-vs-self-hosted.html" hreflang="ru" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/n8n-cloud-vs-self-hosted.html" hreflang="pt-BR" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-cloud-vs-self-hosted.html" hreflang="de" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/" hreflang="hi" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html" hreflang="pl" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-cloud-vs-self-hosted.html" hreflang="x-default" rel="alternate"/><meta content="website" property="og:type"/><meta content="n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण" property="og:title"/><meta content="Cost, infrastructure control, maintenance, data location और scaling के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n Cloud vs Self-Hosted: लागत &amp; नियंत्रण" name="twitter:title"/><meta content="Cost, infrastructure control, maintenance, data location और scaling के आधार पर n8n Cloud और VPS पर self-hosted n8n compare करें।" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"मुख्य पृष्ठ","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n Cloud vs Self-Hosted","item":"https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html"}]}</script><link href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/" hreflang="bn" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/" hreflang="ja" rel="alternate"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/" hreflang="pa" rel="alternate"/><link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-cloud-vs-self-hosted.html"/><link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/n8n-cloud-vs-self-host.html"/><link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-cloud-vs-self-hosted.html"><link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/n8n-cloud-vs-auto-heberge.html"><style id="cloud-vs-vps-styles">
 .cloud-compare-page .side-comparison{width:100%;overflow-x:auto;border-radius:15px;border:1px solid #dfe4ec;background:#fff;margin:24px 0}
 .cloud-compare-page .side-comparison table{border-collapse:collapse;width:100%;min-width:710px;font-size:14px;line-height:1.5}
 .cloud-compare-page .side-comparison th,.cloud-compare-page .side-comparison td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid #e3e7ed}
@@ -35,380 +28,51 @@
 .cloud-compare-page .cloud-selfhost-hero-graphic .cloud-hero-ref-link svg{transition:transform .18s ease}
 .cloud-compare-page .cloud-selfhost-hero-graphic .cloud-hero-ref-link:hover svg,.cloud-compare-page .cloud-selfhost-hero-graphic .cloud-hero-ref-link:focus-visible svg{transform:translateY(-3px)}
 @media(max-width:750px){.cloud-compare-page .cloud-vs-hero{grid-template-columns:1fr;gap:10px}.cloud-compare-page .cloud-selfhost-hero-graphic svg{max-width:340px}}
-</style></head><body class="cloud-compare-page"><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu"><a href="./">English</a><a href="es/">Español</a><a href="/vps-for-n8n/ru/n8n-cloud-vs-self-hosted.html">Русский</a><a href="pt-br/">Português</a><a href="/vps-for-n8n/de/n8n-cloud-vs-self-hosted.html">Deutsch</a><a href="hi/">हिन्दी</a><a href="bn/">বাংলা</a><a href="ja/">日本語</a><a href="pa/">ਪੰਜਾਬੀ</a><a href="mr/">मराठी</a><a href="te/">తెలుగు</a><a href="ta/n8n-cloud-vs-self-hosted.html">தமிழ்</a><a href="tr/">Türkçe</a><a href="vi/n8n-cloud-vs-self-host.html">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-cloud-vs-self-hosted.html">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/n8n-cloud-vs-auto-heberge.html">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/vps-n8n/">Italiano</a><a href="/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html">Polski</a></div></div></header><main>
-
-
-
-
-
-
-
+</style></head><body class="cloud-compare-page"><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu"><a href="./">English</a><a href="es/">Español</a><a href="/vps-for-n8n/ru/n8n-cloud-vs-self-hosted.html">Русский</a><a href="pt-br/">Português</a><a href="/vps-for-n8n/de/n8n-cloud-vs-self-hosted.html">Deutsch</a><a href="/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" aria-current="page">हिन्दी</a><a href="bn/">বাংলা</a><a href="ja/">日本語</a><a href="pa/">ਪੰਜਾਬੀ</a><a href="mr/">मराठी</a><a href="te/">తెలుగు</a><a href="ta/n8n-cloud-vs-self-hosted.html">தமிழ்</a><a href="tr/">Türkçe</a><a href="vi/n8n-cloud-vs-self-host.html">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-cloud-vs-self-hosted.html">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/n8n-cloud-vs-auto-heberge.html">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/vps-n8n/">Italiano</a><a href="/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html">Polski</a></div></div></header><main>
 <section class="section cloud-vs-hero"><div class="cloud-vs-hero-copy"><p class="eyebrow">HOSTING निर्णय</p><h1>n8n Cloud vs Self-Hosted</h1><p class="lead">n8n Cloud तब चुनें जब managed hosting चाहिए, server maintenance नहीं करना चाहते और plan-based execution allowance स्पष्ट चाहिए। VPS पर self-hosted n8n तब चुनें जब root access, private networking या अपनी scaling architecture चाहिए और server maintain कर सकते हैं। दोनों production workflows चला सकते हैं; असली तुलना total cost, edition features और security, backups तथा recovery की जिम्मेदारी की है।</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="affiliate-note">VPS options देखें</a></div></div><div class="cloud-selfhost-hero-graphic"><a class="cloud-hero-ref-link" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="affiliate-note" aria-label="हमारे partner के VPS hosting options देखें"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 440" fill="none" focusable="false">
-
-
-
-
-
-
-
 <defs><linearGradient id="cv-bg" x1="45" y1="44" x2="440" y2="380" gradientUnits="userSpaceOnUse"><stop stop-color="#25334C"/><stop offset="1" stop-color="#111925"/></linearGradient><linearGradient id="cv-accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFB28C"/><stop offset="1" stop-color="#FF6245"/></linearGradient></defs>
-
-
-
-
-
-
-
 <rect x="20" y="25" width="440" height="385" rx="31" fill="url(#cv-bg)"/>
-
-
-
-
-
-
-
 <rect x="35" y="40" width="410" height="355" rx="23" stroke="#718099" stroke-opacity=".26" stroke-width="1.5"/>
-
-
-
-
-
-
-
 <g opacity=".2" fill="#A6C0D3"><circle cx="64" cy="74" r="2"/><circle cx="78" cy="74" r="2"/><circle cx="92" cy="74" r="2"/><path d="M53 107H429M53 365H429" stroke="#8C9CB1"/></g>
-
-
-
-
-
-
-
 <g stroke="#5B89A2" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M129 204H199"/><path d="M279 204H351"/><path d="M239 156V104"/><path d="M239 252V311"/><path d="M130 285L194 237"/><path d="M348 285L284 237"/></g>
-
-
-
-
-
-
-
 <g transform="translate(72 141)"><rect width="98" height="117" rx="17" fill="#314056" stroke="#59748B" stroke-width="2"/><path d="M25 57C13 52 17 37 30 37C30 17 58 13 65 32C84 27 89 56 73 57Z" fill="#243B4D" stroke="#87CECA" stroke-width="4" stroke-linejoin="round"/><path d="M36 76H62M42 88H56" stroke="#87CECA" stroke-width="4" stroke-linecap="round"/></g>
-
-
-
-
-
-
-
 <g transform="translate(311 141)"><rect width="98" height="117" rx="17" fill="#314056" stroke="#59748B" stroke-width="2"/><rect x="23" y="22" width="52" height="73" rx="7" fill="#1B2738" stroke="#FF8968" stroke-width="3"/><path d="M34 43H62M34 62H62M34 79H62" stroke="#F8A089" stroke-width="3" stroke-linecap="round"/><circle cx="67" cy="43" r="3" fill="#FF8968"/><circle cx="67" cy="62" r="3" fill="#FF8968"/></g>
-
-
-
-
-
-
-
 <g transform="translate(194 156)"><rect width="90" height="97" rx="24" fill="#FFF7F3" stroke="#FF9A78" stroke-width="4"/><path d="M24 31H66M24 65H66M25 31L43 49L25 65M66 31L48 49L66 65" stroke="#FF704E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="45" cy="49" r="8" fill="#FF704E"/></g>
-
-
-
-
-
-
-
 <g transform="translate(204 63)"><rect width="70" height="52" rx="14" fill="#253F4B" stroke="#87CECA" stroke-width="2"/><ellipse cx="35" cy="16" rx="19" ry="7" stroke="#87CECA" stroke-width="3"/><path d="M16 16V33C16 45 54 45 54 33V16" stroke="#87CECA" stroke-width="3"/></g>
-
-
-
-
-
-
-
 <g transform="translate(201 302)"><rect width="76" height="68" rx="15" fill="#3A2F35" stroke="#F4A287" stroke-width="2"/><path d="M38 12L58 19V35C58 48 47 56 38 60C29 56 18 48 18 35V19L38 12Z" stroke="#FF9978" stroke-width="3.5"/><path d="M29 35L36 42L48 29" stroke="#FF9978" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
-
-
-
-
-
-
-
 <g fill="#FF8262"><circle cx="199" cy="204" r="5"/><circle cx="279" cy="204" r="5"/><circle cx="239" cy="156" r="5"/><circle cx="239" cy="252" r="5"/></g>
-
-
-
-
-
-
-
 <g fill="#88D4CB"><circle cx="129" cy="204" r="4"/><circle cx="351" cy="204" r="4"/><circle cx="239" cy="104" r="4"/></g>
-
-
-
-
-
-
-
 </svg></a></div></section>
-
-
-
-
-
-
-
 <section class="section dark"><p class="eyebrow">त्वरित निष्कर्ष</p><h2>सिर्फ server price नहीं, responsibility के आधार पर चुनें</h2><div class="cards"><article><h3>n8n Cloud चुनें जब</h3><p>आप सबसे तेज शुरुआत चाहते हैं, servers maintain नहीं करना चाहते और hosting, updates तथा infrastructure operations n8n से करवाना चाहते हैं।</p></article><article class="featured"><h3>Self-hosted VPS चुनें जब</h3><p>आपको deployment control, custom networking, data location पर control या workload के अनुसार tune होने वाला infrastructure model चाहिए।</p></article><article><h3>दोनों production-ready हो सकते हैं</h3><p>Production use किसी एक model तक सीमित नहीं है। फैसला यह है कि managed infrastructure चाहिए या आप खुद operate करने के लिए तैयार हैं।</p></article><article><h3>Total cost गिनें</h3><p>Self-hosting में VPS, backups, monitoring और administrator time शामिल करें। Cloud में अपने workload के लिए applicable plan और execution allowance compare करें।</p></article></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Self-hosting कर रहे हैं तो VPS चुनें</a></div><p id="affiliate-note"><small>हमारा <a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VDSina</a> link sponsored है; खरीदारी पर हमें commission मिल सकता है।</small></p></section>
-
-
-
-
-
-
-
 <section class="section"><p class="eyebrow">सीधी तुलना</p><h2>n8n Cloud vs VPS: वे differences जो निर्णय बदलते हैं</h2><div class="requirements"><div><b>सेटअप</b><span>Cloud: managed onboarding। VPS: Linux provision करें, n8n deploy करें, database, HTTPS और persistence configure करें।</span></div><div><b>मेंटेनेंस</b><span>Cloud: infrastructure maintenance managed है। VPS: updates, patching, monitoring और recovery आपकी जिम्मेदारी है।</span></div><div><b>इन्फ्रास्ट्रक्चर नियंत्रण</b><span>Cloud: managed environment। VPS: compute, storage, network और supporting services पर root-level control।</span></div><div><b>डेटा स्थान</b><span>Cloud: data managed service environment में रहता है। VPS: provider और configuration के अनुसार infrastructure और region आप चुनते हैं।</span></div><div><b>स्केलिंग</b><span>Cloud: purchased concurrency allowance सहित service limits के भीतर scaling managed होती है। VPS: measured demand के अनुसार resources resize करें या queue mode, Redis और workers design करें।</span></div><div><b>लागत मॉडल</b><span>Cloud: completed workflow executions और concurrency allowances पर आधारित plan pricing। VPS: infrastructure + selected services + operational time + recovery responsibility + कोई paid software edition।</span></div></div></section>
-
-
-
-
-
-
-
 <section class="section" id="side-by-side-table"><p class="eyebrow">एक निर्णय · दो OPERATING MODELS</p><h2>n8n Cloud vs self-hosted VPS: तुलना तालिका</h2><p class="intro">दोनों options के लिए वही criteria उपयोग करें। Cloud infrastructure management आसान करता है; VPS अधिक deployment control देता है लेकिन responsibility आपको देता है।</p>
-
-
-
-
-
-
-
 <div class="side-comparison" role="region" aria-label="n8n Cloud और self-hosted VPS की scrollable comparison" tabindex="0"><table><thead><tr><th scope="col">खरीद मानदंड</th><th scope="col">Official n8n Cloud</th><th scope="col">VPS पर self-hosted n8n</th></tr></thead><tbody>
-
-
-
-
-
-
-
 <tr><th scope="row">Server कौन operate करता है?</th><td>n8n hosted platform operate करता है।</td><td>Linux, n8n, networking और supporting services आप maintain करते हैं।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">पहला deployment</th><td>Linux provision किए बिना hosted environment में start करें।</td><td>Server provision करें, n8n deploy करें और HTTPS/persistence setup करें।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">बिलिंग आधार</th><td>Monthly workflow-execution allowances वाला plan subscription।</td><td>VPS usage और optional services; administration time अतिरिक्त है।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">Execution क्षमता</th><td>Plan-specific completed-execution और concurrency limits।</td><td>Capacity resources और architecture पर निर्भर है, Cloud plan quota पर नहीं।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">कस्टम infrastructure</th><td>Hosted platform limits के भीतर।</td><td>Root access, custom packages, networking और optional workers।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">Backups और updates</th><td>Hosting-platform operations managed हैं; plan retention और export options verify करें।</td><td>अपने application updates, off-server backups और restore tests।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">डेटा स्थान</th><td>Available n8n service regions और agreements पर निर्भर।</td><td>Available VPS region चुनें; compliance फिर भी पूरे system design पर निर्भर है।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">Collaboration features</th><td>Purchased Cloud tier पर निर्भर।</td><td>Community Edition paid self-hosted Business/Enterprise से अलग है।</td></tr>
-
-
-
-
-
-
-
 <tr><th scope="row">सबसे अच्छा जब</th><td>Team servers के बजाय workflows पर focus करना चाहती हो।</td><td>Team को infrastructure control चाहिए और उसे responsibly चला सकती हो।</td></tr>
-
-
-
-
-
-
-
 </tbody></table></div><p class="comparison-note">Official Cloud examples (8 अक्टूबर 2026): Starter में 2,500 monthly workflow executions और 5 concurrent executions हैं; Pro 10,000 monthly executions list करता है और plan configuration के अनुसार 50 तक concurrent executions advertise करता है। इस site का hosting comparison USD server rates उपयोग करता है; headline subscription rate को VPS daily price के बराबर न मानें, बल्कि current n8n Cloud checkout total को अपनी currency और billing term में compare करें। Live n8n plans और feature matrix verify करें; Cloud और self-hosted Community identical feature bundles नहीं हैं।</p></section>
-
-
-
-
-
-
-
 <section class="section" id="execution-example"><p class="eyebrow">WORKFLOW FREQUENCY जाँच</p><h2>Simple schedule Cloud execution allowance कैसे उपयोग कर सकता है</h2><p>एक workflow मानें जो 30-day month में हर five minutes चलता है। यदि हर scheduled run complete होकर एक execution count हो, तो यह है <strong>12 runs per hour × 24 hours × 30 days = 8,640 executions</strong>. यह केवल एक workflow होने पर भी 2,500-execution Starter allowance से अधिक है। Cloud पर current quota और n8n execution counting देखें; VPS पर execution count को capacity मानने के बजाय real server load और resource use देखें।</p><p class="comparison-note">यह illustrative arithmetic है, performance benchmark या usage prediction नहीं। Polling के बजाय webhook से workload सस्ता हो सकता है, लेकिन triggers actual integration requirements के आधार पर चुनें। Official n8n Cloud allowances verify करें।</p></section>
-
-
-
-
-
-
-
 <section class="section" id="third-hosting-model"><p class="eyebrow">तीसरा OPERATING MODEL</p><h2>One-click n8n VPS हमेशा managed service नहीं होता</h2><p>Official n8n Cloud और अपना VPS operate करने के अलावा कुछ companies pre-installed या managed n8n hosting बेचती हैं। ये अलग commercial offers हैं जिनकी support, backup और software-update responsibilities अलग होती हैं। One-click installation setup आसान करता है लेकिन यह साबित नहीं करता कि provider n8n application manage करता है। Third-party offer compare करते समय exact service agreement, backup retention, execution limits और licensing जाँचें; यह automatically official n8n Cloud के बराबर नहीं है।</p></section>
-
-
-
-
-
-
-
 <section class="section" id="cost-example"><p class="eyebrow">वास्तविक लागत मॉडल</p><h2>उदाहरण: self-hosted n8n का एक महीना वास्तव में कितना खर्च करता है?</h2><p>उदाहरण के लिए self-managed Standard VPS जिसकी कीमत <strong>$0.07 प्रति दिन</strong> की लागत <strong>30 billed days के लिए $2.10</strong> add-ons से पहले। बड़ा <strong>$0.67 प्रति दिन</strong> option की लागत <strong>30 billed days के लिए $20.10</strong>. ये server charges हैं, all-in application costs नहीं। Server size इस example के बजाय real workload के अनुसार चुनें।</p>
-
-
-
-
-
-
-
 <div class="scenario-facts"><p><b>Monthly self-hosting TCO</b> = VPS charge + paid backup/storage/monitoring + external services + administrator time।</p><p><b>उदाहरण:</b> $20.10 VPS + $5 selected recurring extras + $20/hour पर valued two administrator hours = <strong>उस महीने के लिए $65.10</strong>.</p><p><b>वैकल्पिक:</b> $2.10 VPS + कोई selected paid extras नहीं + zero separately costed administrator hours = <strong>$2.10 direct server charges</strong>, लेकिन maintenance या recovery responsibility खत्म नहीं होती।</p></div>
-
-
-
-
-
-
-
 <p class="comparison-note">$5 extras, two hours और $20/hour hypothetical inputs हैं, provider quotes या actual workload prediction नहीं। $20/hour पर administration का हर additional hour self-hosted TCO को $20 बदलता है; provider invoice न होने से hour free नहीं हो जाता। Break-even जानने के लिए ऐसा Cloud tier compare करें जो actual completed executions, concurrency और needed features cover करे, बनाम VPS + extras + time at your own rates। Current Cloud billing जाँचें। Paid n8n self-hosted editions के लिए अलग license चाहिए।</p></section>
-
-
-
-
-
-
-
 <section class="section" id="choice-flow"><p class="eyebrow">निर्णय पथ</p><h2>Operational work कौन संभालता है, उसके आधार पर चुनें</h2><div class="decision-diagram"><div class="decision-lane"><strong>Managed operations पसंद हैं</strong><p>Linux maintenance, updates या restore procedures खुद नहीं चलाने</p><p><b>→ n8n Cloud</b></p></div><div class="decision-divider" aria-hidden="true">↔</div><div class="decision-lane"><strong>Server-level control चाहिए</strong><p>Private services, custom environment, अपने backups और worker architecture</p><p><b>→ Self-hosted VPS</b></p></div></div><p class="comparison-note">VPS पर preinstalled n8n image setup work कम करता है, लेकिन automatically managed n8n hosting नहीं बनता। दोनों paths में responsible credential और workflow management चाहिए।</p></section><section class="section dark"><p class="eyebrow">कुल स्वामित्व लागत</p><h2>Self-hosting सिर्फ VPS invoice नहीं है</h2><div class="cards"><article><h3>इन्फ्रास्ट्रक्चर</h3><p>Compute, storage, backups और उपयोग किए जाने वाले external database/monitoring services शामिल करें।</p></article><article><h3>ऑपरेशन्स</h3><p>Updates, security patches, TLS, monitoring, incident response और restore testing में समय लगता है। यह labor comparison में शामिल होना चाहिए।</p></article><article><h3>Execution volume</h3><p>n8n Cloud plan और monthly completed workflow executions के आधार पर charge करता है, individual workflow steps पर नहीं। Self-hosted Community Edition वही Cloud plan execution quota लागू नहीं करती; effective throughput फिर भी compute, memory, database performance और separately purchased n8n license पर निर्भर है।</p></article><article><h3>विफलता लागत</h3><p>यदि untested backup या खराब upgrade लंबे downtime का कारण बने तो cheap VPS cheap नहीं रहता। Reliability work self-hosting का हिस्सा है।</p></article></div></section>
-
-
-
-
-
-
-
 <section class="section"><p class="eyebrow">नियंत्रण &amp; डेटा</p><h2>Self-hosting architecture कहाँ बदलता है</h2><div class="cards"><article><h3>Private systems</h3><p>Self-hosted deployment ऐसी infrastructure में रखा जा सकता है जहाँ private databases, internal APIs और restricted networks का direct access हो।</p></article><article><h3>डेटा residency</h3><p>Self-hosting available server region चुनने और application database कहाँ चलता है उस पर control देता है। यह guarantee नहीं करता कि सभी workflow data वहीं रहें: external APIs, model providers, logs और backup destinations data कहीं और process कर सकते हैं। Regulated use के लिए पूरा data flow confirm करें।</p></article><article><h3>कस्टम server configuration</h3><p>Reverse proxy rules, firewall policy, storage, database configuration, environment variables और supporting services आप control करते हैं।</p></article><article><h3>सुरक्षा जिम्मेदारी</h3><p>Control responsibility भी देता है। VPS पर SSH, TLS, firewall rules, credentials, database exposure, backups और updates secure करना आपकी जिम्मेदारी है।</p></article></div></section>
-
-
-
-
-
-
-
 <section class="split"><div><p class="eyebrow">ऑपरेशन्स</p><h2>Self-host करते समय आप क्या संभालते हैं</h2><p>VPS flexibility देता है क्योंकि infrastructure आपके operating model का हिस्सा है। यही freedom यह भी मतलब है कि कोई managed platform team background में server नहीं संभाल रही।</p><p><a href="n8n-vps-security.html">Production सुरक्षा</a> · <a href="n8n-backup-restore.html">Backup &amp; restore</a></p></div><div class="requirements"><div><b>Deploy</b><span>Linux, Docker, PostgreSQL, persistent storage, hostname और HTTPS।</span></div><div><b>मेंटेन करें</b><span>Application updates, OS patches, certificates और dependency changes।</span></div><div><b>Monitor करें</b><span>CPU, RAM, disk, database growth, execution failures और availability।</span></div><div><b>Recover करें</b><span>Off-server backups, encryption key protection और tested restoration।</span></div></div></section>
-
-
-
-
-
-
-
 <section class="section dark"><p class="eyebrow">स्केलिंग</p><h2>Cloud convenience बनाम self-hosted scaling control</h2><div class="cards"><article><h3>Cloud</h3><p>Managed service user से अधिकतर infrastructure scaling decisions हटा देता है। आप selected service tier की capabilities और commercial limits में operate करते हैं।</p></article><article><h3>Single VPS</h3><p>Actual concurrency और payload behavior के अनुसार sized server से start करें। Sustained CPU/RAM pressure में vertical scaling अक्सर सबसे सरल पहला response है।</p></article><article><h3>Queue mode</h3><p>जब parallel demand distributed execution architecture justify करे, self-hosting में Redis और workers जोड़ सकते हैं। इससे capacity और operational complexity दोनों बढ़ते हैं।</p></article><article><h3>Database और storage</h3><p>n8n scaling का मतलब PostgreSQL, execution retention, binary data और backup growth plan करना भी है, सिर्फ application CPU नहीं।</p></article></div><p><a href="n8n-queue-mode.html">Queue mode &amp; workers</a> · <a href="n8n-vps-requirements.html">VPS आवश्यकताएँ</a></p></section>
-
-
-
-
-
-
-
 <section class="section"><p class="eyebrow">निर्णय FRAMEWORK</p><h2>कौन-सा deployment model आपके लिए सही है?</h2><div class="cards"><article><h3>Cloud से शुरू करें</h3><p>यदि infrastructure work से बचना server-level control से अधिक महत्वपूर्ण है, Cloud आसान विकल्प है।</p></article><article><h3>VPS उपयोग करें</h3><p>यदि Linux और Docker operate कर सकते हैं और infrastructure control, custom networking या self-managed scaling चाहिए तो VPS बेहतर fit है।</p></article><article><h3>सिर्फ पैसे बचाने के लिए self-host न करें</h3><p>Server invoice कम हो सकती है लेकिन operational cost ज्यादा। Self-host तब करें जब control और workload economics operations खुद संभालने को justify करें।</p></article><article><h3>सिर्फ simple होने के कारण Cloud न चुनें</h3><p>यदि private-network access, data-location requirements या infrastructure customization hard constraints हैं, convenience इन्हें solve नहीं करती।</p></article></div></section>
-
-
-
-
-
-
-
 <section class="section dark"><p class="eyebrow">EDITION &amp; LICENSE सीमा</p><h2>Hosting model और n8n edition अलग decisions हैं</h2><div class="cards"><article><h3>n8n Cloud</h3><p>Cloud tiers managed hosting को specific execution allowances, concurrency, retention और collaboration features के साथ bundle करते हैं। Official annual-billing Starter example में 2,500 executions/month और 5 concurrent executions हैं; Pro 10,000 executions/month के साथ अधिक concurrency और project features list करता है। Exact plan और contract term महत्वपूर्ण हैं: ऐसा tier चुनें जो peak parallel runs और monthly completed executions दोनों cover करे। Official Cloud matrix जाँचें।</p></article><article><h3>Self-hosted Community</h3><p>अपने VPS पर n8n चलाने से हर paid feature unlock नहीं होता। Community Edition core workflow automation देती है, लेकिन paid collaboration, governance, support, source-control या enterprise functions automatically नहीं देती। Team के लिए plan चुनने से पहले official edition feature matrix जाँचें।</p></article><article><h3>Self-hosted Business / Enterprise</h3><p>License key paid self-hosted features unlock करती है। Software edition paid होने पर भी infrastructure आपको operate करनी होती है।</p></article><article><h3>दूसरे users के लिए n8n host करना</h3><p>यदि organization के बाहर लोग आपकी n8n instance पर workflows build/configure कर सकते हैं, तो free self-hosted license इस service model को cover करती है ऐसा assume न करें। n8n को hosted product के रूप में offer करने से पहले current licensing rules जाँचें।</p></article></div><p>Official n8n plans, execution limits और edition comparison · Official self-hosting documentation</p></section><section class="section dark"><p class="eyebrow">FAQ</p><h2>n8n Cloud vs self-hosted: आम सवाल</h2><div class="faq"><details><summary>क्या n8n Cloud self-hosting से बेहतर है?</summary><p>हर case में नहीं। Managed infrastructure और कम operational overhead मुख्य हों तो Cloud बेहतर है। Infrastructure control और custom deployment requirements खुद stack operate करना justify करें तो self-hosting बेहतर है।</p></details><details><summary>क्या self-hosted n8n सस्ता है?</summary><p>Raw VPS charge Cloud subscription से काफी कम हो सकता है, लेकिन इससे total cost कम साबित नहीं होती। Backups, monitoring, maintenance, administrator time और paid edition features जोड़ें। Cloud के current execution allowance और plan limits से compare करें। Explicit calculation के लिए ऊपर cost example देखें।</p></details><details><summary>क्या self-hosted n8n production में चल सकता है?</summary><p>हाँ। Production readiness deployment quality पर निर्भर है: database, persistence, HTTPS, security, monitoring, backups और recovery procedures सभी महत्वपूर्ण हैं।</p></details><details><summary>Self-hosted n8n के लिए Redis चाहिए?</summary><p>नहीं। Redis queue mode और distributed workers से जुड़ा है। Normal single-instance VPS को default रूप से Redis नहीं चाहिए।</p></details><details><summary>VPS कब चुनें?</summary><p>VPS तब चुनें जब server-level control, private networking, data-location control या self-managed scaling इतने महत्वपूर्ण हों कि updates, security, monitoring और recovery की जिम्मेदारी लेना justify हो। VPS price अकेला यह तय नहीं करता कि self-hosting सस्ता है।</p></details><details><summary>n8n Cloud किसे execution count करता है?</summary><p>n8n Cloud pricing completed workflow executions पर आधारित है, एक execution के individual nodes/steps पर नहीं। Needed Cloud tier का published monthly execution allowance और concurrent-execution limits compare करें।</p></details><details><summary>क्या n8n Cloud से self-hosted migrate कर सकता हूँ?</summary><p>Workflows export करने और credentials, encryption keys, execution history, users, webhook URLs तथा trigger schedules transfer करने का plan बनाएँ। Workflow export full database restore के बराबर नहीं। Old environment retire करने से पहले imports और cutover test करें; देखें <a href="n8n-backup-restore.html">backup और recovery guide</a>.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS options देखें</a></div><p><a href="index.html">VPS plans &amp; sizing</a> · <a href="n8n-vps-requirements.html">VPS आवश्यकताएँ</a> · <a href="install-n8n-vps-docker.html">Docker installation</a> · <a href="n8n-vps-security.html">Production सुरक्षा</a></p></section>
-
-
-
-
-
-
-
 <section class="section" id="reliability-decision"><p class="eyebrow">दीर्घकालीन OPERATIONS</p><h2>क्या यह deployment वर्षों तक विश्वसनीय रह सकता है?</h2><p>Official n8n Cloud या self-hosted VPS ईमानदारी से यह guarantee नहीं कर सकते कि कोई workflow दस साल बिना रुकावट चलेगा। Business-critical automations के लिए स्पष्ट करें कि कौन-से service terms और support commitments लागू हैं, incidents कैसे detect होते हैं, instance कौन restore करता है और deployment या external APIs fail होने पर क्या होता है।</p><div class="cards"><article><h3>Official n8n Cloud के लिए</h3><p>Service tier के published support terms, data export capabilities और incident process confirm करें। Managed infrastructure server administration कम करती है, लेकिन business outcomes और integration failures monitor करने की जरूरत खत्म नहीं करती।</p></article><article><h3>Self-hosted VPS के लिए</h3><p>Security patches, monitoring और upgrades के लिए owner तय करें; independent backups रखें और नए host पर restore test करें। Low monthly server price को reliability guarantee मानने के बजाय VPS, disk, region या third-party integration fail होने पर recovery का तरीका तय करें।</p></article></div><p class="comparison-note">Availability, support और recovery objectives documented service terms और आपके tested procedures पर आधारित होने चाहिए, unverified uptime promises पर नहीं।</p></section>
-
-
-
-
-
-
-
 <section class="section" id="migration-checklist"><p class="eyebrow">MIGRATION निर्णय</p><h2>n8n Cloud से अपने VPS पर जाने पर क्या बदलता है?</h2><p class="intro">Workflow export पूरी migration नहीं है। Cloud instance बंद करने से पहले destination को operational बनाएँ।</p><div class="cards">
-
-
-
-
-
-
-
 <article><h3>अपने deployment का inventory बनाएँ</h3><p>Active और scheduled workflows, credentials, environment variables, integration secrets, webhooks और data stores की list बनाएँ। पहचानें कि कौन-से functions Community Edition के बजाय Cloud plan का हिस्सा हैं।</p></article>
-
-
-
-
-
-
-
 <article><h3>Destination बनाएँ और test करें</h3><p>Maintained n8n release को persistent storage, HTTPS और उचित database के साथ deploy करें। हर external integration और credential अलग test करें; exported workflow JSON credential portability की guarantee नहीं देता।</p></article>
-
-
-
-
-
-
-
 <article><h3>Cutover plan करें</h3><p>Callback URLs और external webhooks सोच-समझकर repoint करें। Duplicate executions side effects पैदा करें तो दोनों schedule-triggered copies parallel न चलाएँ। Backups और rollback validate करने के लिए समय रखें।</p></article>
-
-
-
-
-
-
-
 <article><h3>क्या transfer नहीं होगा, confirm करें</h3><p>यह assume न करें कि Cloud users, project permissions, execution history, instance settings या paid-plan features automatically transfer होंगे। Cloud cancel करने से पहले हर required dataset के लिए export या supported migration method verify करें।</p></article>
-
-
-
-
-
-
-
 </div><p>Official deployment choices · <a href="n8n-backup-restore.html">Recovery तैयार करें</a></p></section>
-
-
-
-
-
-
-
 <section class="section" data-best-vps-link="1"><h2>Providers compare कर रहे हैं?</h2><p>Provider choice, one-click setup, support boundaries, backups, migration, region और scaling के लिए <a href="best-vps-for-n8n.html">n8n के लिए Best VPS comparison</a>. Resource sizing के लिए वापस जाएँ <a href="index.html">मुख्य n8n VPS guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n के लिए independent infrastructure guide।</span><p><a href="about.html">परिचय</a> · <a href="contact.html">संपर्क</a> · <a href="privacy.html">गोपनीयता</a></p><p><a href="/vps-for-n8n/es/n8n-cloud-vs-autoalojado.html">Español</a> · <a href="/vps-for-n8n/de/n8n-cloud-vs-self-hosted.html">Deutsch</a> · <a href="/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">हिन्दी ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="/vps-for-n8n/n8n-cloud-vs-self-hosted.html" hreflang="en" lang="en" aria-current="page">English</a><a href="/vps-for-n8n/es/n8n-cloud-vs-autoalojado.html" hreflang="es" lang="es">Español</a><a href="/vps-for-n8n/ru/n8n-cloud-vs-self-hosted.html" hreflang="ru" lang="ru">Русский</a><a href="/vps-for-n8n/pt-br/n8n-cloud-vs-self-hosted.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="/vps-for-n8n/de/" hreflang="de" lang="de">Deutsch</a><a href="/vps-for-n8n/hi/n8n-cloud-vs-self-hosted.html" hreflang="hi" lang="hi">हिन्दी</a><a href="/vps-for-n8n/bn/n8n-cloud-vs-self-hosted.html" hreflang="bn" lang="bn">বাংলা</a><a href="/vps-for-n8n/ja/n8n-cloud-vs-self-hosted.html" hreflang="ja" lang="ja">日本語</a><a href="/vps-for-n8n/pa/n8n-cloud-vs-self-hosted.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="/vps-for-n8n/mr/" hreflang="mr" lang="mr">मराठी</a><a href="/vps-for-n8n/te/" hreflang="te" lang="te">తెలుగు</a><a href="/vps-for-n8n/ta/n8n-cloud-vs-self-hosted.html" hreflang="ta" lang="ta">தமிழ்</a><a href="/vps-for-n8n/tr/n8n-cloud-vs-self-hosted.html" hreflang="tr" lang="tr">Türkçe</a><a href="/vps-for-n8n/vi/n8n-cloud-vs-self-host.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="/vps-for-n8n/ko/n8n-cloud-vs-self-hosted.html" hreflang="ko" lang="ko">한국어</a><a href="/vps-for-n8n/fr/n8n-cloud-vs-auto-heberge.html" hreflang="fr" lang="fr">Français</a><a href="/vps-for-n8n/it/vps-n8n/" hreflang="it" lang="it">Italiano</a><a href="/vps-for-n8n/pl/n8n-cloud-czy-self-hosting.html" hreflang="pl" lang="pl">Polski</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
