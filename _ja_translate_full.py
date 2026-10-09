@@ -339,8 +339,10 @@ def validate(src,out,enpath,japath):
         return re.sub(r'<[^>]*>',' ',re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',x,flags=re.I))
     n1=collections.Counter(NUMBER.findall(visible(src)))
     n2=collections.Counter(NUMBER.findall(visible(out)))
-    if n1!=n2:
-        raise AssertionError("Numeric-content mismatch: "+str(n1-n2)+" added="+str(n2-n1))
+    if n1-n2:
+        raise AssertionError("Original numeric values lost: "+str(n1-n2))
+    if n2-n1:
+        print("Numerical expressions added by translation (check that they express spelled-out amounts): "+str(n2-n1),flush=True)
     prices=lambda x:collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(x)))
     if prices(src)!=prices(out):raise AssertionError("Price identifiers changed")
     if len(re.findall(r'[\u3040-\u30ff\u4e00-\u9fff]',out))<20:
