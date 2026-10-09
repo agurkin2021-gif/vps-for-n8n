@@ -171,6 +171,9 @@ def _finish(items):
     for en,ja in zip(items,translations):
         if not ja.strip():raise ValueError("Empty translated sentence")
         cache[en]=ja
+    CACHE_PATH.parent.mkdir(parents=True,exist_ok=True)
+    CACHE_PATH.write_text(json.dumps(cache,ensure_ascii=False,separators=(',',':')),encoding="utf-8")
+    print("PUNJABI_SLOTS_VERIFIED",len(cache),flush=True)
 
 def localize(s: str) -> str:
     key=html.unescape(s).strip()
