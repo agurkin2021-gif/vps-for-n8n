@@ -2,39 +2,77 @@
 
 
 
+
+
+
+
 <html lang="de"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n VPS Anforderungen</title><meta content="n8n-VPS-Anforderungen für RAM, CPU, SSD-Speicher, PostgreSQL, Docker, Parallelität und Dimensionierung von Produktions-Workloads." name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html" rel="canonical"/>
+
+
 
 <link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html"/>
 
+
+
 <link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/requisitos-vps-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/trebovaniya-vps-n8n.html"/>
 
+
+
 <link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/requisitos-vps-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html"/>
 
+
+
 <link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-vps-requirements.html"/>
+
+
 
 <link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-vps-requirements.html"/>
 
+
+
 <link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-vps-requirements.html"/>
+
+
 
 <link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-vps-requirements.html"/>
 
+
+
 <link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-vps-requirements.html"/>
+
+
 
 <link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-vps-requirements.html"/>
 
+
+
 <link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-vps-requirements.html"/>
+
+
 
 <link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-gereksinimleri.html"/>
 
+
+
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cau-hinh-vps-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-vps-requirements.html"/>
 
+
+
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/configuration-vps-n8n.html"/>
+
+
 
 <link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/wymagania-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html"/><meta content="website" property="og:type"/><meta content="n8n VPS Anforderungen" property="og:title"/><meta content="n8n-VPS-Anforderungen für RAM, CPU, SSD-Speicher, PostgreSQL, Docker, Parallelität und Dimensionierung von Produktions-Workloads." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n VPS Anforderungen" name="twitter:title"/><meta content="n8n-VPS-Anforderungen für RAM, CPU, SSD-Speicher, PostgreSQL, Docker, Parallelität und Dimensionierung von Produktions-Workloads." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://agurkin2021-gif.github.io/vps-for-n8n/"},{"@type":"ListItem","position":2,"name":"n8n VPS Anforderungen","item":"https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-anforderungen.html"}]}</script><style id="requirements-hero-art-styles">
 .requirements-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(270px,.85fr);gap:36px;align-items:center;min-height:450px}
@@ -64,106 +102,210 @@
 @media(max-width:750px){.n8n-vps-requirements-page .requirements-detail-list{grid-template-columns:1fr}.n8n-vps-requirements-page .spec-table{min-width:790px}.n8n-vps-requirements-page .requirements-reality-note{padding:14px 16px}}
 </style></head><body class="n8n-vps-requirements-page"><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">Deutsch ▾</button><div class="lang-menu"><a href="n8n-vps-requirements.html" aria-current="page">English</a><a href="es/requisitos-vps-n8n.html">Español</a><a href="ru/trebovaniya-vps-n8n.html">Русский</a><a href="pt-br/requisitos-vps-n8n.html">Português</a><a href="n8n-vps-anforderungen.html" aria-current="page">Deutsch</a><a href="hi/n8n-vps-requirements.html">हिन्दी</a><a href="bn/n8n-vps-requirements.html">বাংলা</a><a href="ja/n8n-vps-requirements.html">日本語</a><a href="pa/n8n-vps-requirements.html">ਪੰਜਾਬੀ</a><a href="mr/n8n-vps-requirements.html">मराठी</a><a href="te/n8n-vps-requirements.html">తెలుగు</a><a href="ta/n8n-vps-requirements.html">தமிழ்</a><a href="tr/n8n-vps-gereksinimleri.html">Türkçe</a><a href="vi/cau-hinh-vps-n8n.html">Tiếng Việt</a><a href="ko/n8n-vps-requirements.html">한국어</a><a href="fr/configuration-vps-n8n.html">Français</a><a href="../pl/wymagania-n8n-na-vps.html">Polski</a></div></div></header><main>
 
+
+
 <section class="section requirements-hero"><div class="requirements-hero-copy"><p class="eyebrow">SERVERANFORDERUNGEN</p><h1>n8n VPS Anforderungen</h1><p class="lead">Beginne bei den n8n-VPS-Anforderungen mit deinem Workload statt mit einem pauschalen Hardwareminimum. Ein sorgfältig dimensionierter VPS mit 1 vCPU / 1 GB kann kleine dauerhaft laufende Automatisierungen betreiben, während 2 vCPU / 4 GB RAM eine praktische Einstiegsklasse für n8n mit PostgreSQL und HTTPS sind. Große Payloads, gleichzeitige Ausführungen und lokale Datenverarbeitung benötigen mehr Reserven; miss die tatsächliche Nutzung vor der Auswahl.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="affiliate-note">VPS-Optionen ansehen</a></div></div><div class="requirements-hero-art"><a class="requirements-hero-ref-link" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="affiliate-note" aria-label="VPS-Hosting-Optionen unseres Partners ansehen"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 490" fill="none" focusable="false">
+
+
 
 <defs><linearGradient id="rq-base" x1="30" y1="25" x2="453" y2="445" gradientUnits="userSpaceOnUse"><stop stop-color="#26364D"/><stop offset="1" stop-color="#111823"/></linearGradient><linearGradient id="rq-coral" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFC0A3"/><stop offset="1" stop-color="#FF6847"/></linearGradient></defs>
 
+
+
 <rect x="20" y="30" width="440" height="425" rx="32" fill="url(#rq-base)"/><rect x="36" y="46" width="408" height="394" rx="22" stroke="#6B7F95" stroke-opacity=".37" stroke-width="1.5"/>
+
+
 
 <g stroke="#6A8C9E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 9"><path d="M240 131V94"/><path d="M327 212L388 163"/><path d="M328 309L392 358"/><path d="M151 309L88 358"/><path d="M151 212L89 163"/><path d="M240 359V391"/></g>
 
+
+
 <g transform="translate(155 145)"><rect width="170" height="212" rx="19" fill="#172130" stroke="#708198" stroke-width="3"/><path d="M0 69H170M0 139H170" stroke="#53657C" stroke-width="2"/><rect x="20" y="24" width="76" height="10" rx="5" fill="#73869D"/><circle cx="139" cy="29" r="7" fill="#FF8060"/><rect x="20" y="94" width="76" height="10" rx="5" fill="#73869D"/><circle cx="139" cy="99" r="7" fill="#FF8060"/><rect x="20" y="164" width="76" height="10" rx="5" fill="#73869D"/><circle cx="139" cy="169" r="7" fill="#FF8060"/><rect x="61" y="211" width="48" height="21" rx="4" fill="#798DA4"/><rect x="39" y="230" width="92" height="10" rx="5" fill="#798DA4"/></g>
+
+
 
 <g transform="translate(193 64)"><rect width="94" height="91" rx="20" fill="#253E4A" stroke="#7DE0C7" stroke-width="2.5"/><rect x="27" y="25" width="40" height="40" rx="8" stroke="#9AE4CF" stroke-width="3"/><path d="M39 12V25M55 12V25M39 65V78M55 65V78M14 37H27M14 53H27M67 37H80M67 53H80" stroke="#9AE4CF" stroke-width="3" stroke-linecap="round"/></g>
 
+
+
 <g transform="translate(360 118)"><rect width="94" height="89" rx="20" fill="#F5F8FB" stroke="#CBD5E2" stroke-width="2"/><rect x="23" y="22" width="48" height="45" rx="5" stroke="#FF7959" stroke-width="3"/><path d="M31 34H64M31 44H58M31 54H62" stroke="#FF7959" stroke-width="3" stroke-linecap="round"/><circle cx="67" cy="61" r="3" fill="#FF7959"/></g>
+
+
 
 <g transform="translate(352 335)"><rect width="103" height="84" rx="20" fill="#F5F8FB" stroke="#CBD5E2" stroke-width="2"/><ellipse cx="51" cy="26" rx="28" ry="9" fill="#FFE6DE" stroke="#FF7959" stroke-width="3"/><path d="M23 27V58C23 70 79 70 79 58V27M23 43C25 54 77 54 79 43" stroke="#FF7959" stroke-width="3"/></g>
 
+
+
 <g transform="translate(26 332)"><rect width="108" height="89" rx="21" fill="#F5F8FB" stroke="#CBD5E2" stroke-width="2"/><path d="M23 23H86V67H23Z" stroke="#FF7959" stroke-width="3"/><path d="M34 53L46 39L56 47L73 30" stroke="#FF7959" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></g>
+
+
 
 <g transform="translate(27 116)"><rect width="100" height="88" rx="20" fill="#F5F8FB" stroke="#CBD5E2" stroke-width="2"/><rect x="24" y="20" width="52" height="48" rx="9" stroke="#FF7959" stroke-width="3"/><path d="M35 33H65M35 44H65M35 55H54" stroke="#FF7959" stroke-width="3" stroke-linecap="round"/></g>
 
+
+
 <g fill="#FF8060"><circle cx="240" cy="131" r="5"/><circle cx="327" cy="212" r="5"/><circle cx="328" cy="309" r="5"/><circle cx="151" cy="309" r="5"/><circle cx="151" cy="212" r="5"/></g>
+
+
 
 </svg></a></div></section>
 
+
+
 <section class="section dark"><p class="eyebrow">SCHNELLE ANFORDERUNGEN</p><h2>Minimum, praktische Produktion und schwerere Workloads</h2><div class="cards"><article><h3>Leichte, dauerhaft laufende Instanz</h3><b>1 vCPU · 1–2 GB RAM</b><p>Ein echter VPS mit 1 GB kann sorgfältig begrenzte, leichte und kontinuierliche n8n-Workflows ausführen, wenn Speicher- und Datenträgerreserven geprüft sind. Die 2-GB-Klasse lässt mehr Spielraum für Docker, kleine Lastspitzen und weitere Dienste. Keine der Angaben garantiert eine bestimmte Workflow-Anzahl.</p></article><article class="featured"><h3>Praktische kleine Produktion</h3><b>2 vCPU · 4 GB RAM</b><p>Eine ausgewogene Einstiegsklasse, wenn n8n den VPS mit PostgreSQL, Docker und einem Reverse Proxy teilt. Lass Reserven für sich überschneidende Ausführungen und Wartung.</p></article><article><h3>Schwer oder datenintensiv</h3><b>4+ vCPU · 8 GB+ RAM</b><p>Große JSON-Objekte, Binärdateien, Code-Nodes, Browserarbeit und viele sich überschneidende Ausführungen können deutlich mehr CPU und Speicher rechtfertigen.</p></article><article><h3>Speicher</h3><b>SSD / NVMe mit Wachstumsreserve</b><p>Die benötigte Kapazität hängt von PostgreSQL-Wachstum, Ausführungsaufbewahrung, Binärdaten, Logs, Docker-Layern und Backup-Strategie ab, nicht nur von n8n.</p></article></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Passende VPS-Optionen vergleichen</a></div><p id="affiliate-note"><small>Partnerlink: Wir können bei Käufen eine Provision erhalten.</small></p></section>
+
+
 
 <section class="section" id="real-vps-tiers">
 
+
+
 <p class="eyebrow">RESSOURCENPAKETE · VERIFIZIERTE PREISE</p><h2>Reale VPS-Spezifikationen zum Vergleich mit deinem n8n-Workload</h2>
+
+
 
 <p class="intro">Dies sind veröffentlichte Standard-Serverkonfigurationen, keine offiziellen Mindestanforderungen von n8n oder Garantien für Ausführungskapazität. Nutze das Workload-Profil, um die nötigen Reserven festzulegen, und bestätige anschließend die aktuellen Bedingungen des Anbieters.</p>
 
+
+
 <div class="spec-table-scroll" role="region" tabindex="0" aria-label="Scrollbarer Vergleich von vier VPS-Ressourcenstufen">
+
+
 
 <table class="spec-table"><thead><tr><th scope="col">Ressourcenklasse</th><th scope="col">CPU / RAM</th><th scope="col">Speicher / Traffic</th><th scope="col">Serverkosten in USD</th><th scope="col">Interpretation der n8n-Dimensionierung</th></tr></thead><tbody>
 
+
+
 <tr><th scope="row">Kompakt, dauerhaft aktiv</th><td>1 vCPU<br/>1 GB RAM</td><td>10 GB Datenträger<br/>1 TB/Monat</td><td>$0.07/Tag<br/>$2.10 / 30 Tage</td><td>Für gemessene, leichte Arbeit mit einer Instanz. Halte den Stack schlank und überwache Speicher und Datenträger sorgfältig.</td></tr>
+
+
 
 <tr><th scope="row">Leicht mit Reserven</th><td>1 vCPU<br/>2 GB RAM</td><td>40 GB Datenträger<br/>32 TB/Monat</td><td>$0.50/Tag<br/>$15.00 / 30 Tage</td><td>Mehr Spielraum für einfache Automatisierungen, Docker und kleine Lastspitzen. Keine feste Zahl unterstützter Workflows.</td></tr>
 
+
+
 <tr><th scope="row">Einstiegsklasse für kleine Produktion</th><td>2 vCPU<br/>4 GB RAM</td><td>80 GB Datenträger<br/>32 TB/Monat</td><td>$0.67/Tag<br/>$20.10 / 30 Tage</td><td>Praktischer Startpunkt, um n8n mit PostgreSQL, HTTPS und moderat sich überschneidender Arbeit zu bewerten.</td></tr>
+
+
 
 <tr><th scope="row">Größere Verarbeitungsklasse</th><td>4 vCPU<br/>8 GB RAM</td><td>160 GB Datenträger<br/>32 TB/Monat</td><td>$1.34/Tag<br/>$40.20 / 30 Tage</td><td>Zusätzliche Reserven für größere Payloads, Transformationen und sich überschneidende Jobs. Gegen die Spitzenlast validieren.</td></tr>
 
+
+
 </tbody></table></div>
+
+
 
 <p class="requirements-small">Diese veröffentlichten Optionen stammen aus <a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VDSina</a> den Standard-VPS-Preisen, geprüft am 8. Oktober 2026. Die Tagespreise decken den Server ab; Backups, externe APIs, zusätzliche Dienste und Steuern können weitere Kosten verursachen. Das Traffic-Kontingent gilt pro Kalendermonat. <a href="https://www.vdsina.com/pricing/standard" rel="noopener noreferrer">Aktuelle Konfigurationen und Bedingungen prüfen</a>. Der Affiliate-Link öffnet den Anbieterkatalog, keinen vorausgewählten Server.</p>
 
+
+
 <p class="requirements-small">Brauchst du eine Kaufempfehlung nach Workload? <a href="index.html#workloads">Bestehenden Konfigurationsleitfaden für VPS mit n8n vergleichen</a>.</p>
 
+
+
 </section>
+
+
 
 <section class="section" id="requirements-official-minimum">
 
+
+
 <p class="eyebrow">MINIMUM VS. PRAKTISCHE KAPAZITÄT</p><h2>Hat n8n eine offizielle Mindestgröße für VPS?</h2>
+
+
 
 <div class="requirements-reality-note"><p><strong>Nicht für jeden Workload.</strong> Die offiziellen n8n-Voraussetzungsbeispiele beschreiben eine illustrative OEM-Bereitstellung und weisen ausdrücklich darauf hin, dass Anforderungen je nach Workload variieren. Diese Dokumentation garantiert nicht allgemein, dass eine bestimmte CPU-, RAM- oder Datenträgerzuweisung Produktionsautomatisierungen unterstützt.</p><p>n8n weist darauf hin, dass eine inaktive Instanz relativ wenig Speicher nutzen kann, ein Code-Node, große Binär-Payloads oder gleichzeitige Ausführungen den Speicherbedarf jedoch stark erhöhen können. Plane Betriebssystem, Docker, PostgreSQL sowie Backup-/Monitoring-Werkzeuge separat ein.</p></div>
 
+
+
 <p class="requirements-small">Technische Quellen: die illustrativen n8n-Voraussetzungen und der offizielle Speicherleitfaden. Die vier Zeilen oben sind reale kaufbare Ressourcenpakete, keine vorgeschriebenen offiziellen n8n-Anforderungen.</p>
+
+
 
 </section>
 
+
+
 <section class="section"><p class="eyebrow">RAM &amp; CPU</p><h2>Was tatsächlich Serverressourcen verbraucht</h2><div class="cards"><article><h3>Parallele Ausführungen</h3><p>Mehrere gleichzeitig laufende Workflows können wichtiger sein als die Gesamtzahl der in n8n gespeicherten Workflows. Beobachte Speicherspitzen und Ausführungslatenz bei Überschneidungen.</p></article><article><h3>Payload-Größe</h3><p>Große JSON-Objekte, Dateien und Binärdaten erhöhen den Speicherdruck. Wenige datenintensive Ausführungen können mehr RAM benötigen als viele leichte API-Automatisierungen.</p></article><article><h3>CPU-intensive Nodes</h3><p>Code, Transformationen und andere rechenintensive Schritte können dauerhaften CPU-Druck erzeugen. Mehr Kerne helfen, wenn reale Ausführungen um Rechenleistung konkurrieren.</p></article><article><h3>Unterstützende Dienste</h3><p>Betriebssystem, PostgreSQL, Reverse Proxy, Monitoring und Docker benötigen ebenfalls Ressourcen. Dimensioniere den gesamten Stack, nicht nur den n8n-Prozess.</p></article></div></section>
+
+
 
 <section class="section" id="requirements-diagnostics">
 
+
+
 <p class="eyebrow">VOR DEM UPGRADE MESSEN</p><h2>So erkennst du, ob n8n mehr RAM, CPU oder Datenträger benötigt</h2>
+
+
 
 <p>Führe deinen größten erwarteten Workflow und eine realistische sich überschneidende Lastspitze aus und prüfe danach Server und n8n-Ausführungslogs. Die Zahl der im Editor gespeicherten Workflows ist allein kein sinnvoller Kapazitätsbenchmark.</p>
 
+
+
 <div class="requirements-detail-list">
+
+
 
 <article><h3>Speicher / OOM</h3><p>Prüfe <code>docker stats --no-stream</code> und <code>free -h</code>. Wenn der Speicher erschöpft ist, reduziere zuerst JSON- oder Binär-Payloads, verarbeite große Importe in Batches und vermeide speicherintensive Code-Schritte. Ein JavaScript-Heap-Fehler wird nicht zwingend durch mehr vCPUs behoben.</p></article>
 
+
+
 <article><h3>CPU / Parallelität</h3><p>Miss, ob die CPU bei Transformationen dauerhaft beschäftigt ist oder Jobs nur auf externe APIs warten. Berücksichtige im regulären Modus ein unterstütztes Produktions-Parallelitätslimit, bevor auf Worker skaliert wird. Mehr CPU beschleunigt keine externe API mit Rate-Limit.</p></article>
 
-<article><h3>Speicher / Datenbank</h3><p>Prüfe <code>df -h</code>, database size and retained execution history. Watch disk growth and slow database operations. Set retention deliberately before paying for a larger disk; keep recovery copies off-server.</p></article>
+
+
+<article><h3>Speicher / Datenbank</h3><p>Prüfe <code>df -h</code>, Datenbankgröße und aufbewahrten Ausführungsverlauf. Beobachte Datenträgerwachstum und langsame Datenbankoperationen. Lege die Aufbewahrung bewusst fest, bevor du für einen größeren Datenträger zahlst; halte Wiederherstellungskopien Off-Server.</p></article>
+
+
 
 </div>
 
+
+
 <p class="requirements-small">Nutze n8ns Hinweise zur Parallelität und die offizielle Benchmark-Erklärung. Jede beworbene Zahl paralleler Workflows ist ohne Kenntnis ihrer Payloads und API-Latenz nur eine Schätzung.</p></section>
+
+
 
 <section class="section dark"><p class="eyebrow">DATENBANK &amp; SPEICHER</p><h2>SQLite, PostgreSQL und persistente Daten</h2><div class="cards"><article><h3>SQLite</h3><p>SQLite kann zu kleinen Einzelinstanz-Bereitstellungen und Tests passen. Mit wachsender Produktionsnutzung und Parallelität wird die Datenbankwahl zu einer betrieblichen Randbedingung statt nur einem Installationsdetail.</p></article><article><h3>PostgreSQL</h3><p>Für einen produktionsorientierten VPS-Stack bietet PostgreSQL eine robustere Datenbankbasis. Plane RAM, CPU und Datenträger für die Datenbank selbst ein und überwache ihr Wachstum.</p></article><article><h3>Persistente .n8n-Daten</h3><p>Behandle PostgreSQL nicht als einziges persistentes Objekt. Sichere das n8n-Datenverzeichnis und den Verschlüsselungsschlüssel, der zur Wiederherstellung verschlüsselter Zugangsdaten nötig ist.</p></article><article><h3>Datenträgerwachstum</h3><p>Ausführungsverlauf, Binärdaten, Datenbankdateien und Logs können mit der Zeit wachsen. Aufbewahrungseinstellungen und Off-Server-Backups beeinflussen die benötigte Kapazität direkt.</p></article></div></section>
 
+
+
 <section class="section" id="requirements-execution-storage">
+
+
 
 <p class="eyebrow">DATENTRÄGERKAPAZITÄT</p><h2>Speicherbedarf des n8n-Ausführungsverlaufs vor der Bestellung schätzen</h2>
 
+
+
 <p>Beginne mit <strong>gespeicherte Ausführungen pro Tag × durchschnittlich gespeicherte Bytes pro Ausführung × Aufbewahrungstage</strong>. Beispiel: 500 gespeicherte Ausführungen pro Tag × 200 KB je Ausführung × 14 Tage = <strong>1.4 GB</strong> Beispiel-Ausführungsdaten vor Datenbank-Overhead. Die Annahme von 200 KB ist illustrativ, kein n8n-Benchmark.</p>
+
+
 
 <div class="requirements-reality-note"><p>Plane außerdem Datenträger für Betriebssystem, Docker-Image-Layer, Datenbankindizes, Binärdateien, Anwendungslogs, Upgrades und temporäre Dateien ein. Off-Server-Backups benötigen eigene Kapazität. Ein 10-GB-Datenträger kann für einen schlanken Stack funktionieren, bietet aber deutlich weniger Platz für aufbewahrte Dateien als 40 oder 80 GB.</p><p>n8n dokumentiert standardmäßiges Pruning nach Alter (336 Stunden / 14 Tage) oder Anzahl (10,000 Ausführungen), mit Ausnahmen. Prüfe deine tatsächlichen Einstellungen und was aufbewahrt wird, bevor du sie änderst. SQLite kann freigegebenen Platz wiederverwenden, statt die Datei automatisch zu verkleinern.</p></div>
 
+
+
 <p class="requirements-small">Quelle: n8n: Ausführungsdaten und Pruning verwalten. Datenträgeranforderungen hängen von beobachteten Größen gespeicherter Payloads ab, nicht nur von der Zahl der Nodes.</p></section>
+
+
 
 <section class="section"><p class="eyebrow">SYSTEMANFORDERUNGEN</p><h2>Docker- und Produktions-Overhead</h2><div class="cards"><article><h3>Linux-VPS</h3><p>Nutze eine gepflegte Linux-Distribution mit genügend Ressourcen für Betriebssystem und Sicherheitsupdates zusätzlich zum Anwendungsstack.</p></article><article><h3>Docker &amp; Compose</h3><p>Container-Bereitstellung vereinfacht Wiederholbarkeit, beseitigt aber Ressourcen-Overhead nicht. Halte n8n- und Datenbankdaten außerhalb kurzlebiger Container persistent.</p></article><article><h3>HTTPS &amp; Reverse Proxy</h3><p>Öffentliche Webhooks benötigen einen stabilen Hostnamen und korrekt konfiguriertes HTTPS. Plane Reverse Proxy und TLS-Schicht in das Produktionsdesign ein.</p></article><article><h3>Monitoring &amp; Backups</h3><p>Überwache RAM, CPU, Datenträger und Datenbankwachstum. Halte wiederherstellbare Backups außerhalb des VPS und teste Restores, statt einen Snapshot als ausreichend anzunehmen.</p></article></div></section>
 
+
+
 <section class="split"><div><p class="eyebrow">PARALLELITÄT</p><h2>Wann ein größerer VPS nicht mehr die ganze Lösung ist</h2><p>Vertikale Skalierung ist sinnvoll, solange eine Instanz den Workload sauber bewältigt. Wenn anhaltende Parallelität zu Konkurrenz führt, prüfe Queue-Modus und Worker. Der Queue-Modus führt Redis, PostgreSQL und einen oder mehrere Worker-Prozesse ein; plane RAM und CPU für jede Komponente, nicht nur n8n. n8n dokumentiert außerdem Einschränkungen für dateisystembasierten Binärdatenspeicher im Queue-Modus; validiere vor dem Wechsel ein kompatibles Speicherdesign.</p><p><a href="n8n-queue-mode.html">Leitfaden zu Queue-Modus &amp; Workern lesen</a></p></div><div class="requirements"><div><b>Bei einer Instanz bleiben</b><span>Wenn CPU, RAM und Ausführungslatenz auch bei maximaler Überschneidung unkritisch bleiben.</span></div><div><b>Vertikal skalieren</b><span>Wenn anhaltender CPU- oder Speicherdruck begrenzt und die Architektur noch einfach ist.</span></div><div><b>Queue-Modus erwägen</b><span>Wenn gemessene parallele Last Redis und separate Worker rechtfertigt.</span></div><div><b>Speicher erneut prüfen</b><span>Wenn Ausführungsverlauf, Binärdaten oder PostgreSQL-Wachstum zur dominierenden Grenze werden.</span></div></div></section>
+
+
 
 <section class="section dark"><p class="eyebrow">DIMENSIONIERUNGS-CHECKLISTE</p><h2>Vor der VPS-Wahl festlegen</h2><div class="cards"><article><h3>Wie viel Arbeit überschneidet sich?</h3><p>Schätze die maximale Zahl paralleler Ausführungen, nicht nur die tägliche Anzahl.</p></article><article><h3>Wie groß ist jede Ausführung?</h3><p>Berücksichtige JSON-Größe, Dateien, Binärdaten und speicherintensive Transformationen.</p></article><article><h3>Was teilt sich den Server?</h3><p>Berücksichtige PostgreSQL, Proxy, Monitoring und alle weiteren Container im Ressourcenbudget.</p></article><article><h3>Wie schnell wachsen die Daten?</h3><p>Schätze Ausführungsaufbewahrung, Datenbankwachstum und Backup-Speicher vor der Wahl der Datenträgerkapazität.</p></article></div></section>
 
+
+
 <section class="section dark"><p class="eyebrow">EINSTIEGSSTUFE &amp; SPEICHER-I/O</p><h2>So nutzt du einen 1-GB-Einstiegs-VPS</h2><div class="cards"><article><h3>1 GB RAM</h3><p>Das ist eine echte nutzbare VPS-Stufe, kein reines Testprodukt. Sie kann für kleine dauerhaft laufende Automatisierungen und überwiegend serielle API-Arbeit geeignet sein, wenn Speicher, Datenträgernutzung und parallele Jobs innerhalb gemessener Grenzen bleiben. Für PostgreSQL auf demselben Server, große Payloads oder schwere parallele Ausführungen gibt es wenig Reserve.</p></article><article><h3>2 GB RAM</h3><p>Nutze 2 GB als sicherere Basis für eine leichte Instanz, wenn du mehr Spielraum für das Betriebssystem, Docker und kleine Lastspitzen willst, ohne sofort auf einen produktionsgroßen Stack zu wechseln.</p></article><article><h3>SSD vs. NVMe</h3><p>Standard-SSD reicht für leichte Automatisierung. NVMe wird nützlicher, wenn PostgreSQL und Ausführungsverlauf häufige Lese-/Schreibzugriffe erzeugen oder Datenträgerlatenz in gemessener Workflow-Leistung sichtbar wird.</p></article><article><h3>Vor dem Upgrade messen</h3><p>Nutze CPU, Speicher, Datenträgerwachstum und Ausführungsdauer bei Spitzenüberschneidung, um zu bestimmen, ob Rechenleistung, Speicher oder Datenträger der Engpass ist, statt anzunehmen, dass ein größerer VPS jede Verlangsamung löst.</p></article></div><p>Offizielle n8n-Leitlinie zur Leistungsmessung · Offizielle Speicher-Fehlerbehebung</p></section><section class="section"><p class="eyebrow">FAQ</p><h2>n8n-VPS-Anforderungen: häufige Fragen</h2><div class="faq"><details><summary>Wie viel RAM benötigt n8n?</summary><p>Es gibt keine universelle Zahl. Der RAM-Bedarf ändert sich mit Parallelität, Payload-Größe, Ausführungsverhalten und unterstützenden Diensten auf dem VPS. Ein 4-GB-Server ist eine praktische Einstiegsklasse für kleine Produktion, keine garantierte Anforderung für jeden Workload.</p></details><details><summary>Wie viele CPU-Kerne sollte ich nutzen?</summary><p>Leichte Workloads können mit kleiner CPU-Zuweisung starten. Füge Kerne hinzu, wenn Monitoring anhaltenden CPU-Druck oder langsamere Ausführungen bei Parallelität zeigt, statt allein nach Workflow-Anzahl zu dimensionieren.</p></details><details><summary>Benötigt n8n PostgreSQL?</summary><p>Kleine Bereitstellungen können SQLite nutzen, aber PostgreSQL ist bei steigenden Betriebsanforderungen und zunehmender Parallelität die robustere produktionsorientierte Wahl.</p></details><details><summary>Wann wird Redis benötigt?</summary><p>Redis gehört zum Queue-Modus. Eine normale Bereitstellung mit einer Instanz benötigt Redis nicht allein deshalb, weil sie auf einem VPS läuft.</p></details><details><summary>Wie viel Datenträgerspeicher sollte ich reservieren?</summary><p>Der Datenträgerbedarf hängt von PostgreSQL-Wachstum, aufbewahrtem Ausführungsverlauf, Binärdaten, Logs, Container-Layern und Backups ab. Überwache das Wachstum und lass Reserven statt dich auf eine feste universelle Zahl zu verlassen.</p></details><details><summary>Kann ich n8n dauerhaft auf einem 1-GB-VPS betreiben?</summary><p>Ja, wenn der tatsächliche Workload passt. Ein 1-GB-VPS ist ein echter Server und kann kleine, überwiegend serielle Automatisierungen unterstützen, aber die Speicherreserve ist begrenzt. Gehe nicht davon aus, dass PostgreSQL auf demselben Server, binärdatenintensive Jobs oder mehrere große parallele Ausführungen hineinpassen. Überwache den Verbrauch und upgrade anhand beobachteten Ressourcendrucks.</p></details><details><summary>Sind 2 GB oder 4 GB RAM besser für einen n8n-Produktions-VPS?</summary><p>Zwei Gigabyte bieten mehr Spielraum als eine schlanke 1-GB-Instanz, während 4 GB eine praktische Einstiegsklasse zur Bewertung von n8n zusammen mit PostgreSQL und HTTPS sind. Es gibt kein universell garantiertes Produktionsminimum: Workload-Komplexität, Spitzenüberschneidung, Containerkonfiguration und aufbewahrte Daten bestimmen den realen Bedarf.</p></details><details><summary>Benötigen n8n-KI-Workflows eine GPU?</summary><p>Nicht, wenn n8n nur eine externe Modell-API aufruft: Der Modellanbieter übernimmt die Inferenz, der VPS Orchestrierung, Payloads und Parallelität. Lokale Inferenzmodelle sind eine separate Hardwareentscheidung und können deutlich mehr RAM sowie passende GPU-Ressourcen erfordern.</p></details><details><summary>Was verursacht Out-of-Memory-Fehler in n8n?</summary><p>Große JSON- oder Binär-Payloads, speicherintensive Code-Operationen und sich überschneidende Ausführungen sind häufige Ursachen. Prüfe Runtime-Logs und Spitzenverbrauch, reduziere dann die in einer Ausführung gehaltenen Daten oder weise anhand des gemessenen Problems mehr RAM zu.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS-Optionen ansehen</a></div><p><a href="index.html">VPS-Tarife &amp; Dimensionierung</a> · <a href="n8n-vps-docker-installieren.html">Docker-Installation</a> · <a href="n8n-queue-mode.html">Queue-Modus &amp; Worker</a> · <a href="n8n-backup-wiederherstellung.html">Backup &amp; Wiederherstellung</a></p></section>
+
+
 
 <section class="section" data-best-vps-link="1"><h2>Vergleichst du Anbieter?</h2><p>Für Anbieterwahl, One-Click-Setup, Supportgrenzen, Backups, Migration, Region und Skalierung nutze den <a href="bester-vps-fuer-n8n.html">Vergleich der besten VPS für n8n</a>. Für Ressourcendimensionierung gehe zurück zum <a href="index.html">Hauptleitfaden zu VPS für n8n</a>.</p></section></main><footer><b>n8nVPS</b><span>Unabhängiger Infrastrukturleitfaden für selbstgehostetes n8n.</span><p><a href="ueber-uns.html">Über uns</a> · <a href="kontakt.html">Kontakt</a> · <a href="datenschutz.html">Datenschutz</a></p><p><a href="/vps-for-n8n/es/requisitos-vps-n8n.html">Español</a> · <a href="/vps-for-n8n/pl/wymagania-n8n-na-vps.html">Polski</a></p></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
