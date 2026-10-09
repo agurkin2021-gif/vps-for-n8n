@@ -1,4 +1,4 @@
-name: Marathi full English-sitemap localization and publication QA
+name: Marathi English-sitemap localization and final publication QA
 on:
   push:
     branches: [mr-complete-sitemap-20261009]
