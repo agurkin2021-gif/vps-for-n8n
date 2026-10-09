@@ -381,7 +381,7 @@ def validate(src,out,enpath,japath):
         print("Numerical expressions added by translation (check that they express spelled-out amounts): "+str(n2-n1),flush=True)
     prices=lambda x:collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(x)))
     if prices(src)!=prices(out):raise AssertionError("Price identifiers changed")
-    if len(re.findall(r'[\u3040-\u30ff\u4e00-\u9fff]',out))<20:
+    if len(re.findall(r'[\u0a00-\u0a7f]',out))<20:
         raise AssertionError("Punjabi content absent")
     if "<!--JSONLD_" in out:raise AssertionError("JSON-LD placeholder unresolved")
     if "</html>" not in out.lower():raise AssertionError("HTML not complete")
