@@ -101,7 +101,7 @@ def do_menu(match,path):
         tag=set_href(tag,dest(code,tp))
         tag=re.sub(r'\s+aria-current=(["\'])page\1','',tag,flags=re.I)
         if code=="mr" and not re.search(r'\blang=',tag):
-            tag=tag[:-1]+' lang="pa">'
+            tag=tag[:-1]+' lang="mr">'
         if code==current and dest(code,tp)==canonical(path):
             tag=tag[:-1]+' aria-current="page">'
         return tag+label+close
@@ -237,9 +237,9 @@ def audit(changed):
                     errors.append(path+": incorrect "+label+" menu link")
             valid+=1
         if re.search(r'<link\b[^>]*hreflang=["\']ja["\'][^>]*href=["\'][^"\']*/pa/',text,re.I):
-            errors.append(path+": ja points to Marathi")
+            errors.append(path+": ja points to Punjabi")
         if re.search(r'<link\b[^>]*href=["\'][^"\']*/pa/[^"\']*["\'][^>]*hreflang=["\']ja["\']',text,re.I):
-            errors.append(path+": ja points to Marathi")
+            errors.append(path+": ja points to Punjabi")
     sm=ET.parse(ROOT/"sitemap.xml")
     urls=[x.text for x in sm.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
     en_expected={canonical(en) for en,_ in PAIRS}
@@ -254,7 +254,7 @@ def audit(changed):
     actual_en={"" if p==BASE else p.removeprefix(BASE) for p in urls if p==BASE or (
         p.startswith(BASE) and "/" not in p.removeprefix(BASE) and p.endswith(".html"))}
     if actual_en!={("" if p=="index.html" else p) for p in expected_en}:errors.append("English sitemap no longer has exactly the 11 translation originals")
-    print("MARATHI_QA english="+str(len(en_expected))+" translated="+str(len(pa_expected))
+    print("MARATHI_QA english="+str(len(en_expected))+" translated="+str(len(mr_expected))
           +" footer_pages="+str(total)+" menus="+str(valid)+" changed="+str(changed)
           +" issues="+str(len(errors)),flush=True)
     if errors:raise AssertionError("\n".join(errors[:75]))
