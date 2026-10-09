@@ -1,4 +1,4 @@
-name: Punjabi page 1 final verification
+name: Punjabi full website sequential page translation
 on:
   push:
     branches: [pa-complete-sitemap-20261009]
@@ -6,21 +6,61 @@ on:
 permissions:
   contents: write
 jobs:
-  page-one:
+  remaining-ten-pages:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 175
     steps:
       - uses: actions/checkout@v4
         with:
           ref: pa-complete-sitemap-20261009
-      - name: Validate 259 Punjabi text slots and complete page 1
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: en-pa-indictrans2-200m-v1
+      - name: Install offline translation engine
         run: |
-          python -m py_compile _pa_translate_full.py _pa_sync_nav.py
-          python -u _pa_translate_full.py 0
-      - name: Commit only the validated page
+          python -m pip install -q 'torch==2.5.1' --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -q 'transformers==4.44.2' sentencepiece indictranstoolkit
+      - name: Translate verify and save one page before opening the next
+        shell: bash
         run: |
+          python -m py_compile _pa_translate_full.py _pa_offline_runtime.py _pa_editorial.py _pa_sync_nav.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pa/index.html
-          git commit -m "Translate verify save Punjabi page 1 of 11"
-          git push origin HEAD:pa-complete-sitemap-20261009
+          python -u - <<'PY'
+          import subprocess
+          from _pa_translate_full import PAGES,ROOT,process,validate
+          from _pa_editorial import polish
+          for idx in range(1,len(PAGES)):
+              en,pa=PAGES[idx]
+              print(f"PAGE {idx+1}/11 START: {en}",flush=True)
+              process(en,pa)
+              polish(idx)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/pa).read_text(encoding="utf-8"),en,pa)
+              subprocess.run(["git","add",pa,".github/pa-translation-cache.json"],check=True)
+              subprocess.run(["git","commit","-m",f"Translate verify save Punjabi page {idx+1} of 11"],check=True)
+              subprocess.run(["git","push","origin","HEAD:pa-complete-sitemap-20261009"],check=True)
+              print(f"PAGE {idx+1}/11 SAVED and verified: {pa}",flush=True)
+          PY
+      - name: Integrate Punjabi footer language choice on every localized site page
+        shell: bash
+        run: |
+          python -u _pa_sync_nav.py
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Add stable Punjabi language switching and sitemap support pages"
+            git push origin HEAD:pa-complete-sitemap-20261009
+          fi
+      - name: Save verified translated fragments on failure without saving an unchecked page
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/pa-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/pa-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Punjabi text translation after page error"
+              git push origin HEAD:pa-complete-sitemap-20261009
+            fi
+          fi
