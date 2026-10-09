@@ -89,11 +89,32 @@ def mark_numbers(s: str):
     return MASK_PATTERN.sub(replace, s), stored
 
 def restore_numbers(s: str, stored):
-    for idx, token in enumerate(stored):
-        pat = r"§\s*" + str(idx) + r"(?!\d)(?:\s*§)?"
-        s, n = re.subn(pat, lambda _m: token, s)
-        if n != 1:
-            raise ValueError(f"Technical token {idx} disappeared or duplicated: {s[:150]!r}")
+    # IndicTrans may remove one '§' or separate it from the numeric sentinel.
+    # Each technical value is restored exactly once; ambiguity remains a hard error.
+    for idx in range(len(stored)-1,-1,-1):
+        token=stored[idx]
+        nstr=str(idx)
+        candidates=[
+            r"§\s*"+nstr+r"(?!\d)(?:\s*§)?",
+            r"(?<!\d)"+nstr+r"(?!\d)\s*§",
+            r"(?<![\dA-Za-z])"+nstr+r"(?!\d)",
+        ]
+        hits=[]
+        for pat in candidates:
+            hits=list(re.finditer(pat,s))
+            if hits:
+                if len(hits)!=1:
+                    raise ValueError(f"Ambiguous technical token {idx}: {s[:160]!r}")
+                break
+        if not hits:
+            raise ValueError(f"Technical token {idx} disappeared: {s[:160]!r}")
+        m=hits[0]
+        # Repair model-collapsed adjacency: 'Linux2 §' -> 'Linux VPS'.
+        prefix=" " if m.start()>0 and s[m.start()-1].isalnum() else ""
+        suffix=" " if m.end()<len(s) and s[m.end()].isalnum() else ""
+        s=s[:m.start()]+prefix+token+suffix+s[m.end():]
+    if re.search(r"§\s*\d",s):
+        raise ValueError(f"Unresolved technical sentinels: {s[:160]!r}")
     return s
 
 def translate_group(items: list[str]) -> list[str]:
