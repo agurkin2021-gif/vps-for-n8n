@@ -63,3 +63,5 @@ jobs:
             git commit -m "Integrate complete Turkish localization site-wide"
             git push origin HEAD:tr-complete-sitemap-20261009
           fi
+
+# retry after canonical English homepage hreflang normalization
