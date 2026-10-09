@@ -1,0 +1,51 @@
+name: Punjabi IndicTrans2 quality probe
+on:
+  push:
+    branches: [pa-complete-sitemap-20261009]
+    paths: [.github/workflows/pa-indictrans-probe.yml]
+jobs:
+  translation-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface/hub
+          key: en-pa-indictrans2-200m-v1
+      - name: Install translation runtime
+        run: |
+          python -m pip install -q 'torch==2.5.1' --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -q 'transformers==4.44.2' sentencepiece indictranstoolkit
+      - name: Verify Punjabi semantics and placeholders
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          import time,torch
+          from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+          from IndicTransToolkit import IndicProcessor
+          torch.set_num_threads(2)
+          model_id="naklitechie/indictrans2-en-indic-dist-200M"
+          started=time.time()
+          ip=IndicProcessor(inference=True)
+          tokenizer=AutoTokenizer.from_pretrained(model_id,trust_remote_code=True)
+          model=AutoModelForSeq2SeqLM.from_pretrained(model_id,trust_remote_code=True,use_safetensors=True).eval()
+          print("MODEL_LOADED_SECONDS",round(time.time()-started,2),flush=True)
+          examples=[
+            "Choose the resources your workflows need.",
+            "Compare VPS configurations from $0.07/day. Keep Docker, PostgreSQL and n8n unchanged.",
+            "If your database is hosted on the same server, keep encrypted backups of the key.",
+            "§0§ The minimum includes §1§ RAM and §2§ storage.",
+            "VDSina, n8n, Docker, PostgreSQL, Linux and Ubuntu.",
+          ]
+          batch=ip.preprocess_batch(examples,src_lang="eng_Latn",tgt_lang="pan_Guru")
+          enc=tokenizer(batch,truncation=True,padding=True,return_tensors="pt")
+          with torch.no_grad():
+            output=model.generate(**enc,use_cache=True,max_length=220,num_beams=3,num_return_sequences=1)
+          decoded=tokenizer.batch_decode(output,skip_special_tokens=True,clean_up_tokenization_spaces=True)
+          trs=ip.postprocess_batch(decoded,lang="pan_Guru")
+          for a,b in zip(examples,trs):
+            print("SOURCE",a,flush=True)
+            print("PUNJABI",b,flush=True)
+          print("TOTAL_SECONDS",round(time.time()-started,2),flush=True)
+          PY
