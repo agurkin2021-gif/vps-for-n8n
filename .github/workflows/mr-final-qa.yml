@@ -1,0 +1,48 @@
+name: Marathi final parity and reciprocal switching audit
+on:
+  push:
+    branches: [mr-google-complete-20261009]
+    paths: [.github/workflows/mr-final-qa.yml]
+permissions:
+  contents: read
+jobs:
+  site-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: mr-google-complete-20261009
+      - name: Validate original English -> Marathi one-to-one fidelity
+        run: |
+          python -m py_compile _mr_translate_full.py _mr_editorial.py _mr_publish_qa.py
+          python -u - <<'PY'
+          from _mr_translate_full import PAGES,ROOT,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,mr) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/mr).read_text(encoding="utf-8"),en,mr)
+              print(f"FINAL_PARITY_PASS {idx}/11 {mr}",flush=True)
+          PY
+      - name: Verify site-wide menus, footer links and hreflang
+        run: |
+          python -u _mr_publish_qa.py
+          python - <<'PY'
+          import re
+          from _mr_publish_qa import PAIRS,ROOT,canonical
+          def href_for_hreflang(text,language):
+              for tag in re.findall(r'<link\b[^>]*>',text,re.I):
+                  code=re.search(r'\bhreflang=(["\'])([^"\']+)\1',tag,re.I)
+                  if code and code.group(2).lower()==language:
+                      href=re.search(r'\bhref=(["\'])(.*?)\1',tag,re.I)
+                      if href:return href.group(2)
+              return None
+          for en,mr in PAIRS:
+              english=(ROOT/en).read_text(encoding="utf-8")
+              marathi=(ROOT/mr).read_text(encoding="utf-8")
+              actual=href_for_hreflang(english,"mr")
+              assert actual==canonical(mr), (en,actual,canonical(mr))
+              original=href_for_hreflang(marathi,"en")
+              assert original==canonical(en), (mr,original,canonical(en))
+          print("MARATHI_RECIPROCAL_HREFLANG=11/11",flush=True)
+          PY
+          git diff --exit-code
