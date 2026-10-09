@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="420" viewBox="0 0 480 420" fill="none">
+<title>n8n Queue Mode: Main, Redis, Workers and PostgreSQL</title><desc>n8n main enqueues jobs to Redis; two workers execute queued jobs; the main and workers access shared PostgreSQL data.</desc>
+<defs>
+<linearGradient id="qm-bg" x1="30" y1="20" x2="460" y2="400" gradientUnits="userSpaceOnUse"><stop stop-color="#283A52"/><stop offset="1" stop-color="#111823"/></linearGradient>
+<marker id="qm-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#FF9474"/></marker>
+<marker id="qm-data" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#81D6C1"/></marker>
+<pattern id="qm-dot" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1" fill="#99AEC4" opacity=".13"/></pattern>
+</defs>
+<rect x="12" y="12" width="456" height="396" rx="30" fill="url(#qm-bg)"/><rect x="29" y="29" width="422" height="362" rx="22" stroke="#92A9C1" stroke-opacity=".24" stroke-width="1.5"/><rect x="29" y="29" width="422" height="362" rx="22" fill="url(#qm-dot)"/>
+<text x="47" y="64" fill="#FF997A" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700" letter-spacing="1.7">QUEUE MODE · EXECUTION FLOW</text>
+<circle cx="429" cy="55" r="4" fill="#FF9678"/><circle cx="415" cy="55" r="4" fill="#627790"/>
+<!-- Queue dispatch -->
+<path d="M200 149H274" stroke="#FF9474" stroke-width="3" stroke-linecap="round" marker-end="url(#qm-arrow)"/>
+<text x="240" y="139" fill="#DBB8AE" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10">enqueue</text>
+<path d="M359 190V209H305V232" stroke="#FF9474" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#qm-arrow)"/>
+<path d="M359 209H400V232" stroke="#FF9474" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#qm-arrow)"/>
+<!-- Shared database access -->
+<path d="M122 190V242" stroke="#81D6C1" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="4 6" marker-end="url(#qm-data)"/>
+<path d="M265 293H207" stroke="#81D6C1" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="4 6" marker-end="url(#qm-data)"/>
+<text x="236" y="281" fill="#A3D6C9" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10">data</text>
+<!-- Main -->
+<rect x="44" y="99" width="156" height="91" rx="15" fill="#29394F" stroke="#7590A9" stroke-width="1.7"/>
+<circle cx="71" cy="121" r="8" fill="#FF8060"/><circle cx="92" cy="121" r="5" fill="#FFBA9A"/><path d="M79 121H87" stroke="#FFE2D3" stroke-width="2"/>
+<text x="63" y="154" fill="#F5F7FA" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="700">MAIN n8n</text>
+<text x="63" y="173" fill="#B0C0D2" font-family="Arial,Helvetica,sans-serif" font-size="12">Receives triggers</text>
+<!-- Redis -->
+<rect x="279" y="99" width="158" height="91" rx="15" fill="#383043" stroke="#E89A8D" stroke-width="1.7"/>
+<path d="M305 122L321 115L336 122L321 129Z M305 131L321 138L336 131" stroke="#FFAF95" stroke-width="1.8" stroke-linejoin="round"/>
+<text x="299" y="155" fill="#FFF4F0" font-family="Arial,Helvetica,sans-serif" font-size="17.5" font-weight="700">REDIS</text>
+<text x="299" y="173" fill="#E3C0BB" font-family="Arial,Helvetica,sans-serif" font-size="12">Queues jobs</text>
+<!-- Postgres -->
+<rect x="44" y="242" width="163" height="112" rx="15" fill="#1E3842" stroke="#70BFB0" stroke-width="1.7"/>
+<ellipse cx="72" cy="270" rx="15" ry="7" stroke="#8AE1CA" stroke-width="2"/><path d="M57 270V287C57 296 87 296 87 287V270M57 280C57 289 87 289 87 280" stroke="#8AE1CA" stroke-width="2"/>
+<text x="61" y="314" fill="#EDF8F5" font-family="Arial,Helvetica,sans-serif" font-size="16.5" font-weight="700">PostgreSQL</text>
+<text x="61" y="334" fill="#B0D9CE" font-family="Arial,Helvetica,sans-serif" font-size="12">Shared data</text>
+<!-- Two workers -->
+<rect x="262" y="237" width="82" height="112" rx="14" fill="#273A4C" stroke="#85A0B4" stroke-width="1.7"/>
+<rect x="357" y="237" width="82" height="112" rx="14" fill="#273A4C" stroke="#85A0B4" stroke-width="1.7"/>
+<circle cx="303" cy="266" r="11" fill="#80D9BF"/><path d="M297 265L301 269L309 261" stroke="#19463C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="398" cy="266" r="11" fill="#80D9BF"/><path d="M392 265L396 269L404 261" stroke="#19463C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="303" y="300" fill="#EAF3F9" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700">WORKER 1</text>
+<text x="398" y="300" fill="#EAF3F9" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="700">WORKER 2</text>
+<text x="303" y="320" fill="#B4C6D4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11">Execute</text>
+<text x="398" y="320" fill="#B4C6D4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11">Execute</text>
+<text x="240" y="380" fill="#D7E0EC" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="12" font-weight="600">Scale execution capacity with workers</text>
+</svg>
