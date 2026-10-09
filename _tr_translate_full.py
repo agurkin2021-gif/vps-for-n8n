@@ -394,9 +394,9 @@ def validate(src,out,enpath,japath):
         raise AssertionError(f"CSS changed: {enpath}")
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
         raise AssertionError(f"JavaScript changed: {enpath}")
-    if not re.search(r'<html\\b[^>]*lang=["\\']tr',out,re.I):
+    if not re.search(r'<html\b[^>]*lang=["\']tr',out,re.I):
         raise AssertionError("lang tr missing")
-    canonical = BASE + ("ta/" if japath == "tr/index.html" else japath)
+    canonical = BASE + ("tr/" if japath == "tr/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):
         raise AssertionError("H1 count differs")
