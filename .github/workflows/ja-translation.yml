@@ -15,7 +15,7 @@ jobs:
         run: |
           python - <<'PY'
           import urllib.parse,urllib.request,json
-          query=urllib.parse.urlencode({'client':'gtx','sl':'en','tl':'ja','dt':'t','q':'Back up the database and encryption key before upgrading.'})
+          query=urllib.parse.urlencode({'client':'gtx','sl':'en','tl':'ja','dt':'t','q':'Back up the database and encryption key before upgrading.\n\nZZSEGMENTKEEPZZ\n\nSelf-hosted n8n requires you to manage security updates.'})
           url='https://translate.googleapis.com/translate_a/single?'+query
           req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
           with urllib.request.urlopen(req,timeout=20) as res: data=json.load(res)
