@@ -29,3 +29,6 @@
 /* Japanese technical guides: keep long commands inside horizontally scrollable code blocks on narrow screens. */
 html[lang="ja"] pre{max-width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
 html[lang="ja"] pre>code{white-space:pre}
+
+/* Mobile footer language menu must open inside the viewport, not beyond the left edge. */
+@media(max-width:560px){footer .footer-lang-switch .lang-menu{left:0;right:auto;max-width:calc(100vw - 32px)}}
