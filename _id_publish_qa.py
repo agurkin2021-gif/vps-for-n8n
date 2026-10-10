@@ -118,7 +118,7 @@ def transform(path,source):
         out=set_indonesian_button(out,path)
         out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
-    if category(path) in ID_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']fa["\']',out,re.I):
+    if category(path) in ID_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']id["\']',out,re.I):
         out=out.replace("</head>",'<link rel="alternate" hreflang="id" href="'+id_dest(path)+'"/></head>',1)
     return out
 
@@ -169,7 +169,7 @@ def audit(changed):
         if prices(source)!=prices(output):errors.append(vi+": prices differ")
         if len(re.findall(r'<details\b',source,re.I))!=len(re.findall(r'<details\b',output,re.I)):errors.append(vi+": FAQ count differs")
         if len(re.findall(r'<img\b',source,re.I))!=len(re.findall(r'<img\b',output,re.I)):errors.append(vi+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']fa["\']',output,re.I):errors.append(vi+": html lang is not fa")
+        if not re.search(r'<html\b[^>]*\blang=["\']id["\']',output,re.I):errors.append(vi+": html lang is not id")
         if len(re.findall(r'<h1(?:\s|>)',source,re.I))!=len(re.findall(r'<h1(?:\s|>)',output,re.I)):errors.append(vi+": H1 count differs")
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
