@@ -1,4 +1,4 @@
-# Thai editorial pass v5 final-native-cleanup
+# Thai editorial pass v6 post-polish-final
 name: Thai sequential HTML localization and publication QA
 on:
   workflow_dispatch:
