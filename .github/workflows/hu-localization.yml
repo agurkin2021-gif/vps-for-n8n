@@ -1,4 +1,4 @@
-# Hungarian pages 1-2 — clean cache and verified localization pass
+# Hungarian pages 1-2 — completed editorial glossary and long-paragraph audit
 name: Hungarian localization — sequential two-page pass
 on:
   push:
