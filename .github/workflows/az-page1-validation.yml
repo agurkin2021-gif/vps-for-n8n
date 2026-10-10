@@ -1,4 +1,4 @@
-name: Verify Azerbaijani page 11 then save
+name: Publish Azerbaijani all eleven pages and multilingual menus
 on:
   push:
     branches: [main]
@@ -25,6 +25,8 @@ jobs:
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add az/n8n-queue-mode.html
-          git commit -m "Translate and verify Azerbaijani page 11 of 11"
+          python -u _az_publish_qa.py
+          git add -u
+          git add sitemap.xml
+          git commit -m "Publish Azerbaijani across all header and footer language menus"
           git push origin HEAD:main
