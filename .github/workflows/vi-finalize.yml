@@ -1,0 +1,72 @@
+name: Vietnamese native editorial finalization
+on:
+  push:
+    branches: [vi-complete-sitemap-20261009]
+    paths: [.github/workflows/vi-finalize.yml]
+permissions:
+  contents: write
+jobs:
+  polish-and-finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: vi-complete-sitemap-20261009
+          fetch-depth: 0
+
+      - name: Compile and validate finalization scripts
+        run: |
+          rm -rf __pycache__
+          python -m py_compile _vi_translate_full.py _vi_native_polish.py _vi_publish_qa.py
+          rm -rf __pycache__
+          python - <<'PY'
+          from _vi_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("VIETNAMESE_FINAL_SOURCE_PAGES=11")
+          PY
+          rm -rf __pycache__
+
+      - name: Native Vietnamese editorial review, page by page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 0 10); do
+            python -u _vi_native_polish.py "$i"
+            rm -rf __pycache__
+            git add vi/
+            if ! git diff --cached --quiet; then
+              git commit -m "Polish native Vietnamese page $((i+1))/11"
+              git push origin HEAD:vi-complete-sitemap-20261009
+            fi
+          done
+
+      - name: Rebuild Vietnamese selectors and sitemap
+        run: |
+          rm -rf __pycache__
+          python -u _vi_publish_qa.py
+          rm -rf __pycache__
+          git diff --binary > /tmp/vi-native-first.diff
+          python -u _vi_publish_qa.py
+          rm -rf __pycache__
+          git diff --binary > /tmp/vi-native-second.diff
+          cmp /tmp/vi-native-first.diff /tmp/vi-native-second.diff
+
+      - name: Final source-parity verification after editorial polish
+        run: |
+          python -u - <<'PY'
+          from _vi_translate_full import PAGES,ROOT,validate
+          for i,(en,vi) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/vi).read_text(encoding="utf-8"),en,vi)
+              print(f"VIETNAMESE_NATIVE_FINAL_PASS {i}/11 {vi}")
+          PY
+          rm -rf __pycache__
+
+      - name: Remove generated Python cache and commit final integration
+        run: |
+          rm -rf __pycache__
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize native Vietnamese localization and selectors"
+            git push origin HEAD:vi-complete-sitemap-20261009
+          fi

@@ -1,0 +1,65 @@
+name: Vietnamese complete source-faithful localization
+on:
+  push:
+    branches: [vi-complete-sitemap-20261009]
+    paths: [.github/workflows/vi-complete.yml]
+permissions:
+  contents: write
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: vi-complete-sitemap-20261009
+          fetch-depth: 0
+
+      - name: Validate Vietnamese scripts and authoritative English sitemap
+        run: |
+          python -m py_compile _vi_translate_full.py _vi_publish_qa.py
+          python - <<'PY'
+          from _vi_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("VIETNAMESE_SOURCE_PAGES=11")
+          PY
+
+      - name: Translate, verify and save each page sequentially
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for i in $(seq 0 10); do
+            echo "VIETNAMESE_PAGE_START $((i+1))/11"
+            python -u _vi_translate_full.py "$i"
+            git add vi/ .github/vi-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Vietnamese page $((i+1))/11: translate and verify English sitemap source"
+              git push origin HEAD:vi-complete-sitemap-20261009
+            fi
+            echo "VIETNAMESE_PAGE_SAVED $((i+1))/11"
+          done
+
+      - name: Integrate Vietnamese in all selectors and sitemap
+        run: |
+          python -u _vi_publish_qa.py
+          git diff --binary > /tmp/vi-first.diff
+          python -u _vi_publish_qa.py
+          git diff --binary > /tmp/vi-second.diff
+          cmp /tmp/vi-first.diff /tmp/vi-second.diff
+
+      - name: Final 11-page source parity verification
+        run: |
+          python -u - <<'PY'
+          from _vi_translate_full import PAGES,ROOT,validate
+          for i,(en,vi) in enumerate(PAGES,1):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/vi).read_text(encoding="utf-8"),en,vi)
+              print(f"VIETNAMESE_FINAL_PAGE_PASS {i}/11 {vi}")
+          PY
+
+      - name: Commit verified Vietnamese integration
+        run: |
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate complete Vietnamese localization site-wide"
+            git push origin HEAD:vi-complete-sitemap-20261009
+          fi
