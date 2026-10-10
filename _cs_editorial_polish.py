@@ -57,23 +57,22 @@ REPLACE={
 "n8n-queue-mode.html":[("Měřítko nejprve vertikálně, když","Nejprve navyšujte výkon jednoho serveru, pokud"),("Změřte před změnou architektury","Před změnou architektury nejprve měřte"),("Zůstaňte v běžném režimu, když","Zůstaňte v běžném režimu, pokud"),("Zvažte režim fronty, když","Zvažte režim fronty, pokud")]
 }
 def script_parts(s,tag):
-    rx=rf'<{tag}\\b[^>]*>([\\s\\S]*?)</{tag}>'
-    return re.findall(rx,s,re.I)
+    return re.findall(rf'<{tag}\b[^>]*>([\s\S]*?)</{tag}>',s,re.I)
 def sig(s):
     return [('/' if m.group().startswith('</') else '')+m.group(1).lower()
-        for m in re.finditer(r'</?([a-z][\\w-]*)\\b[^>]*>',s,re.I)
+        for m in re.finditer(r'</?([a-z][\w-]*)\b[^>]*>',s,re.I)
         if m.group(1).lower() not in ('link','meta')]
 def prices(s):
-    s=re.sub(r'<(?:script|style)\\b[^>]*>[\\s\\S]*?</(?:script|style)>','',s,flags=re.I)
+    s=re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',s,flags=re.I)
     s=html.unescape(re.sub(r'<[^>]*>',' ',s))
-    return collections.Counter(re.findall(r'\\$\\s*\\d+(?:[.,]\\d+)*(?:/(?:day|month|year|mo))?',s,re.I))
+    return collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',s,re.I))
 def set_meta(s,key,value):
     def change(m):
         tag=m.group()
-        field=re.search(r'\\b(?:name|property)=(["\\\'])(.*?)\\1',tag,re.I)
+        field=re.search(r"""(?:name|property)\s*=\s*(['"])(.*?)\1""",tag,re.I)
         if not field or field.group(2)!=key:return tag
-        return re.sub(r'\\bcontent=(["\\\'])(.*?)\\1',lambda x:'content='+x.group(1)+html.escape(value,quote=True)+x.group(1),tag,count=1,flags=re.I)
-    return re.sub(r'<meta\\b[^>]*>',change,s,flags=re.I)
+        return re.sub(r"""content\s*=\s*(['"])(.*?)\1""",lambda x:'content='+x.group(1)+html.escape(value,quote=True)+x.group(1),tag,count=1,flags=re.I)
+    return re.sub(r'<meta\b[^>]*>',change,s,flags=re.I)
 def main():
     assert len(META)==11
     warnings=[]
@@ -90,10 +89,10 @@ def main():
             cs=cs.replace(old,new)
         assert sig(en)==sig(cs),filename+' DOM changed'
         assert script_parts(en,'style')==script_parts(cs,'style'),filename+' CSS changed'
-        def js(s):return re.findall(r'<script\\b(?![^>]*application/ld\\+json)[^>]*>([\\s\\S]*?)</script>',s,re.I)
+        def js(s):return re.findall(r'<script\b(?![^>]*application/ld\+json)[^>]*>([\s\S]*?)</script>',s,re.I)
         assert js(en)==js(cs),filename+' JavaScript changed'
         assert prices(en)==prices(cs),filename+' price change: '+repr((prices(en),prices(cs)))
-        assert len(re.findall(r'<h1(?:\\s|>)',cs,re.I))==1,filename+' H1'
+        assert len(re.findall(r'<h1(?:\s|>)',cs,re.I))==1,filename+' H1'
         target.write_text(cs,encoding='utf-8')
         print('CS_EDITORIAL',i,'/11',filename,'PASS',flush=True)
     print('CS_EDITORIAL_WARNINGS',warnings,flush=True)
