@@ -1,3 +1,4 @@
+# Thai editorial pass v2
 name: Thai sequential HTML localization and publication QA
 on:
   workflow_dispatch:
