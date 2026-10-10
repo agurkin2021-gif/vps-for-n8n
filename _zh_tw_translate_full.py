@@ -35,14 +35,14 @@ LANGUAGE_NAMES = {
     "한국어", "Français", "Italiano", "Polski", "繁體中文", "n8nVPS", "n8n", "VDSina",
 }
 EXACT = {
-    "FAQ": "FAQ",
-    "Skip to content": "Lewati ke konten",
+    "FAQ": "常見問題",
+    "Skip to content": "跳至內容",
     "FAQPage": "FAQPage",
-    "Privacy": "Privasi",
-    "Contact": "Kontak",
-    "About": "Tentang",
-    "Choose your VPS": "Pilih VPS Anda",
-    "View requirements": "Lihat persyaratan",
+    "Privacy": "隱私權",
+    "Contact": "聯絡我們",
+    "About": "關於我們",
+    "Choose your VPS": "選擇您的 VPS",
+    "View requirements": "查看需求",
 }
 MASK_PATTERN = re.compile(
     r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo))?'
