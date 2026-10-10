@@ -188,7 +188,7 @@ def polish(i):
             text=text.replace(old,new);hits+=n
     for old,new in GLOBAL:
         if old.isalpha():
-            text,n=re.subn(r'\\b'+re.escape(old)+r'\\b',new,text)
+            text,n=re.subn(r'\b'+re.escape(old)+r'\b',new,text)
         else:
             n=text.count(old)
             if n:text=text.replace(old,new)
