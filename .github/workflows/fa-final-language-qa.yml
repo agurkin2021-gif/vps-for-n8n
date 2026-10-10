@@ -1,0 +1,20 @@
+name: Persian final language QA
+on:
+  push:
+    branches: [fa-final-language-cleanup-20261009]
+    paths:
+      - .github/workflows/fa-final-language-qa.yml
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fa-final-language-cleanup-20261009
+      - name: Verify Persian pages and integration
+        shell: bash
+        run: |
+          python -m py_compile _fa_publish_qa.py
+          python -u _fa_publish_qa.py
