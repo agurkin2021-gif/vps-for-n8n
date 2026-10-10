@@ -1,0 +1,116 @@
+name: Greek sequential HTML localization, full parity QA and publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/el-localization.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: el-localization-main
+  cancel-in-progress: false
+jobs:
+  translate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Check English sitemap and compile Greek localization tools
+        shell: bash
+        run: |
+          python -m py_compile _el_translate_full.py _el_publish_qa.py
+          python - <<'PY'
+          from _el_translate_full import verify_source_sitemap, PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("GREEK_SOURCE_SITEMAP_ENGLISH_PAGES=11",flush=True)
+          PY
+      - name: Translate, verify and commit each page before opening the next
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess,time
+          from _el_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          def run(*args):
+              return subprocess.run(list(args),check=True)
+          def push():
+              for retry in range(6):
+                  if subprocess.run(["git","push","origin","HEAD:main"]).returncode==0:return
+                  run("git","pull","--rebase","origin","main")
+                  time.sleep(2+retry)
+              raise RuntimeError("Unable to publish verified Greek page to main")
+          for i,(en,target) in enumerate(PAGES,1):
+              print(f"GREEK_PAGE {i}/11 OPEN {en}",flush=True)
+              process(en,target)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
+              run("git","add",target,".github/el-translation-cache.json")
+              if subprocess.run(["git","diff","--cached","--quiet"]).returncode:
+                  run("git","commit","-m",f"Greek page {i}/11 translated verified saved: {target}")
+                  push()
+              print(f"GREEK_PAGE {i}/11 VERIFIED_SAVED {target}",flush=True)
+          PY
+      - name: Recheck all eleven pages and language completeness
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          from _el_translate_full import PAGES,ROOT,validate
+          import re,json
+          for i,(en,target) in enumerate(PAGES,1):
+              src=(ROOT/en).read_text(encoding="utf-8")
+              out=(ROOT/target).read_text(encoding="utf-8")
+              validate(src,out,en,target)
+              assert len(re.findall(r'<title>',src,re.I))==len(re.findall(r'<title>',out,re.I))
+              assert len(re.findall(r'<meta\b',src,re.I))<=len(re.findall(r'<meta\b',out,re.I))
+              assert re.search(r'<html\s+lang="el"',out,re.I)
+              print(f"GREEK_CONTENT_RECHECK {i}/11 PASS {target}",flush=True)
+          PY
+      - name: Add Greek last in every language switcher and publish sitemap
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python -u _el_publish_qa.py
+          git diff --binary > /tmp/el-first-pass.diff
+          python -u _el_publish_qa.py
+          git diff --binary > /tmp/el-second-pass.diff
+          cmp /tmp/el-first-pass.diff /tmp/el-second-pass.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Greek in every language menu with exact article links and sitemap"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git pull --rebase origin main
+              python -u _el_publish_qa.py
+              git add -u sitemap.xml
+              if ! git diff --cached --quiet; then git commit -m "Update Greek reciprocal links after remote changes"; fi
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final Greek 11-page and sitewide footer audit
+        shell: bash
+        run: |
+          python -u _el_publish_qa.py
+          if ! git diff --quiet; then
+             echo "Greek QA was not idempotent"
+             exit 1
+          fi
+          git status --short
+          echo "GREEK_FINAL_PUBLISHED_QA_PASS"
+      - name: Save verified Greek translation cache after interruption
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/el-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/el-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Greek translation slots"
+              git push origin HEAD:main || true
+            fi
+          fi
