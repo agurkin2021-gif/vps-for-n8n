@@ -18,7 +18,7 @@ jobs:
       - name: Confirm authoritative English sitemap
         shell: bash
         run: |
-          python -m py_compile _nl_translate_full.py _nl_publish_qa.py
+          python -m py_compile _nl_translate_full.py _nl_native_polish.py _nl_publish_qa.py
           python - <<'PY'
           from _nl_translate_full import verify_source_sitemap,PAGES
           assert verify_source_sitemap()==len(PAGES)==11
@@ -33,7 +33,7 @@ jobs:
           import subprocess
           from _nl_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
           assert verify_source_sitemap()==len(PAGES)==11
-          for idx,(en,target) in enumerate(PAGES):
+          for idx,(en,target) in enumerate(PAGES[11:], start=11):
               print(f"DUTCH_PAGE_{idx+1}/11 OPEN {en}",flush=True)
               process(en,target)
               validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
@@ -42,6 +42,24 @@ jobs:
               subprocess.run(["git","push","origin","HEAD:main"],check=True)
               print(f"DUTCH_PAGE_{idx+1}/11 VERIFIED_SAVED {target}",flush=True)
           PY
+      - name: Native Dutch editorial polish and page QA
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          from _nl_translate_full import PAGES,ROOT,validate
+          from _nl_native_polish import polish
+          for idx,(en,target) in enumerate(PAGES):
+              polish(idx)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
+              print(f"DUTCH_NATIVE_QA {idx+1}/11 {target} PASS",flush=True)
+          PY
+          git add nl/*.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Polish Dutch translation quality on all 11 pages"
+            git push origin HEAD:main
+          fi
       - name: Integrate Dutch last in every language selector and validate sitemap
         shell: bash
         run: |
