@@ -110,7 +110,7 @@ def transform(path,source):
         out=set_dutch_button(out,path)
         out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
-    if category(path) in NL_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']ro["\']',out,re.I):
+    if category(path) in NL_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']nl["\']',out,re.I):
         out=out.replace("</head>",'<link rel="alternate" hreflang="nl" href="'+nl_dest(path)+'"/></head>',1)
     return out
 
@@ -161,7 +161,7 @@ def audit(changed):
         if prices(source)!=prices(output):errors.append(vi+": prices differ")
         if len(re.findall(r'<details\b',source,re.I))!=len(re.findall(r'<details\b',output,re.I)):errors.append(vi+": FAQ count differs")
         if len(re.findall(r'<img\b',source,re.I))!=len(re.findall(r'<img\b',output,re.I)):errors.append(vi+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']ro["\']',output,re.I):errors.append(vi+": html lang is not ro")
+        if not re.search(r'<html\b[^>]*\blang=["\']nl["\']',output,re.I):errors.append(vi+": html lang is not nl")
         if len(re.findall(r'<h1(?:\s|>)',source,re.I))!=len(re.findall(r'<h1(?:\s|>)',output,re.I)):errors.append(vi+": H1 count differs")
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
