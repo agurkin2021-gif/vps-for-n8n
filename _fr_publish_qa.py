@@ -89,7 +89,7 @@ def do_menu(match,path):
     inner=ANCHOR.sub(rewrite,inner)
     if found==0:
         new='<a href="'+target+'" hreflang="fr" lang="fr"'+(' aria-current="page"' if current else '')+'>'+FR_TITLE+'</a>'
-        tr=list(re.finditer(r'<a\b[^>]*>\s*Tiếng Việt\s*</a>',inner,re.I))
+        tr=list(re.finditer(r'<a\b[^>]*>\s*한국어\s*</a>',inner,re.I))
         if tr:
             m=tr[-1];inner=inner[:m.end()]+new+inner[m.end():]
         else:inner+=new
@@ -118,7 +118,7 @@ def transform(path,source):
         out=set_french_button(out,path)
         out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
-    if category(path) in FR_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']ko["\']',out,re.I):
+    if category(path) in FR_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']fr["\']',out,re.I):
         out=out.replace("</head>",'<link rel="alternate" hreflang="fr" href="'+fr_dest(path)+'"/></head>',1)
     return out
 
@@ -169,7 +169,7 @@ def audit(changed):
         if prices(source)!=prices(output):errors.append(vi+": prices differ")
         if len(re.findall(r'<details\b',source,re.I))!=len(re.findall(r'<details\b',output,re.I)):errors.append(vi+": FAQ count differs")
         if len(re.findall(r'<img\b',source,re.I))!=len(re.findall(r'<img\b',output,re.I)):errors.append(vi+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']ko["\']',output,re.I):errors.append(vi+": html lang is not fr")
+        if not re.search(r'<html\b[^>]*\blang=["\']fr["\']',output,re.I):errors.append(vi+": html lang is not fr")
         if len(re.findall(r'<h1(?:\s|>)',source,re.I))!=len(re.findall(r'<h1(?:\s|>)',output,re.I)):errors.append(vi+": H1 count differs")
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
@@ -210,7 +210,7 @@ def audit(changed):
     fr_expected={canonical(vi) for _,vi in PAIRS}
     if not en_expected.issubset(set(urls)):errors.append("Sitemap missing English original")
     if not fr_expected.issubset(set(urls)):errors.append("Sitemap missing French equivalent")
-    if len(en_expected)!=len(fr_expected) or len(fr_expected)!=14:errors.append("English/French page-count mismatch")
+    if len(en_expected)!=len(fr_expected) or len(fr_expected)!=11:errors.append("English/French mandatory page-count mismatch")
     fr_urls=[u for u in urls if u.startswith(BASE+"fr/")]
     if len(fr_urls)!=14:errors.append("French sitemap expected 14 URLs (11 equivalents + 3 retained French regional/commercial pages), got "+str(len(fr_urls)))
     if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
