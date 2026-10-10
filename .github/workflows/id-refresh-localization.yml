@@ -1,0 +1,74 @@
+name: Indonesian sitemap refresh and publication QA
+on:
+  push:
+    branches: [id-refresh-sitemap-20261010]
+    paths:
+      - .github/workflows/id-refresh-localization.yml
+permissions:
+  contents: write
+jobs:
+  refresh-pages-sequentially:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: id-refresh-sitemap-20261010
+      - name: Confirm authoritative English sitemap
+        shell: bash
+        run: |
+          python -m py_compile _id_translate_full.py _id_native_polish.py _id_publish_qa.py
+          python - <<'PY'
+          from _id_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("INDONESIAN_SOURCE_QA ENGLISH_PAGES=11")
+          PY
+      - name: PAGE N translate polish verify save before PAGE N+1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _id_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          from _id_native_polish import polish
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,target) in enumerate(PAGES):
+              print(f"INDONESIAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
+              process(en,target)
+              polish(idx)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
+              subprocess.run(["git","add",target,".github/id-translation-cache.json"],check=True)
+              changed=subprocess.run(["git","diff","--cached","--quiet"]).returncode!=0
+              if changed:
+                  subprocess.run(["git","commit","-m",f"Refresh verify and save Indonesian PAGE {idx+1}/11"],check=True)
+                  subprocess.run(["git","push","origin","HEAD:id-refresh-sitemap-20261010"],check=True)
+              print(f"INDONESIAN_PAGE_{idx+1}/11 VERIFIED_SAVED {target} changed={changed}",flush=True)
+          PY
+      - name: Integrate Indonesian across every selector and validate sitemap
+        shell: bash
+        run: |
+          python -u _id_publish_qa.py
+          git diff --binary > /tmp/id-first-qa.diff
+          python -u _id_publish_qa.py
+          git diff --binary > /tmp/id-second-qa.diff
+          cmp /tmp/id-first-qa.diff /tmp/id-second-qa.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize Indonesian selectors hreflang and sitemap QA"
+            git push origin HEAD:id-refresh-sitemap-20261010
+          fi
+      - name: Save verified Indonesian cache after interruption
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/id-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/id-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint Indonesian translation cache after interrupted page"
+              git push origin HEAD:id-refresh-sitemap-20261010
+            fi
+          fi
