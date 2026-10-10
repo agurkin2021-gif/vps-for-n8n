@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - .github/workflows/zh-tw-localization.yml
+      - _zh_tw_translate_full.py
+      - _zh_tw_publish_qa.py
   workflow_dispatch:
 permissions:
   contents: write
