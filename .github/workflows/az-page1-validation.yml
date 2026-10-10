@@ -1,4 +1,4 @@
-name: Verify Azerbaijani page 6 then save
+name: Verify Azerbaijani page 7 then save
 on:
   push:
     branches: [main]
@@ -6,25 +6,25 @@ on:
 permissions:
   contents: write
 jobs:
-  page-six:
+  page-seven:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Translate, verify and save page 6
+      - name: Translate, verify and save page 7
         shell: bash
         run: |
-          python -u _az_translate_full.py 5
+          python -u _az_translate_full.py 6
           python - <<'PY'
           from _az_translate_full import ROOT,validate,PAGES
-          s,d=PAGES[5]
+          s,d=PAGES[6]
           validate((ROOT/s).read_text(encoding="utf-8"),(ROOT/d).read_text(encoding="utf-8"),s,d)
-          print("AZ_PAGE_6_TRANSLATION_VERIFIED",flush=True)
+          print("AZ_PAGE_7_TRANSLATION_VERIFIED",flush=True)
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add az/install-n8n-on-a-vps.html
-          git commit -m "Translate and verify Azerbaijani page 6 of 11"
+          git add az/n8n-cloud-vs-self-hosted.html
+          git commit -m "Translate and verify Azerbaijani page 7 of 11"
           git push origin HEAD:main
