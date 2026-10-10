@@ -410,9 +410,7 @@ def process(enpath,elpath):
         output=output.replace("</head>",'<link rel="alternate" hreflang="el" href="'+BASE+elpath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"el/index.html",BASE+"el/")
-    # Greek word order needs the n8n brand before VPS even when the original H1 uses emphasis.
-    if enpath=="index.html":
-        # Preserve the exact H1 DOM structure; Greek word order already reads naturally.
+    # Preserve H1 markup and let Greek word order follow the surrounding HTML structure.
     validate(source,output,enpath,elpath)
     dest=ROOT/elpath
     dest.parent.mkdir(parents=True,exist_ok=True)
