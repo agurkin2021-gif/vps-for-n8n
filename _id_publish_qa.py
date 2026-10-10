@@ -78,22 +78,14 @@ def do_menu(match,path):
     opening,inner,closing=match.groups()
     current=(locale(path)=="id")
     target=id_dest(path)
-    found=0
-    def rewrite(m):
-        nonlocal found
+    kept=[]
+    for m in ANCHOR.finditer(inner):
         tag,label,close=m.groups()
-        if html.unescape(label).strip()!=ID_TITLE:return m.group()
-        found+=1
-        if found>1:return ""
-        return normalize_id_anchor(tag,current,target)+label+close
-    inner=ANCHOR.sub(rewrite,inner)
-    if found==0:
-        new='<a href="'+target+'" hreflang="id" lang="id"'+(' aria-current="page"' if current else '')+'>'+ID_TITLE+'</a>'
-        tr=list(re.finditer(r'<a\b[^>]*>\s*Français\s*</a>',inner,re.I))
-        if tr:
-            m=tr[-1];inner=inner[:m.end()]+new+inner[m.end():]
-        else:inner+=new
-    return opening+inner+closing
+        if html.unescape(label).strip()==ID_TITLE:
+            continue
+        kept.append(m.group())
+    new='<a href="'+target+'" hreflang="id" lang="id"'+(' aria-current="page"' if current else '')+'>'+ID_TITLE+'</a>'
+    return opening+"".join(kept)+new+closing
 
 def do_link(match,path):
     tag=match.group()
@@ -200,6 +192,9 @@ def audit(changed):
             anchors=[m for m in ANCHOR.finditer(block.group(2)) if html.unescape(m.group(2)).strip()==ID_TITLE]
             if len(anchors)!=1:
                 errors.append(path+": Indonesian selector count "+str(len(anchors)));continue
+            allanchors=list(ANCHOR.finditer(block.group(2)))
+            if not allanchors or html.unescape(allanchors[-1].group(2)).strip()!=ID_TITLE:
+                errors.append(path+": Indonesian is not last in language selector")
             href=re.search(r'\bhref=(["\'])(.*?)\1',anchors[0].group(1),re.I)
             if not href or href.group(2)!=expected:errors.append(path+": incorrect Indonesian menu link")
         if locale(path)=="id" and "Bahasa Indonesia ▾" not in text:errors.append(path+": Indonesian button label missing")
