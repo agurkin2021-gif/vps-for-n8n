@@ -1,0 +1,65 @@
+name: Czech final 11-page and global language QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cs-final-validation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate all Czech pages and every footer selector
+        run: |
+          python -u _cs_publish_qa.py
+          git diff --exit-code
+      - name: Check English parity and Czech sitemap exact mapping
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from _cs_translate_full import PAGES, verify_source_sitemap
+          import re, json, collections, xml.etree.ElementTree as ET
+          root=Path(".")
+          base="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          assert verify_source_sitemap()==len(PAGES)==11
+          sitemap=ET.parse("sitemap.xml")
+          urls=[u.text for u in sitemap.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+          expected={base+("cs/" if tr=="cs/index.html" else tr) for _,tr in PAGES}
+          actual={u for u in urls if u.startswith(base+"cs/")}
+          assert expected==actual,(expected-actual,actual-expected)
+          assert len(urls)==len(set(urls)),"Sitemap duplicates"
+          def tags(s):
+              return [(m.group().startswith("</"),m.group(1).lower()) for m in re.finditer(r"</?([a-z][\w-]*)\b[^>]*>",s,re.I) if m.group(1).lower() not in ("meta","link")]
+          def capture(s,tag):
+              return [m.group(1) for m in re.finditer(r"<"+tag+r"\b[^>]*>([\s\S]*?)</"+tag+r">",s,re.I)]
+          def script(s):
+              return [m.group(1) for m in re.finditer(r'<script\b(?![^>]*application/ld\+json)[^>]*>([\s\S]*?)</script>',s,re.I)]
+          def visible(s):
+              return re.sub(r'<[^>]*>',' ',re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',s,flags=re.I))
+          def prices(s):
+              return collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(s),re.I))
+          for i,(en,cs) in enumerate(PAGES,1):
+              a=(root/en).read_text(encoding="utf-8")
+              b=(root/cs).read_text(encoding="utf-8")
+              assert tags(a)==tags(b),cs+": HTML"
+              assert capture(a,"style")==capture(b,"style"),cs+": CSS"
+              assert script(a)==script(b),cs+": JavaScript"
+              assert prices(a)==prices(b),cs+": Prices"
+              assert len(re.findall(r'<h1(?:\s|>)',b,re.I))==1,cs+": H1"
+              assert re.search(r'<html\b[^>]*lang=["\']cs["\']',b,re.I),cs+": locale"
+              assert 'noindex' not in b.lower(),cs+": noindex"
+              for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',b,re.I):
+                  json.loads(block)
+              assert b.count(">Čeština</a>")==2,cs+": menus"
+              print(f"CS_FINAL_PAGE_{i}/11_PASS {cs}",flush=True)
+          print("CS_FINAL_EN_11_CS_11_SITEMAP_MENU_PARITY_PASS",flush=True)
+          PY
