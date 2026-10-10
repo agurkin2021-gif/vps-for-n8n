@@ -475,7 +475,7 @@ def validate(src,out,enpath,japath):
         print("Numerical expressions added by translation (check that they express spelled-out amounts): "+str(n2-n1),flush=True)
     prices=lambda x:collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(x)))
     if prices(src)!=prices(out):raise AssertionError("Price identifiers changed")
-    if len(re.findall(r'\b(?:pro|nebo|který|které|když|však|pokud|proto|bez|při|díky|zálohy|server|nasazení|nastavení|vlastní|jsou|data|musí|může|také)\b',visible(out),re.I))<5:
+    if len(re.findall(r'\b(?:och|för|med|som|att|inte|utan|från|eller|till|dina|din|ditt|den|det|denna|när|kan|behöver|är|har|ska|om|också|via|på|av|medan|server|säkerhet|lagring|drift|sidan|information|guiden|används|välja)\b',visible(out),re.I))<5:
         raise AssertionError("Swedish content absent")
     if "§" in out:raise AssertionError("Protected-token separator leaked")
     if "<!--JSONLD_" in out:raise AssertionError("JSON-LD placeholder unresolved")
@@ -483,7 +483,7 @@ def validate(src,out,enpath,japath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _cs_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _sv_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]
