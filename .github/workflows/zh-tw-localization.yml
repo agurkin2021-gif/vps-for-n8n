@@ -40,3 +40,14 @@ jobs:
                   subprocess.run(["git","commit","-m",f"Translate Traditional Chinese page {i+1}/11"],check=True)
                   subprocess.run(["git","push","origin","HEAD:main"],check=True)
           PY
+      - name: Integrate Traditional Chinese across site after all pages pass
+        shell: bash
+        run: |
+          python -m py_compile _zh_tw_publish_qa.py
+          python -u _zh_tw_publish_qa.py
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate Traditional Chinese selectors, hreflang and sitemap"
+            git push origin HEAD:main
+          fi
