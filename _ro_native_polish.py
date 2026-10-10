@@ -37,7 +37,7 @@ GLOBAL=[
 
 PER_PAGE={
 "ro/index.html":[
- ("VPS pentru n8n din $0.07/Day - Ghid pentru planuri și dimensiuni","VPS pentru n8n de la $0.07/zi — Planuri și ghid de dimensionare"),
+ ("VPS pentru n8n din $0.07/Day - Ghid pentru planuri și dimensiuni","VPS pentru n8n de la $0.07/Day — Planuri și ghid de dimensionare"),
  ("Care VPS se potrivește sarcinii dvs. de lucru n8n?","Ce VPS se potrivește volumului dvs. de lucru n8n?"),
  ("Mici automatizări și fluxuri de lucru mereu activate","Automatizări mici și workflow-uri mereu active"),
  ("Fluxuri de lucru CRM, clienți potențiali și magazine online","Workflow-uri pentru CRM, lead-uri și magazine online"),
