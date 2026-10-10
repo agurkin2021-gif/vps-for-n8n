@@ -1,3 +1,4 @@
+# Hungarian page 1–2 retry after locale code correction
 name: Hungarian localization — sequential two-page pass
 on:
   push:
@@ -24,7 +25,7 @@ jobs:
           python-version: '3.12'
       - name: Verify authoritative English sitemap and source code
         run: |
-          python -m py_compile _hu_translate_full.py
+          python -m py_compile _hu_translate_full.py _hu_publish_qa.py
           python - <<'PY'
           from _hu_translate_full import verify_source_sitemap, PAGES
           assert verify_source_sitemap() == len(PAGES) == 11
