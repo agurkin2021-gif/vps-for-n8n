@@ -124,7 +124,7 @@ def visible(source):
 def prices(source):
     return collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(source),re.I))
 def czech_words(source):
-    return len(re.findall(r'\b(?:pro|nebo|který|které|když|však|pokud|proto|bez|při|díky|zálohy|server|nasazení|nastavení|vlastní|jsou|data|musí|může|také)\b', visible(source), re.I))
+    return len(re.findall(r'\b(?:pro|nebo|který|které|když|však|pokud|proto|bez|při|díky|zálohy|server|nasazení|nastavení|vlastní|jsou|data|musí|může|také|je|na|se|tato|tento|této|v|k|a|i|o|do|stránka|projektu|dotazům|chyb|údaje|adresa|konkrétní|není)\b', visible(source), re.I))
 
 def alternate(text,lang):
     for tag in LINK.findall(text):
@@ -144,7 +144,7 @@ def ensure_sitemap():
             source=source.replace("</urlset>",'  <url><loc>'+url+'</loc></url>\n</urlset>',1)
             existing.add(url);count+=1
     p.write_text(source,encoding="utf-8");ET.parse(p)
-    print("HU_SITEMAP_ADDED",count,flush=True)
+    print("CS_SITEMAP_ADDED",count,flush=True)
 
 def audit(changed):
     errors=[]
@@ -171,7 +171,7 @@ def audit(changed):
             except Exception as exc:errors.append(vi+": invalid JSON-LD "+str(exc))
         if alternate(transform(en,(ROOT/en).read_text(encoding="utf-8")),"cs")!=canonical(vi):errors.append(en+": reciprocal Czech hreflang wrong")
         if alternate(output,"en")!=canonical(en):errors.append(vi+": English hreflang wrong")
-        print("HU_PAGE_QA "+str(index)+"/11 "+vi+(" PASS" if not errors else " checked"),flush=True)
+        print("CS_PAGE_QA "+str(index)+"/11 "+vi+(" PASS" if not errors else " checked"),flush=True)
 
     pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html") if ".git" not in f.parts and f.name!="404.html")
     total=menus=0
@@ -203,8 +203,8 @@ def audit(changed):
     if not en_expected.issubset(set(urls)):errors.append("Sitemap missing English original")
     if not id_expected.issubset(set(urls)):errors.append("Sitemap missing Czech equivalent")
     if len(en_expected)!=len(id_expected) or len(id_expected)!=11:errors.append("English/Czech page-count mismatch")
-    hu_urls=[u for u in urls if u.startswith(BASE+"cs/")]
-    if len(hu_urls)!=11:errors.append("Czech sitemap expected 11 URLs, got "+str(len(hu_urls)))
+    cs_urls=[u for u in urls if u.startswith(BASE+"cs/")]
+    if len(cs_urls)!=11:errors.append("Czech sitemap expected 11 URLs, got "+str(len(cs_urls)))
     if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
 
     expected_en={"index.html","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html",
@@ -214,7 +214,7 @@ def audit(changed):
       (u.startswith(BASE) and "/" not in u.removeprefix(BASE) and u.endswith(".html"))}
     if actual_en!={("" if p=="index.html" else p) for p in expected_en}:errors.append("English sitemap no longer has exactly 11 originals")
 
-    print("HU_QA english=11 translated=11 hu_sitemap="+str(len(hu_urls))+
+    print("CS_QA english=11 translated=11 cs_sitemap="+str(len(cs_urls))+
           " footer_pages="+str(total)+" menus="+str(menus)+" changed="+str(changed)+
           " issues="+str(len(errors)),flush=True)
     if errors:raise AssertionError("\n".join(errors[:100]))
