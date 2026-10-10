@@ -1,0 +1,70 @@
+name: Korean sequential HTML localization and publication QA
+on:
+  push:
+    branches: [ko-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/ko-localization.yml
+permissions:
+  contents: write
+jobs:
+  translate-pages-sequentially:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ko-complete-sitemap-20261009
+      - name: Confirm authoritative English sitemap
+        shell: bash
+        run: |
+          python -m py_compile _ko_translate_full.py _ko_publish_qa.py
+          python - <<'PY'
+          from _ko_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("KOREAN_SOURCE_QA ENGLISH_PAGES=11")
+          PY
+      - name: PAGE N translate verify save before PAGE N+1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _ko_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,ko) in enumerate(PAGES):
+              print(f"KOREAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
+              process(en,ko)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/ko).read_text(encoding="utf-8"),en,ko)
+              subprocess.run(["git","add",ko,".github/ko-translation-cache.json"],check=True)
+              subprocess.run(["git","commit","-m",f"Translate verify and save Korean PAGE {idx+1}/11"],check=True)
+              subprocess.run(["git","push","origin","HEAD:ko-complete-sitemap-20261009"],check=True)
+              print(f"KOREAN_PAGE_{idx+1}/11 VERIFIED_SAVED {ko}",flush=True)
+          PY
+      - name: Integrate Korean in every language selector and validate sitemap
+        shell: bash
+        run: |
+          python -u _ko_publish_qa.py
+          git diff --binary > /tmp/ko-first-qa.diff
+          python -u _ko_publish_qa.py
+          git diff --binary > /tmp/ko-second-qa.diff
+          cmp /tmp/ko-first-qa.diff /tmp/ko-second-qa.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Korean to every language selector and reciprocal hreflang; sitemap QA"
+            git push origin HEAD:ko-complete-sitemap-20261009
+          fi
+      - name: Save verified Korean fragments after interruption
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/ko-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/ko-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Korean strings after interrupted page"
+              git push origin HEAD:ko-complete-sitemap-20261009
+            fi
+          fi
