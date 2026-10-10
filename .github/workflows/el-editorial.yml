@@ -1,0 +1,44 @@
+name: Greek native editorial polish and final sitewide audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/el-editorial.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: el-native-editorial-main
+  cancel-in-progress: false
+jobs:
+  polish-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Compile and polish Greek terminology and SEO titles, verify every page
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m py_compile _el_translate_full.py _el_publish_qa.py _el_editorial_polish.py
+          python -u _el_editorial_polish.py
+      - name: Publish Greek editorial improvements on all 11 pages
+        shell: bash
+        run: |
+          git add el/*.html .github/el-translation-cache.json sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Polish native Greek technical vocabulary and 108 SEO headings on all 11 pages"
+            git push origin HEAD:main
+          fi
+      - name: Verify exact Greek sitemap and all language menus after publication
+        shell: bash
+        run: |
+          python -u _el_publish_qa.py
+          if ! git diff --quiet; then
+            echo "NONIDEMPOTENT_GREEK_SELECTOR"
+            exit 1
+          fi
+          echo "GREEK_NATIVE_FINAL_PASS"
