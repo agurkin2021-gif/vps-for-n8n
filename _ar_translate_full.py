@@ -305,7 +305,7 @@ def patch_json(v,enpath,arpath):
                 if eligible(x):v[k]=EXACT.get(x,cache[x]) if x not in EXACT else EXACT[x]
             elif k in ("item","url") and isinstance(x,str) and x==BASE+enpath:
                 v[k]=BASE+arpath
-            elif k=="item" and x==BASE:v[k]=BASE+"fr/"
+            elif k=="item" and x==BASE:v[k]=BASE+"ar/"
             else:patch_json(x,enpath,arpath)
     elif isinstance(v,list):
         for x in v:patch_json(x,enpath,arpath)
@@ -378,9 +378,9 @@ def process(enpath,arpath):
     output=re.sub(r'(<a\b[^>]*>)(English|العربية)</a>',fix_language_link,output)
     # Arabic alternate must be present even on English source pages missing the tag.
     if not re.search(r'<link\b[^>]*hreflang=["\']ar["\']',output,re.I):
-        output=output.replace("</head>",'<link rel="alternate" hreflang="fr" href="'+BASE+arpath+'"/></head>',1)
+        output=output.replace("</head>",'<link rel="alternate" hreflang="ar" href="'+BASE+arpath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
-    output=output.replace(BASE+"ar/index.html",BASE+"fr/")
+    output=output.replace(BASE+"ar/index.html",BASE+"ar/")
     validate(source,output,enpath,arpath)
     dest=ROOT/arpath
     dest.parent.mkdir(parents=True,exist_ok=True)
@@ -420,7 +420,7 @@ def validate(src,out,enpath,arpath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _fr_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _ar_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]
