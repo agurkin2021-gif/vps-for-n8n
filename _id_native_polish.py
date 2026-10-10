@@ -9,6 +9,7 @@ GLOBAL=[
  ("kesecretan","kerahasiaan"),("Kesecretan","Kerahasiaan"),
  ("tunjangan","kuota"),("Tunjangan","Kuota"),
  ("pemutakhiran","upgrade"),("Pemutakhiran","Upgrade"),
+ ("Otomatisasi cahaya","Otomatisasi ringan"),("otomatisasi cahaya","otomatisasi ringan"),
  ("Alur kerja","Workflow"),("alur kerja","workflow"),
  ("Pekerja","Worker"),("pekerja","worker"),
  ("Mode antrian","Queue Mode"),("mode antrian","Queue Mode"),
