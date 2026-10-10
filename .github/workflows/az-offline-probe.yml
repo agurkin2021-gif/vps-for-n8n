@@ -1,0 +1,48 @@
+name: Probe offline English to Azerbaijani neural model
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/az-offline-probe.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mt-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Install Marian MT dependencies
+        shell: bash
+        run: |
+          python -m pip install -q "transformers>=4.42,<5" sentencepiece sacremoses "torch>=2.3"
+      - name: Translate realistic n8n hosting paragraphs
+        shell: bash
+        env:
+          HF_HUB_DISABLE_XET: "1"
+        run: |
+          python -u - <<'PY'
+          import time
+          from transformers import AutoTokenizer,AutoModelForSeq2SeqLM
+          name="Helsinki-NLP/opus-mt-en-az"
+          start=time.monotonic()
+          tokenizer=AutoTokenizer.from_pretrained(name)
+          model=AutoModelForSeq2SeqLM.from_pretrained(name)
+          model.eval()
+          print("MODEL_LOAD_SECONDS",round(time.monotonic()-start,1),flush=True)
+          texts=[
+            "Choose your VPS",
+            "Compare VPS for n8n configurations from $0.07/day. Match CPU, RAM, storage and traffic to light automations, production workflows, data processing and AI.",
+            "Back up the n8n database, data volume and encryption key before upgrading or moving the instance.",
+            "Use the larger option for data-heavy work and substantial overlap; use the lighter option for a lean instance with small, mostly sequential jobs.",
+            "When is 8 GB RAM a better choice than 4 GB?",
+            "The configurations above map to the published Standard server specifications and rates. Verify rates at checkout."
+          ]
+          import torch
+          with torch.inference_mode():
+            encoded=tokenizer(texts,return_tensors="pt",padding=True,truncation=True,max_length=512)
+            output=model.generate(**encoded,max_new_tokens=200,num_beams=4)
+          for orig,targ in zip(texts,tokenizer.batch_decode(output,skip_special_tokens=True)):
+            print("INPUT",orig,"\nOUTPUT",targ,flush=True)
+          print("TOTAL_SECONDS",round(time.monotonic()-start,1),flush=True)
+          PY
