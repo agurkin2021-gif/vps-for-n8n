@@ -1,4 +1,4 @@
-# Hungarian page 1–2 retry after locale code correction
+# Hungarian first two pages — post-edited Hungarian strings and token QA
 name: Hungarian localization — sequential two-page pass
 on:
   push:
