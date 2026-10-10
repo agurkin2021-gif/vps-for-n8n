@@ -109,7 +109,7 @@ def set_indonesian_button(text,path):
     if locale(path)!="id":return text
     return re.sub(
       r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',
-      lambda m:m.group(1)+"فارسی ▾"+m.group(2),text,flags=re.I)
+      lambda m:m.group(1)+"Bahasa Indonesia ▾"+m.group(2),text,flags=re.I)
 
 def transform(path,source):
     if path=="404.html":return source
@@ -202,17 +202,17 @@ def audit(changed):
                 errors.append(path+": Indonesian selector count "+str(len(anchors)));continue
             href=re.search(r'\bhref=(["\'])(.*?)\1',anchors[0].group(1),re.I)
             if not href or href.group(2)!=expected:errors.append(path+": incorrect Indonesian menu link")
-        if locale(path)=="id" and "فارسی ▾" not in text:errors.append(path+": Indonesian button label missing")
+        if locale(path)=="id" and "Bahasa Indonesia ▾" not in text:errors.append(path+": Indonesian button label missing")
 
     sm=ET.parse(ROOT/"sitemap.xml")
     urls=[x.text for x in sm.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
     en_expected={canonical(en) for en,_ in PAIRS}
-    fa_expected={canonical(vi) for _,vi in PAIRS}
+    id_expected={canonical(vi) for _,vi in PAIRS}
     if not en_expected.issubset(set(urls)):errors.append("Sitemap missing English original")
-    if not fa_expected.issubset(set(urls)):errors.append("Sitemap missing Indonesian equivalent")
-    if len(en_expected)!=len(fa_expected) or len(fa_expected)!=11:errors.append("English/Indonesian page-count mismatch")
-    fa_urls=[u for u in urls if u.startswith(BASE+"id/")]
-    if len(fa_urls)!=11:errors.append("Indonesian sitemap expected 11 URLs, got "+str(len(fa_urls)))
+    if not id_expected.issubset(set(urls)):errors.append("Sitemap missing Indonesian equivalent")
+    if len(en_expected)!=len(id_expected) or len(id_expected)!=11:errors.append("English/Indonesian page-count mismatch")
+    id_urls=[u for u in urls if u.startswith(BASE+"id/")]
+    if len(id_urls)!=11:errors.append("Indonesian sitemap expected 11 URLs, got "+str(len(id_urls)))
     if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
 
     expected_en={"index.html","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html",
@@ -222,7 +222,7 @@ def audit(changed):
       (u.startswith(BASE) and "/" not in u.removeprefix(BASE) and u.endswith(".html"))}
     if actual_en!={("" if p=="index.html" else p) for p in expected_en}:errors.append("English sitemap no longer has exactly 11 originals")
 
-    print("INDONESIAN_QA english=11 translated=11 fa_sitemap="+str(len(fa_urls))+
+    print("INDONESIAN_QA english=11 translated=11 id_sitemap="+str(len(id_urls))+
           " footer_pages="+str(total)+" menus="+str(menus)+" changed="+str(changed)+
           " issues="+str(len(errors)),flush=True)
     if errors:raise AssertionError("\n".join(errors[:100]))
