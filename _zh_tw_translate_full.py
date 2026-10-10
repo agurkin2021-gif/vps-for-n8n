@@ -43,6 +43,8 @@ EXACT = {
     "About": "關於我們",
     "Choose your VPS": "選擇您的 VPS",
     "View requirements": "查看需求",
+    "Best VPS for n8n: 6 provider options": "n8n 最佳 VPS：6 家供應商選項",
+    "Best VPS for n8n in 2026: 6 Providers Compared": "2026 年 n8n 最佳 VPS：6 家供應商比較",
 }
 MASK_PATTERN = re.compile(
     r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo))?'
