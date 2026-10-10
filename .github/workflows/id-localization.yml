@@ -1,5 +1,5 @@
 name: Indonesian sequential HTML localization and publication QA
-# Indonesian polish v4
+# Indonesian full sitemap refresh v5
 on:
   workflow_dispatch:
   push:
@@ -25,7 +25,7 @@ jobs:
           assert verify_source_sitemap()==len(PAGES)==11
           print("INDONESIAN_SOURCE_QA ENGLISH_PAGES=11")
           PY
-      - name: PAGE N translate verify save before PAGE N+1
+      - name: PAGE N translate polish verify save before PAGE N+1
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
@@ -33,34 +33,29 @@ jobs:
           python -u - <<'PY'
           import subprocess
           from _id_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          from _id_native_polish import polish
           assert verify_source_sitemap()==len(PAGES)==11
-          for idx,(en,target) in enumerate(PAGES[11:], start=11):
+          for idx,(en,target) in enumerate(PAGES):
               print(f"INDONESIAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
               process(en,target)
-              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
-              subprocess.run(["git","add",target,".github/id-translation-cache.json"],check=True)
-              subprocess.run(["git","commit","-m",f"Translate verify and save Indonesian PAGE {idx+1}/11"],check=True)
-              subprocess.run(["git","push","origin","HEAD:main"],check=True)
-              print(f"INDONESIAN_PAGE_{idx+1}/11 VERIFIED_SAVED {target}",flush=True)
-          PY
-      - name: Native Indonesian editorial polish and page QA
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          python -u - <<'PY'
-          from _id_translate_full import PAGES,ROOT,validate
-          from _id_native_polish import polish
-          for idx,(en,target) in enumerate(PAGES):
               polish(idx)
               validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
-              print(f"INDONESIAN_NATIVE_QA {idx+1}/11 {target} PASS",flush=True)
+              subprocess.run(["git","add",target,".github/id-translation-cache.json"],check=True)
+              changed=subprocess.run(["git","diff","--cached","--quiet"]).returncode!=0
+              if changed:
+                  subprocess.run(["git","commit","-m",f"Refresh verify and save Indonesian PAGE {idx+1}/11"],check=True)
+                  subprocess.run(["git","push","origin","HEAD:main"],check=True)
+              print(f"INDONESIAN_PAGE_{idx+1}/11 VERIFIED_SAVED {target} changed={changed}",flush=True)
           PY
-          git add id/*.html
-          if ! git diff --cached --quiet; then
-            git commit -m "Polish Indonesian translation quality on all 11 pages"
-            git push origin HEAD:main
-          fi
+      - name: Recheck all Indonesian pages after sequential save
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          from _id_translate_full import PAGES,ROOT,validate
+          for idx,(en,target) in enumerate(PAGES):
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
+              print(f"INDONESIAN_RECHECK {idx+1}/11 {target} PASS",flush=True)
+          PY
       - name: Integrate Indonesian in every language selector and validate sitemap
         shell: bash
         run: |
