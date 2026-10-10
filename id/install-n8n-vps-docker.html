@@ -88,7 +88,7 @@
 <article><h3>Docker Compose</h3><p>Instal Docker Engine dan plugin Compose menggunakan paket yang didukung untuk sistem operasi.</p></article>
 <article><h3>Firewall</h3><p>Ekspos hanya administrasi dan port web yang diperlukan. Jaga kerahasiaan PostgreSQL dan layanan aplikasi internal.</p></article></div>
 <p><strong>Menginstal pada VPS yang sudah menghosting situs web?</strong> Anda dapat menambahkan n8n ke server yang Anda kontrol ketika CPU, RAM dan penyimpanan mengizinkannya. Namun, jika Nginx, Apache, Caddy atau reverse proxy lainnya sudah memiliki port 80/443, lakukan <strong>tidak</strong> mulai contoh container Caddy di bawah ini tanpa perubahan: port akan konflik. Sebagai gantinya, rutekan subdomain n8n baru melalui reverse proxy yang ada dengan jaringan pribadi yang sesuai, atau gunakan VPS yang bersih untuk contoh Compose yang tepat. Pertahankan situs lain dan konfigurasi TLS; contoh ini mengasumsikan bahwa port 80/443 tersedia.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Pilih Linux VPS untuk n8n</a></div><p id="affiliate-note"><small>Tautan mitra: kami dapat memperoleh komisi dari pembelian.</small></p></section>
-<section class="section"><p class="eyebrow">STACK DEPLOYMENT</p><h2>Komponen yang akan dikonfigurasi</h2><div class="requirements">
+<section class="section"><p class="eyebrow">STACK DEPLOYMENT</p><h2>Komponen yang perlu dikonfigurasi</h2><div class="requirements">
 <div><b>Reverse proxy</b><span>Menerima traffic HTTPS publik dan meneruskannya ke n8n.</span></div>
 <div><b>n8n</b><span>Menjalankan editor, pemicu, dan workflow dengan data aplikasi persisten.</span></div>
 <div><b>PostgreSQL</b><span>Menyimpan workflow, kredensial, dan status eksekusi untuk deployment produksi.</span></div>
@@ -257,12 +257,12 @@ docker compose ps</code></pre>
 <article><h3>Hostname publik</h3><p>Konfigurasikan hostname eksternal dan asal HTTPS yang sebenarnya, bukan alamat penampung internal.</p></article>
 <article><h3>URL webhook</h3><p>Tetapkan <code>N8N_WEBHOOK_URL</code> ke URL dasar HTTPS yang dapat dijangkau publik dan disetel <code>N8N_PROXY_HOPS=1</code> ketika ada satu proxy terbalik yang tepercaya. <code>WEBHOOK_URL</code> adalah alias yang tidak digunakan lagi di n8n 2.35.0 dan yang lebih baru; hindari menyalinnya dari tutorial lama.</p></article>
 </div></section>
-<section class="section"><p class="eyebrow">PERSISTENSI</p><h2>Pertahankan n8n dan PostgreSQL secara terpisah</h2><div class="cards">
+<section class="section"><p class="eyebrow">PERSISTENSI</p><h2>Simpan data n8n dan PostgreSQL secara persisten dan terpisah</h2><div class="cards">
 <article><h3>n8n data</h3><p>Pasang penyimpanan persisten untuk direktori data n8n sehingga status instans penting tetap bertahan dalam pembuatan ulang container.</p></article>
 <article><h3>PostgreSQL data</h3><p>Pertahankan direktori database secara independen dari container PostgreSQL.</p></article>
 <article><h3>Izin berkas</h3><p>Jadikan jalur terpasang dapat ditulis oleh pengguna container yang dituju tanpa membuat penyimpanan host menjadi terlalu permisif.</p></article>
 <article><h3>File workflow</h3><p>Pertahankan semua file terpasang atau penyimpanan data biner yang menjadi sandaran workflow produksi.</p></article></div></section>
-<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Hubungkan n8n ke layanan database pribadi</h2><div class="requirements">
+<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Hubungkan n8n ke layanan database privat</h2><div class="requirements">
 <div><b>Jenis basis data</b><span>Konfigurasikan n8n untuk PostgreSQL daripada kembali ke SQLite secara tidak sengaja.</span></div>
 <div><b>Tuan rumah</b><span>Gunakan nama layanan PostgreSQL di jaringan pribadi Docker.</span></div>
 <div><b>Kredensial</b><span>Cocokkan database yang dituju, user aplikasi dan password.</span></div>
@@ -282,11 +282,11 @@ docker compose ps</code></pre>
 <div><b>webhook</b><span>Jalankan pengujian webhook eksternal untuk memvalidasi DNS, TLS, proksi, dan URL panggilan balik publik.</span></div>
 <div><b>Kredensial</b><span>Verifikasi kredensial terenkripsi tetap dapat digunakan setelah n8n dimulai ulang.</span></div>
 </div></section>
-<section class="section"><p class="eyebrow">PEMBARUAN</p><h2>Tingkatkan deployment Docker tanpa memperlakukan container sebagai backup</h2><div class="cards">
+<section class="section"><p class="eyebrow">PEMBARUAN</p><h2>Upgrade deployment Docker tanpa menganggap container sebagai backup</h2><div class="cards">
 <article><h3>Baca catatan rilis</h3><p>Tinjau perubahan penting n8n sebelum memutakhirkan, terutama saat melewatkan versi.</p></article>
-<article><h3>Cadangkan dulu</h3><p>Ambil database yang dapat dipulihkan dan backup instans sebelum mengubah gambar produksi.</p></article>
+<article><h3>Backup terlebih dahulu</h3><p>Ambil database yang dapat dipulihkan dan backup instans sebelum mengubah gambar produksi.</p></article>
 <article><h3>Buat ulang dengan aman</h3><p>Tarik gambar yang dipilih dan buat ulang container aplikasi sambil mempertahankan volume yang tetap.</p></article>
-<article><h3>Verifikasi setelah peningkatan</h3><p>Periksa log, akses editor, kredensial, dan workflow yang representatif sebelum menyatakan deployment sehat.</p></article></div>
+<article><h3>Verifikasi setelah upgrade</h3><p>Periksa log, akses editor, kredensial, dan workflow yang representatif sebelum menyatakan deployment sehat.</p></article></div>
 <p><a href="n8n-backup-restore.html">Panduan backup &amp; pemulihan</a></p></section>
 <section class="section dark"><p class="eyebrow">KEGAGALAN UMUM</p><h2>Mengapa instalasi n8n Docker berfungsi secara lokal tetapi gagal dalam produksi</h2><div class="cards">
 <article><h3>URL webhook salah</h3><p>Callback menunjuk ke localhost, HTTP atau hostname internal dan bukan asal publik HTTPS.</p></article>
