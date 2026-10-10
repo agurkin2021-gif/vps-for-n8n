@@ -119,14 +119,14 @@ EOF
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
 <p>這是官方 Docker Ubuntu 安裝指南中以生產為導向的儲存庫方法。 <strong>不要在已運行的容器或其他網站上盲目地重新安裝或刪除 VPS Docker</strong>;首先檢查現有的安裝和可能的套件衝突。對於 Debian 或其他發行版，請使用相應的官方作業系統特定指令而不是 Ubuntu 命令。</p>
-<p>現在驗證 Docker 本身、Compose 插件、DNS 和工作目錄：</p>
+<p>現在驗證 Docker 本身、Compose 外掛程式、DNS 和工作目錄：</p>
 <pre><code>sudo docker --version
 sudo docker compose version
 sudo docker run --rm hello-world
 getent hosts n8n.example.com
 mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <p>如果 <code>getent hosts</code> 未交回地址或地址錯誤，請在開始 Caddy 之前更正您的 DNS；替換 <code>n8n.example.com</code> 在本指南中使用您的真實主機名稱。 Docker 通常需要 root 權限：如果您的 SSH 使用者無法執行後者 <code>docker compose</code> 直接命令，前綴為 <code>sudo</code>。將用戶加入到 <code>docker</code> 群組授予 root 等效存取權限，不應在共享伺服器上隨意執行。</p>
-<p>在啟用防火牆之前，請確保您的實際 SSH 管理連接埠可存取。允許入站 HTTP (80) 和 HTTPS (443) 進行證書頒發和編輯。 Docker-發布的容器連接埠可以繞過某些 UFW 規則，因此請查看 Docker 的防火牆指南並僅發布預期的 Caddy 連接埠。這個 Compose 範例故意這樣做 <strong>不</strong> 不要將 PostgreSQL (5432)、n8n (5678) 或 task-runner broker (5679) 暴露到公用網際網路。</p>
+<p>在啟用防火牆之前，請確保您的實際 SSH 管理連接埠可存取。允許入站 HTTP (80) 和 HTTPS (443) 進行證書頒發和編輯。 Docker-發布的容器連接埠可以繞過某些 UFW 規則，因此請查看 Docker 的防火牆指南並僅發布預期的 Caddy 連接埠。這個 Compose 範例刻意<strong>不</strong>將 PostgreSQL (5432)、n8n (5678) 或 task-runner broker (5679) 暴露到公用網際網路。</p>
 <h3>2。建立環境值並儲存密鑰</h3>
 <p>從專案目錄中，產生三個 <strong>不同的</strong> 隨機十六進位值：</p>
 <pre><code>openssl rand -hex 32
@@ -141,7 +141,7 @@ GENERIC_TIMEZONE=Etc/UTC
 POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
 N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
 RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
-<p>從不承諾 <code>.env</code> 到公共存儲庫。將加密金鑰和復原指令安全地儲存在 VPS 之外。在容器重新建立或遷移後，金鑰必須保持不變。</p>
+<p>從不承諾 <code>.env</code> 到公開儲存庫。將加密金鑰和復原指令安全地儲存在 VPS 之外。在容器重新建立或遷移後，金鑰必須保持不變。</p>
 <h3>3。為全新安裝編寫 compose.yaml</h3>
 <p>在同一目錄下創建 <code>compose.yaml</code>。此範例使用官方的 n8n 環境變數約定和 PostgreSQL 18 <code>PGDATA</code> n8n 託管項目記錄的路徑：</p>
 <pre><code>services:
@@ -231,7 +231,7 @@ docker compose up -d
 docker compose ps
 docker compose logs --tail=100 n8n n8n-runner postgres caddy
 curl -fsS https://n8n.example.com/healthz</code></pre>
-<p>最後一個命令會檢查 <strong>公共 HTTPS</strong> 健康终点。如果證書頒發仍在等待中，請在得出 n8n 已損壞的結論之前檢查 Caddy 日誌和 DNS/端口。打開 <code>https://n8n.example.com</code>，立即建立第一個所有者帳戶並啟用適當的登入保護。確認實例實際執行工作流程，而不僅僅是編輯器載入：</p>
+<p>最後一個命令會檢查 <strong>公共 HTTPS</strong> 健康檢查端點。如果證書頒發仍在等待中，請在得出 n8n 已損壞的結論之前檢查 Caddy 日誌和 DNS/端口。打開 <code>https://n8n.example.com</code>，立即建立第一個所有者帳戶並啟用適當的登入保護。確認實例實際執行工作流程，而不僅僅是編輯器載入：</p>
 <ol>
 <li>在編輯器中，建立一個工作流程 <strong>Webhook</strong> 觸發。套裝 <strong>HTTP 方法</strong> 到 <code>GET</code>，選擇 <strong>Path</strong> <code>vps-check</code>，並設定 <strong>回應</strong> 到 <strong>立即</strong>。儲存工作流程。</li>
 <li>點選 <strong>監聽測試事件</strong>，複製完整的 <strong>測試網址</strong> 由 n8n 顯示，並從另一台裝置運行 <code>curl -i 'PASTE_TEST_URL_HERE'</code> 與複製的 URL。預計 HTTP 成功回應和傳入事件將出現在 n8n 編輯器中。測試 URL 僅在 n8n 偵聽事件時有效。</li>
@@ -248,7 +248,7 @@ docker compose exec -T postgres \
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
-<p>變更固定的 <code>N8N_VERSION</code> 仅在阅读发行说明后； n8n 和跑步者图像必须一起前进。 <strong>不要跑 <code>docker compose down -v</code></strong> 在日常維護期間，因為這會刪除命名資料卷。 PostgreSQL 主要版本變更需要資料庫升級或轉儲/復原計畫；以不同的主要標籤取代 Postgres 18 映像並不是自動遷移。</p>
+<p>變更固定的 <code>N8N_VERSION</code> 僅在閱讀發行說明後才變更固定版本；n8n 與 task runner 映像必須同步升級。 <strong>不要跑 <code>docker compose down -v</code></strong> 在日常維護期間，因為這會刪除命名資料卷。 PostgreSQL 主要版本變更需要資料庫升級或轉儲/復原計畫；以不同的主要標籤取代 Postgres 18 映像並不是自動遷移。</p>
 <p>權威參考：n8n Docker Compose 指南、n8n 反向代理/Webhook 配置以及官方 PostgreSQL 部署說明。不假定任何基礎設施基準或特定於供應商的預先安裝功能。</p>
 </section>
 <section class="section dark"><p class="eyebrow">配置</p><h2>有意設定秘密和公共 URL</h2><div class="cards">
@@ -293,7 +293,7 @@ docker compose ps</code></pre>
 <article><h3>缺少堅持</h3><p>重新建立容器時，應用程式或資料庫狀態會消失。</p></article>
 <article><h3>遺失加密金鑰</h3><p>重建後，已儲存的憑證將變得不可用，因為新執行個體使用不同的金鑰。</p></article>
 <article><h3>公共資料庫連接埠</h3><p>PostgreSQL 被不必要地暴露，儘管只有 n8n 需要到達它。</p></article></div></section>
-<section class="section dark"><p class="eyebrow">部署後驗證</p><h2>連接真實工作流程之前驗證運行狀況</h2><div class="cards"><article><h3>檢查容器狀態</h3><p>運行 <code>docker compose ps</code> 並確認應用程式和資料庫服務按預期運行，然後再將部署視為正常。</p></article><article><h3>檢查 n8n 健康端點</h3><p>對於上面的 Compose 範例，連接埠 5678 未在主機上發布。檢查公共端點 <code>curl -fsS https://n8n.example.com/healthz</code> 更改主機名稱後，然後使用 <code>docker compose ps</code> 如果 HTTPS 或数据库未准备好，则加上服务日志。</p></article><article><h3>固定應用程式版本</h3><p>請勿將未經審查的浮動映像更新視為維護策略。記錄您正在執行的 n8n 版本，請閱讀發行說明並在變更之前進行備份。</p></article><article><h3>不要將 PostgreSQL 主要版本更改到位</h3><p>僅更改 Postgres 主映像標籤可能會使現有資料目錄不相容。備份並遵循資料庫升級過程，而不是假設容器重新建立執行主要版本遷移。</p></article></div><p>目前官方 Docker Compose指南</p></section><section class="section"><p class="eyebrow">常見問題</p><h2>將 n8n 與 Docker 一起安裝：常見問題</h2><div class="faq">
+<section class="section dark"><p class="eyebrow">部署後驗證</p><h2>連接真實工作流程之前驗證運行狀況</h2><div class="cards"><article><h3>檢查容器狀態</h3><p>運行 <code>docker compose ps</code> 並確認應用程式和資料庫服務按預期運行，然後再將部署視為正常。</p></article><article><h3>檢查 n8n 健康端點</h3><p>對於上面的 Compose 範例，連接埠 5678 未在主機上發布。檢查公共端點 <code>curl -fsS https://n8n.example.com/healthz</code> 更改主機名稱後，然後使用 <code>docker compose ps</code> 如果 HTTPS 或資料庫尚未就緒，請一併檢查服務日誌。</p></article><article><h3>固定應用程式版本</h3><p>請勿將未經審查的浮動映像更新視為維護策略。記錄您正在執行的 n8n 版本，請閱讀發行說明並在變更之前進行備份。</p></article><article><h3>不要將 PostgreSQL 主要版本更改到位</h3><p>僅更改 Postgres 主映像標籤可能會使現有資料目錄不相容。備份並遵循資料庫升級過程，而不是假設容器重新建立執行主要版本遷移。</p></article></div><p>目前官方 Docker Compose指南</p></section><section class="section"><p class="eyebrow">常見問題</p><h2>將 n8n 與 Docker 一起安裝：常見問題</h2><div class="faq">
 <details><summary>使用 Docker 時 n8n 是否需要 PostgreSQL？</summary><p>Docker 不需要 PostgreSQL，小型部署可以使用 SQLite。對於以生產為導向的 VPS 部署，PostgreSQL 提供了更強大的資料庫基礎並支援以後的佇列模式擴展。</p></details>
 <details><summary>如果 PostgreSQL 儲存數據，為什麼還要保留持久的 n8n 卷？</summary><p>持久性 n8n 目錄可以包含重要的實例狀態和配置。根據部署設計保留它，而不是假設資料庫是唯一的復原資產。</p></details>
 <details><summary>為什麼我的 webhook 顯示 localhost？</summary><p>內部容器位址與公共來源不同。配置外部主機名稱、協定和 Webhook URL，並確保反向代理傳遞所需的標頭。</p></details>
