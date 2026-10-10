@@ -377,7 +377,7 @@ def process(enpath,japath):
     output=re.sub(r'(<a\b[^>]*>)(English|ไทย)</a>',fix_language_link,output)
     # Thai alternate must be present even on English source pages missing the tag.
     if not re.search(r'<link\b[^>]*hreflang=["\']th["\']',output,re.I):
-        output=output.replace("</head>",'<link rel="alternate" hreflang="nl" href="'+BASE+japath+'"/></head>',1)
+        output=output.replace("</head>",'<link rel="alternate" hreflang="th" href="'+BASE+japath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"th/index.html",BASE+"th/")
     validate(source,output,enpath,japath)
