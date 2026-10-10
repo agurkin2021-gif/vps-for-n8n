@@ -124,7 +124,7 @@ def transform(path,source):
         out=set_zh_button(out,path)
         out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
-    if category(path) in ZH_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']id["\']',out,re.I):
+    if category(path) in ZH_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']zh-TW["\']',out,re.I):
         out=out.replace("</head>",'<link rel="alternate" hreflang="zh-TW" href="'+zh_dest(path)+'"/></head>',1)
     return out
 
@@ -175,7 +175,7 @@ def audit(changed):
         if prices(source)!=prices(output):errors.append(vi+": prices differ")
         if len(re.findall(r'<details\b',source,re.I))!=len(re.findall(r'<details\b',output,re.I)):errors.append(vi+": FAQ count differs")
         if len(re.findall(r'<img\b',source,re.I))!=len(re.findall(r'<img\b',output,re.I)):errors.append(vi+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']id["\']',output,re.I):errors.append(vi+": html lang is not id")
+        if not re.search(r'<html\b[^>]*\blang=["\']zh-TW["\']',output,re.I):errors.append(vi+": html lang is not zh-TW")
         if len(re.findall(r'<h1(?:\s|>)',source,re.I))!=len(re.findall(r'<h1(?:\s|>)',output,re.I)):errors.append(vi+": H1 count differs")
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
@@ -187,7 +187,7 @@ def audit(changed):
         for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',output,re.S|re.I):
             try:json.loads(block)
             except Exception as exc:errors.append(vi+": invalid JSON-LD "+str(exc))
-        if alternate((ROOT/en).read_text(encoding="utf-8"),"zh-TW")!=canonical(vi):errors.append(en+": reciprocal Traditional Chinese hreflang wrong")
+        if alternate(transform(en,(ROOT/en).read_text(encoding="utf-8")),"zh-TW")!=canonical(vi):errors.append(en+": reciprocal Traditional Chinese hreflang wrong")
         if alternate(output,"en")!=canonical(en):errors.append(vi+": English hreflang wrong")
         print("ZH_TW_PAGE_QA "+str(index)+"/11 "+vi+(" PASS" if not errors else " checked"),flush=True)
 
