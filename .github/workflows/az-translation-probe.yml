@@ -1,0 +1,47 @@
+name: Probe Azerbaijani translation backends
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/az-translation-probe.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Probe translation endpoints
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,json
+          examples=[
+           ("LingvaML","https://lingva.ml/api/v1/en/az/"+urllib.parse.quote("Keep n8n, Docker and VPS running securely.")),
+           ("Lingva Jae","https://translate.jae.fi/api/v1/en/az/"+urllib.parse.quote("Keep n8n, Docker and VPS running securely.")),
+           ("Lingva dr460","https://translate.dr460nf1r3.org/api/v1/en/az/"+urllib.parse.quote("Keep n8n, Docker and VPS running securely.")),
+           ("Lingva Garuda","https://lingva.garudalinux.org/api/v1/en/az/"+urllib.parse.quote("Keep n8n, Docker and VPS running securely.")),
+           ("MyMemory","https://api.mymemory.translated.net/get?"+urllib.parse.urlencode({"q":"Keep n8n, Docker and VPS running securely.","langpair":"en|az"})),
+          ]
+          for name,url in examples:
+           try:
+            req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Accept":"application/json"})
+            with urllib.request.urlopen(req,timeout=9) as resp:
+             output=resp.read(5000).decode("utf-8","replace")
+            print(name,"OK",output[:450],flush=True)
+           except Exception as e:
+            print(name,"ERROR",type(e).__name__,str(e)[:130],flush=True)
+          PY
+      - name: Probe Bing translator
+        shell: bash
+        run: |
+          python -m pip install -q translatepy==2.3
+          python - <<'PY'
+          from translatepy.translators.bing import BingTranslate
+          try:
+           trans=BingTranslate()
+           print("BING",str(trans.translate("Keep n8n, Docker and VPS running securely.","Azerbaijani","English"))[:500],flush=True)
+          except Exception as e:
+           print("BING ERROR",type(e).__name__,str(e)[:550],flush=True)
+          PY
