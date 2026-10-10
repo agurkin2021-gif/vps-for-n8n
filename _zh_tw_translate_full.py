@@ -280,7 +280,7 @@ def patch_tag(tag: str,enpath: str,japath: str):
     def trans_attr(m):
         name,quote,value=m.group(1),m.group(2),m.group(3)
         key=html.unescape(value).strip()
-        if eligible(key):return name+"="+quote+html.escape(EXACT.get(key,cache[key]) if key not in EXACT else EXACT[key],quote=True)+quote
+        if eligible(key):return name+"="+quote+html.escape(EXACT.get(key,cache.get(key, key)) if key not in EXACT else EXACT[key],quote=True)+quote
         return m.group(0)
     tag=re.sub(r'\b(alt|aria-label|placeholder|title|aria-valuetext)=(["\'])(.*?)\2',trans_attr,tag,flags=re.I|re.S)
     if re.match(r'<meta\b',tag,re.I) and is_eligible_meta(tag):
@@ -302,7 +302,7 @@ def patch_json(v,enpath,japath):
         for k,x in v.items():
             if k=="inLanguage" and x=="en":v[k]="zh-TW"
             elif k in TEXT_FIELDS and isinstance(x,str):
-                if eligible(x):v[k]=EXACT.get(x,cache[x]) if x not in EXACT else EXACT[x]
+                if eligible(x):v[k]=EXACT.get(x,cache.get(x,x)) if x not in EXACT else EXACT[x]
             elif k in ("item","url") and isinstance(x,str) and x==BASE+enpath:
                 v[k]=BASE+japath
             elif k=="item" and x==BASE:v[k]=BASE+"zh-tw/"
