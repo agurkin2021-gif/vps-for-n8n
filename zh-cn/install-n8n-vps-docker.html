@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>在 VPS 上安装 n8n</title>
+<meta content="在 VPS 上安装 n8n，其中包含 Docker Compose、PostgreSQL、持久存储、HTTPS、反向代理和正确的 Webhook 配置。" name="description"/>
+<meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" rel="canonical"/>
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
+<link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html"/>
+<link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html"/>
+<link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
+<link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="在 VPS 上安装 n8n" property="og:title"/><meta content="安装 n8n 以及 Docker Compose、PostgreSQL、持久存储、HTTPS、反向代理和 Webhook 配置。" property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="在 VPS 上安装 n8n" name="twitter:title"/><meta content="安装 n8n 以及 Docker Compose、PostgreSQL、持久存储、HTTPS、反向代理和 Webhook 配置。" name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/"},{"@type":"ListItem","position":2,"name":"在 VPS 上安装 n8n","item":"https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
+.install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
+.install-n8n-hero-copy{min-width:0}
+.install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.install-n8n-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.install-n8n-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 29px rgba(23,36,61,.13));transition:transform .18s ease}
+.install-n8n-hero-art a:hover svg,.install-n8n-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.install-n8n-hero-art a:focus-visible{outline:3px solid #ff6847}
+.install-n8n-hero .actions{margin:28px 0 10px}
+.install-n8n-hero .hero-affiliate-disclosure{font-size:13px;color:#636e80;line-height:1.55;margin:0}
+@media(max-width:790px){.install-n8n-hero{grid-template-columns:1fr;min-height:0;gap:20px}.install-n8n-hero-art a{max-width:410px}}
+@media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
+</style><link rel="alternate" hreflang="fa" href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ar" href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="id" href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ro" href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html"/><link rel="alternate" hreflang="nl" href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html"/><link rel="alternate" hreflang="th" href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="az" href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="el" href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="zh-TW" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="zh-CN" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html"/></head><body>
+<header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">简体中文 ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" lang="tr" hreflang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" lang="vi" hreflang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" lang="ko" hreflang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" lang="fr" hreflang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">印度尼西亚语</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">罗马语</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">荷兰</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">阿兹尔拜坎卡</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a></div></div></header><main>
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">码头安装</p><h1>在 VPS 上安装 n8n</h1><p class="lead">使用 Docker Compose 和 PostgreSQL 在 VPS 上安装 n8n。生产部署还需要持久的应用程序和数据库数据、稳定的 <code>N8N_ENCRYPTION_KEY</code>、公共主机名、HTTPS 和正确的 Webhook 配置。在激活生产工作流程之前验证这些部分。</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">为 n8n 选择 VPS</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">合作伙伴链接：我们可以从购买中赚取佣金。</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="选择 VPS 来安装 n8n"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+<linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
+<linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+</defs>
+<rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+<rect x="35" y="37" width="430" height="387" rx="25" stroke="#71859d" stroke-opacity=".27" stroke-width="2"/>
+<g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+<g stroke="#7496a9" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M248 114V91"/><path d="M163 202H112"/><path d="M338 202H391"/><path d="M160 287L112 338"/><path d="M339 290L393 337"/></g>
+<g transform="translate(193 62)">
+<rect width="111" height="67" rx="21" fill="#284b4d" stroke="#7fdac1" stroke-width="2.5"/>
+<rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+<path d="M50 26V20C50 7 65 7 65 20V26" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+<path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(158 133)">
+<rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+<rect x="19" y="21" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="147" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+<g stroke="#92a8bf" stroke-width="6" stroke-linecap="round"><path d="M67 38H139M67 51H117"/><path d="M67 101H139M67 114H115"/><path d="M67 164H139M67 177H113"/></g>
+<g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+<path d="M91 221V234" stroke="#91a4ba" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(50 167)">
+<rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff7755" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+<path d="M38 35L47 43L61 30"/>
+</g></g>
+<g transform="translate(354 170)">
+<rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<path d="M21 28L38 19L53 28L70 19L79 24V52L63 62L48 52L30 61L21 56V28Z" stroke="#ff795b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
+</g>
+<g transform="translate(44 309)">
+<rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="47" r="7"/><circle cx="77" cy="28" r="7"/><circle cx="77" cy="67" r="7"/><path d="M39 44L71 30M39 50L70 65"/></g>
+</g>
+<g transform="translate(346 309)">
+<rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3"><ellipse cx="55" cy="27" rx="26" ry="9" fill="#ffe8df"/><path d="M29 27V62C29 76 81 76 81 62V27"/><path d="M29 45C31 58 80 58 81 45"/></g>
+</g>
+<g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
+</svg></a></div></section>
+<section class="section dark"><p class="eyebrow">先决条件</p><h2>在开始 n8n 之前准备好 VPS</h2><div class="cards">
+<article><h3>Linux VPS</h3><p>使用大小为 n8n、PostgreSQL、Docker 的维护的 Linux 服务器和反向代理。</p></article>
+<article><h3>DNS</h3><p>在颁发 TLS 证书和发布 Webhook URL 之前，将域或子域指向 VPS。</p></article>
+<article><h3>Docker 撰写</h3><p>使用操作系统支持的软件包安装 Docker 引擎和Compose插件。</p></article>
+<article><h3>防火墙</h3><p>仅公开所需的管理和 Web 端口。保持 PostgreSQL 和内部应用程序服务的私密性。</p></article></div>
+<p><strong>在已托管网站的 VPS 上安装？</strong> 当 CPU、RAM 和存储允许时，您可以将 n8n 添加到您控制的服务器。但是，如果 Nginx、Apache、Caddy 或其他反向代理已拥有端口 80/443，则执行 <strong>不</strong> 启动下面的示例 Caddy 容器，保持不变：端口将发生冲突。相反，请使用适当的专用网络通过现有反向代理路由新的 n8n 子域，或者使用干净的 VPS 作为确切的 Compose 示例。保留其他站点及其 TLS 配置；该示例假设端口 80/443 可用。</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">为 n8n 选择 Linux VPS</a></div><p id="affiliate-note"><small>合作伙伴链接：我们可以从购买中赚取佣金。</small></p></section>
+<section class="section"><p class="eyebrow">部署堆栈</p><h2>要配置的组件</h2><div class="requirements">
+<div><b>反向代理</b><span>接收公共 HTTPS 流量并将其转发至 n8n。</span></div>
+<div><b>n8n</b><span>使用持久应用程序数据运行编辑器、触发器和工作流。</span></div>
+<div><b>PostgreSQL</b><span>存储生产部署的工作流程、凭证和执行状态。</span></div>
+<div><b>持久卷</b><span>将应用程序和数据库状态保存在一次性容器之外。</span></div>
+<div><b>公共 DNS</b><span>将编辑器和 webhook 提供程序使用的主机名映射到 VPS。</span></div>
+</div></section>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">复制并调整安装</p><h2>使用 Docker Compose 在 VPS 上安装 n8n</h2>
+<p>使用此示例构建一个 n8n 部署在 <strong>自我管理 Linux VPS</strong>。您自行安装和维护 n8n；通过我们的合作伙伴选择的服务器不包括预安装的 n8n 实例。该示例在专用 Compose 网络中结合了 n8n、PostgreSQL、外部任务运行程序和 Caddy HTTPS。它是一个配置模板， <strong>并非现场测试部署的声明</strong>.</p>
+<p><strong>想要最快的全新安装吗？</strong> n8n 还提供官方单行 Docker 设置。您可以下载并查看其脚本 <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> 跑步前 <code>sh get-n8n.sh</code>。该选项在本地 URL 处启动带有 SQLite 的初始实例，并包括 n8n 助理沙箱服务；这是 <strong>不一样</strong> 作为此公共 HTTPS、PostgreSQL 支持的 VPS 部署。官方完整沙盒堆栈比精简的 n8n 安装需要更多的 RAM 和 CPU（其 Compose 指南指定至少 4 GB RAM / 2 vCPU）。对于面向互联网的生产 VPS，请继续使用下面的手动配置堆栈。</p>
+<h3>1.准备 Docker、DNS 并访问</h3>
+<p>通过 sudo 访问连接 SSH 并指向 DNS A 记录 <code>n8n.example.com</code> 到您的 VPS IPv4 地址。上一个 <strong>新鲜的 Ubuntu 22.04、24.04 或 26.04</strong> VPS，以下命令安装 Docker 引擎和现代 <code>docker compose</code> 来自 Docker 官方签名的插件 <code>apt</code> 存储库：</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Register Docker's signed apt repository
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>这是官方 Docker Ubuntu 安装指南中面向生产的存储库方法。 <strong>不要在已运行的容器或其他网站上盲目地重新安装或删除 VPS Docker</strong>;首先检查现有的安装和可能的包冲突。对于 Debian 或其他发行版，请使用相应的官方操作系统特定指令而不是 Ubuntu 命令。</p>
+<p>现在验证 Docker 本身、Compose 插件、DNS 和工作目录：</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
+getent hosts n8n.example.com
+mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
+<p>如果 <code>getent hosts</code> 未返回地址或地址错误，请在开始 Caddy 之前更正您的 DNS；替换 <code>n8n.example.com</code> 在本指南中使用您的真实主机名。 Docker 通常需要 root 权限：如果您的 SSH 用户无法运行后者 <code>docker compose</code> 直接命令，前缀为 <code>sudo</code>。将用户添加到 <code>docker</code> 组授予 root 等效访问权限，不应在共享服务器上随意执行。</p>
+<p>在启用防火墙之前，请确保您的实际 SSH 管理端口可访问。允许入站 HTTP (80) 和 HTTPS (443) 进行证书颁发和编辑。 Docker-发布的容器端口可以绕过某些 UFW 规则，因此请查看 Docker 的防火墙指南并仅发布预期的 Caddy 端口。这个 Compose 示例故意这样做 <strong>不</strong> 将 PostgreSQL (5432)、n8n (5678) 或任务运行代理 (5679) 发布到公共互联网。</p>
+<h3>2.创建环境值并保存密钥</h3>
+<p>从项目目录中，生成三个 <strong>不同的</strong> 随机十六进制值：</p>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
+<p>创建一个名为 <code>.env</code> 使用下面的模板，替换每个 <code>REPLACE_WITH_RANDOM_HEX</code> 使用不同的生成值，并更改主机名和时区。所示的 <code>2.42.5</code> 标签是 <strong>稳定版本于 10 月 8 2026 上市</strong>，此处用作过时的配置示例， <strong>不能保证实时测试的部署或未来的安全性</strong>。安装之前，请检查当前的官方 n8n 版本，然后将 n8n 及其任务运行程序映像保留在同一经过验证的版本上。</p>
+<pre><code># .env — replace the three example secrets
+# Pin a maintained n8n release; keep n8n and runner equal.
+N8N_VERSION=2.42.5
+N8N_HOST=n8n.example.com
+GENERIC_TIMEZONE=Etc/UTC
+POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
+N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
+RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
+<p>从不承诺 <code>.env</code> 到公共存储库。将加密密钥和恢复指令安全地存储在 VPS 之外。在容器重新创建或迁移后，密钥必须保持不变。</p>
+<h3>3.为全新安装编写 compose.yaml</h3>
+<p>在同一目录下创建 <code>compose.yaml</code>。该示例使用官方的 n8n 环境变量约定和 PostgreSQL 18 <code>PGDATA</code> n8n 托管项目记录的路径：</p>
+<pre><code>services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+      N8N_WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_PROXY_HOPS: "1"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  n8n-runner:
+    image: n8nio/runners:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+    depends_on:
+      - n8n
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:</code></pre>
+<p>这四个服务具有不同的角色：PostgreSQL 存储数据库状态，n8n 运行工作流程， <code>n8n-runner</code> 使用匹配版本和共享身份验证令牌执行运行器任务，Caddy 处理公共 HTTPS。一个外部 <em>任务运行者</em> 不是 Redis 队列模式。仅 Caddy 发布主机端口。此精益插图使用单个数据库角色进行设置；要加强 PostgreSQL 权限的分离，请参阅官方 n8n PostgreSQL 部署示例。</p>
+<h3>4.创建 HTTPS Caddyfile</h3>
+<p>创建文件 <code>Caddyfile</code> （大写 C，无扩展名）旁边 <code>compose.yaml</code>。将示例主机名替换为您自己的 DNS 名称：</p>
+<pre><code>n8n.example.com {
+    reverse_proxy n8n:5678
+}</code></pre>
+<p>当域正确解析并且外部流量可以到达端口 80/443 时，Caddy 请求并续订公共 TLS 证书。不要将 DNS 指向 <code>localhost</code>。如果将 Caddy 替换为另一个反向代理，则转发原始主机、协议和客户端地址标头并调整 <code>N8N_PROXY_HOPS</code> 为可信代理跃点的实际数量。</p>
+<h3>5.启动容器并从外部进行测试</h3>
+<p>保存后从项目目录运行这些命令 <code>.env</code>, <code>compose.yaml</code> 和 <code>Caddyfile</code>:</p>
+<pre><code>chmod 600 .env
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100 n8n n8n-runner postgres caddy
+curl -fsS https://n8n.example.com/healthz</code></pre>
+<p>最后一个命令检查 <strong>公共 HTTPS</strong> 健康终点。如果证书颁发仍在等待中，请在得出 n8n 已损坏的结论之前检查 Caddy 日志和 DNS/端口。打开 <code>https://n8n.example.com</code>，立即创建第一个所有者帐户并启用适当的登录保护。确认实例实际执行工作流，而不仅仅是编辑器加载：</p>
+<ol>
+<li>在编辑器中，创建一个工作流程 <strong>网络钩子</strong> 触发。套装 <strong>HTTP 方法</strong> 到 <code>GET</code>，选择 <strong>Path</strong> <code>vps-check</code>，并设置 <strong>回应</strong> 到 <strong>立即</strong>。保存工作流程。</li>
+<li>点击 <strong>监听测试事件</strong>，复制完整的 <strong>测试网址</strong> 由 n8n 显示，并从另一台设备运行 <code>curl -i 'PASTE_TEST_URL_HERE'</code> 与复制的 URL。预计 HTTP 成功响应和传入事件将出现在 n8n 编辑器中。测试 URL 仅在 n8n 侦听事件时有效。</li>
+<li><strong>发布</strong> 工作流程，将节点切换到其 <strong>生产网址</strong>，复制并运行 <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> 再次。确认工作流程下的执行 <strong>处决</strong> 选项卡。生产 Webhook 请求需要发布工作流程，并且不会在编辑器的测试视图中显示其负载。</li>
+</ol>
+<p>这是一个故意简单的、未经身份验证的冒烟测试：永远不要向它发送秘密。测试后取消发布/删除它，或者在使用公共端点获取真实数据之前配置 Webhook 身份验证/IP 限制。请参阅官方 Webhook 测试/生产文档。</p>
+<h3>6.更改固定版本之前进行备份</h3>
+<p>保存可恢复的 PostgreSQL 转储 <em>和</em> 持久的 n8n 数据量， <code>.env</code>/加密密钥和需要存储在该服务器外部的外部文件。使用以下命令验证恢复 <a href="n8n-backup-restore.html">备份和恢复指南</a> 在更新生产之前。命令示例：</p>
+<pre><code># Back up the database, encryption key, instance data,
+# and files before changing the pinned versions.
+docker compose exec -T postgres \
+  pg_dump -U n8n -d n8n &gt; n8n-db.sql
+# After securing the backup outside this VPS:
+docker compose pull
+docker compose up -d
+docker compose ps</code></pre>
+<p>更改固定的 <code>N8N_VERSION</code> 仅在阅读发行说明后； n8n 和跑步者图像必须一起前进。 <strong>不要跑 <code>docker compose down -v</code></strong> 在日常维护期间，因为这会删除命名数据卷。 PostgreSQL 主要版本更改需要数据库升级或转储/恢复计划；用不同的主要标签替换 Postgres 18 映像并不是自动迁移。</p>
+<p>权威参考：n8n Docker Compose 指南、n8n 反向代理/Webhook 配置以及官方 PostgreSQL 部署说明。不假定任何基础设施基准或特定于提供商的预安装功能。</p>
+</section>
+<section class="section dark"><p class="eyebrow">配置</p><h2>有意设置秘密和公共 URL</h2><div class="cards">
+<article><h3>加密密钥</h3><p>在存储生产凭据之前设置并保留强大的 n8n 加密密钥。恢复后需要相同的密钥。</p></article>
+<article><h3>PostgreSQL 凭证</h3><p>使用专用数据库凭据并将密码置于公共源代码控制之外。</p></article>
+<article><h3>公共主机名</h3><p>配置真实的外部主机名和 HTTPS 源而不是内部容器地址。</p></article>
+<article><h3>网络钩子 URL</h3><p>套装 <code>N8N_WEBHOOK_URL</code> 到可公开访问的 HTTPS 基本 URL 并设置 <code>N8N_PROXY_HOPS=1</code> 当有一个受信任的反向代理时。 <code>WEBHOOK_URL</code> 是 n8n 2.35.0 及更高版本中已弃用的别名；避免从旧教程中复制它。</p></article>
+</div></section>
+<section class="section"><p class="eyebrow">坚持</p><h2>分别保留 n8n 和 PostgreSQL</h2><div class="cards">
+<article><h3>n8n 数据</h3><p>为 n8n 数据目录安装持久存储，以便关键实例状态在容器重新创建后仍然存在。</p></article>
+<article><h3>PostgreSQL 数据</h3><p>独立于 PostgreSQL 容器保留数据库目录。</p></article>
+<article><h3>文件权限</h3><p>使已安装的路径可供目标容器用户写入，而不会使主机存储变得不必要的许可。</p></article>
+<article><h3>工作流程文件</h3><p>保留生产工作流程所依赖的任何已安装文件或二进制数据存储。</p></article></div></section>
+<section class="section dark"><p class="eyebrow">后GRESQL</p><h2>将 n8n 连接到私有数据库服务</h2><div class="requirements">
+<div><b>数据库类型</b><span>将 n8n 配置为 PostgreSQL，而不是意外地退回到 SQLite。</span></div>
+<div><b>主持人</b><span>使用专用 Docker 网络上的 PostgreSQL 服务名称。</span></div>
+<div><b>凭证</b><span>匹配预期的数据库、应用程序用户和密码。</span></div>
+<div><b>准备状态</b><span>在期望 n8n 成功初始化之前，允许 PostgreSQL 准备就绪。</span></div>
+<div><b>网络</b><span>容器到容器的数据库访问不需要公共 PostgreSQL 端口。</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">HTTPS &amp; 代理</p><h2>将公共 n8n URL 放在 HTTPS 后面</h2><div class="cards">
+<article><h3>反向代理</h3><p>使用 Nginx、Caddy 或 Traefik 作为公共入口点，并将流量转发到私有 n8n 服务。</p></article>
+<article><h3>TLS</h3><p>为公共主机名颁发有效证书并将 HTTP 流量重定向至 HTTPS。</p></article>
+<article><h3>转发的标头</h3><p>传递 n8n 需要的主机、协议和客户端信息并配置预期的代理跳数。</p></article>
+<article><h3>Webhook验证</h3><p>从 VPS 外部触发 Webhook 并确认 n8n 生成外部可访问的 HTTPS URL。</p></article></div>
+<p><a href="n8n-vps-security.html">完整的生产安全检查表</a></p></section>
+<section class="section dark"><p class="eyebrow">第一次开始</p><h2>在生产使用之前验证持久性</h2><div class="requirements">
+<div><b>集装箱</b><span>确认 n8n、PostgreSQL，代理在启动和重新启动后保持健康状态。</span></div>
+<div><b>编辑</b><span>打开公共 HTTPS 主机名并确认身份验证正常工作。</span></div>
+<div><b>数据库</b><span>创建测试状态，重新创建容器并验证状态是否持续。</span></div>
+<div><b>网络钩子</b><span>运行外部 Webhook 测试以验证 DNS、TLS、代理和公共回调 URL。</span></div>
+<div><b>凭证</b><span>验证加密凭据在 n8n 重新启动后仍然可用。</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">更新</p><h2>升级 Docker 部署而不将容器视为备份</h2><div class="cards">
+<article><h3>阅读发行说明</h3><p>在升级之前查看重要的 n8n 更改，尤其是在跳过版本时。</p></article>
+<article><h3>先备份一下</h3><p>在更改生产映像之前进行可恢复的数据库和实例备份。</p></article>
+<article><h3>安全地重建</h3><p>拉取所选映像并重新创建应用程序容器，同时保留持久卷。</p></article>
+<article><h3>升级后验证</h3><p>在宣布部署正常之前，请检查日志、编辑器访问权限、凭据和代表性工作流程。</p></article></div>
+<p><a href="n8n-backup-restore.html">备份和恢复指南</a></p></section>
+<section class="section dark"><p class="eyebrow">常见故障</p><h2>为什么 n8n Docker 安装可以在本地运行但在生产中失败</h2><div class="cards">
+<article><h3>Webhook URL 错误</h3><p>回调指向 localhost、HTTP 或内部主机名，而不是公共 HTTPS 源。</p></article>
+<article><h3>缺少坚持</h3><p>重新创建容器时，应用程序或数据库状态会消失。</p></article>
+<article><h3>丢失加密密钥</h3><p>重建后，保存的凭据将变得不可用，因为新实例使用不同的密钥。</p></article>
+<article><h3>公共数据库端口</h3><p>PostgreSQL 被不必要地暴露，尽管只有 n8n 需要到达它。</p></article></div></section>
+<section class="section dark"><p class="eyebrow">部署后验证</p><h2>连接真实工作流程之前验证运行状况</h2><div class="cards"><article><h3>检查容器状态</h3><p>运行 <code>docker compose ps</code> 并确认应用程序和数据库服务按预期运行，然后再将部署视为正常。</p></article><article><h3>检查 n8n 健康端点</h3><p>对于上面的 Compose 示例，端口 5678 未在主机上发布。检查公共端点 <code>curl -fsS https://n8n.example.com/healthz</code> 更改主机名后，然后使用 <code>docker compose ps</code> 如果 HTTPS 或数据库未准备好，则加上服务日志。</p></article><article><h3>固定应用程序版本</h3><p>不要将未经审查的浮动映像更新视为维护策略。记录您运行的 n8n 版本，阅读发行说明并在更改之前进行备份。</p></article><article><h3>不要将 PostgreSQL 主要版本更改到位</h3><p>仅更改 Postgres 主映像标签可能会使现有数据目录不兼容。备份并遵循数据库升级过程，而不是假设容器重新创建执行主要版本迁移。</p></article></div><p>当前官方 Docker 撰写指南</p></section><section class="section"><p class="eyebrow">常见问题</p><h2>将 n8n 与 Docker 一起安装：常见问题</h2><div class="faq">
+<details><summary>使用 Docker 时 n8n 是否需要 PostgreSQL？</summary><p>Docker 不需要 PostgreSQL，小型部署可以使用 SQLite。对于面向生产的 VPS 部署，PostgreSQL 提供了更强大的数据库基础并支持以后的队列模式扩展。</p></details>
+<details><summary>如果 PostgreSQL 存储数据，为什么还要保留持久的 n8n 卷？</summary><p>持久性 n8n 目录可以包含重要的实例状态和配置。根据部署设计保留它，而不是假设数据库是唯一的恢复资产。</p></details>
+<details><summary>为什么我的 webhook 显示 localhost？</summary><p>内部容器地址与公共来源不同。配置外部主机名、协议和 Webhook URL，并确保反向代理传递所需的标头。</p></details>
+<details><summary>端口 5678 应该是公共的吗？</summary><p>对于反向代理后面的正常生产部署，请在代理处公开 HTTPS，并将 n8n 应用程序端口保留在内部，除非有特定的操作原因不这样做。</p></details>
+<details><summary>我需要 Redis 吗？</summary><p>不适用于标准单实例 Docker 部署。当您有意转向队列模式和工作人员时，Redis 变得相关。</p></details>
+<details><summary>外部 n8n 任务运行程序与队列模式工作程序相同吗？</summary><p>不会。外部任务运行程序独立于 n8n 主进程执行支持的任务代码，并使用共享身份验证令牌。 Redis 队列模式分布工作流执行并有其自己的基础设施要求。此示例显示外部任务运行程序，而不是 Redis 队列模式。将跑步者图像版本与 n8n 版本进行匹配。</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">查看 VPS 选项</a></div>
+<p><a href="n8n-vps-requirements.html">VPS 要求</a> · <a href="n8n-vps-security.html">生产安全</a> · <a href="n8n-backup-restore.html">备份与恢复</a> · <a href="n8n-queue-mode.html">队列模式和工作人员</a> · <a href="index.html">主要 n8n VPS 指南</a></p></section>
+<section class="section" data-best-vps-link="1"><h2>比较提供商？</h2><p>对于提供商选择、一键设置、支持边界、备份、迁移、区域和扩展，请使用 <a href="best-vps-for-n8n.html">n8n 比较的最佳 VPS</a>。对于资源大小，请返回 <a href="index.html">n8n 指南的主要 VPS</a>.</p></section></main><footer><b>n8nVPS</b><span>自托管的独立基础设施指南 n8n。</span><p><a href="about.html">关于我们</a> · <a href="contact.html">联系我们</a> · <a href="privacy.html">隐私</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">简体中文 ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">印度尼西亚语</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">罗马语</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">荷兰</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">阿兹尔拜坎卡</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
