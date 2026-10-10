@@ -373,7 +373,7 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1ca\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1hu\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"Magyar ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
