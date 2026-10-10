@@ -112,11 +112,13 @@ def set_korean_button(text,path):
       lambda m:m.group(1)+"한국어 ▾"+m.group(2),text,flags=re.I)
 
 def transform(path,source):
-    if path=="404.html" or "footer-lang-switch" not in source:return source
-    out=set_korean_button(source,path)
-    out=MENU.sub(lambda m:do_menu(m,path),out)
+    if path=="404.html":return source
+    out=source
+    if "footer-lang-switch" in out:
+        out=set_korean_button(out,path)
+        out=MENU.sub(lambda m:do_menu(m,path),out)
     out=LINK.sub(lambda m:do_link(m,path),out)
-    if category(path) in KO_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']vi["\']',out,re.I):
+    if category(path) in KO_BY_CATEGORY and not re.search(r'<link\b[^>]*hreflang=["\']ko["\']',out,re.I):
         out=out.replace("</head>",'<link rel="alternate" hreflang="ko" href="'+ko_dest(path)+'"/></head>',1)
     return out
 
@@ -167,7 +169,7 @@ def audit(changed):
         if prices(source)!=prices(output):errors.append(vi+": prices differ")
         if len(re.findall(r'<details\b',source,re.I))!=len(re.findall(r'<details\b',output,re.I)):errors.append(vi+": FAQ count differs")
         if len(re.findall(r'<img\b',source,re.I))!=len(re.findall(r'<img\b',output,re.I)):errors.append(vi+": image count differs")
-        if not re.search(r'<html\b[^>]*\blang=["\']vi["\']',output,re.I):errors.append(vi+": html lang is not vi")
+        if not re.search(r'<html\b[^>]*\blang=["\']ko["\']',output,re.I):errors.append(vi+": html lang is not ko")
         if len(re.findall(r'<h1(?:\s|>)',source,re.I))!=len(re.findall(r'<h1(?:\s|>)',output,re.I)):errors.append(vi+": H1 count differs")
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
