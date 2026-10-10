@@ -136,6 +136,11 @@ def polish(i):
     p=ROOT/target
     text=p.read_text(encoding="utf-8")
     before=text;hits=0
+    protected=[]
+    def hide_block(m):
+        protected.append(m.group())
+        return "<!--TH_POLISH_BLOCK_"+str(len(protected)-1)+"-->"
+    text=re.sub(r'<(style|script|pre|code)\\b[^>]*>[\\s\\S]*?</\\1>',hide_block,text,flags=re.I)
     for old,new in PER_PAGE.get(target,[]):
         n=text.count(old)
         if n:
@@ -149,6 +154,8 @@ def polish(i):
         hits+=1;text=spaced
     text=text.replace("เปรียบเทียบผู้ให้บริการ?","กำลังเปรียบเทียบผู้ให้บริการอยู่หรือไม่?")
     text=text.replace("คำถามทั่วไป","คำถามที่พบบ่อย")
+    for idx,block in enumerate(protected):
+        text=text.replace("<!--TH_POLISH_BLOCK_"+str(idx)+"-->",block,1)
     validate((ROOT/en).read_text(encoding="utf-8"),text,en,target)
     if text!=before:
         p.write_text(text,encoding="utf-8")
