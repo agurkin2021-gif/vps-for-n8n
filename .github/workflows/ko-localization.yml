@@ -68,3 +68,5 @@ jobs:
               git push origin HEAD:ko-complete-sitemap-20261009
             fi
           fi
+
+# retry after Korean validator fix
