@@ -1,3 +1,4 @@
+# Syntax corrected for Greek script
 name: Greek sequential HTML localization, full parity QA and publication
 on:
   push:
