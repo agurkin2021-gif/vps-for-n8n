@@ -140,7 +140,7 @@ def polish(i):
     def hide_block(m):
         protected.append(m.group())
         return "<!--TH_POLISH_BLOCK_"+str(len(protected)-1)+"-->"
-    text=re.sub(r'<(style|script|pre|code)\\b[^>]*>[\\s\\S]*?</\\1>',hide_block,text,flags=re.I)
+    text=re.sub(r'<(style|script|pre|code)\b[^>]*>[\s\S]*?</\1>',hide_block,text,flags=re.I)
     for old,new in PER_PAGE.get(target,[]):
         n=text.count(old)
         if n:
