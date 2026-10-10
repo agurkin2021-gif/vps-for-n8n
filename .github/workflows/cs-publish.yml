@@ -62,3 +62,4 @@ jobs:
             exit 1
           fi
           echo "CS_FINAL_PUBLICATION_PASS_11_OF_11"
+# Czech short-page verification uses expanded natural-language vocabulary.
