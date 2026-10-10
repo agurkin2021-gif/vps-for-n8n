@@ -32,7 +32,7 @@ CACHE_PATH = ROOT / ".github" / "az-translation-cache.json"
 LANGUAGE_NAMES = {
     "English", "Español", "Русский", "Português", "Deutsch", "हिन्दी", "বাংলা",
     "日本語", "ਪੰਜਾਬੀ", "मराठी", "తెలుగు", "தமிழ்", "Türkçe", "Tiếng Việt",
-    "한국어", "Français", "Italiano", "Polski", "Azərbaycanca", "Nederlands", "Română", "فارسی", "العربية", "ไทย", "n8nVPS", "n8n", "VDSina",
+    "한국어", "Français", "Italiano", "Polski", "Azərbaycanca", "Bahasa Indonesia", "Nederlands", "Română", "فارسی", "العربية", "ไทย", "n8nVPS", "n8n", "VDSina",
 }
 EXACT = {
     "FAQ": "Tez-tez verilən suallar",
@@ -192,6 +192,8 @@ def translate_candidates(strings: set[str]):
         if not eligible(x) or x in EXACT or x in cache: continue
         todo.append(x)
     print(f"translation_candidates={len(strings)} uncached={len(todo)}",flush=True)
+    if todo:
+        raise RuntimeError(f"AZ_MANUAL_TRANSLATION_MISSING={len(todo)}: {todo[:5]!r}; do not machine-translate unreviewed content")
     batch=[]; count=0
     for idx,item in enumerate(todo):
         if len(item)>3200:
