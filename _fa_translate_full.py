@@ -257,7 +257,7 @@ def patch_tag(tag: str,enpath: str,japath: str):
             mlang=re.search(r'\bhreflang=["\']([^"\']+)',tag,re.I)
             if mlang:
                 lang=mlang.group(1).lower()
-                if lang=="vi":return name+BASE+japath+end
+                if lang=="fa":return name+BASE+japath+end
                 if lang in ("en","x-default"):return name+BASE+enpath+end
         if re.match(r"^(?:https?://|//|/|#|data:|mailto:|tel:)",value,re.I):
             return m.group(0)
