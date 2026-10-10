@@ -224,22 +224,22 @@ volumes:
 }</code></pre>
 <p>A Caddy akkor igényel és újít meg nyilvános TLS-tanúsítványokat, ha a domain helyesen oldódik fel, és a külső forgalom eléri a 80/443-as portokat. A DNS-t ne irányítsd a <code>localhost</code>címre. Ha a Caddyt más fordított proxyval helyettesíted, továbbítsd az eredeti hosztnév-, protokoll- és klienscímet tartalmazó fejléceket, és állítsd be a <code>N8N_PROXY_HOPS</code> értékét a ténylegesen megbízható proxyugrások számának megfelelően.</p>
 <h3>5. A konténerek indítása és külső tesztelése</h3>
-<p>Mentés után futtassa ezeket a parancsokat a projektkönyvtárból <code>.env</code>, <code>compose.yaml</code> és <code>Caddyfile</code>:</p>
+<p>Miután elmentetted a <code>.env</code>, <code>compose.yaml</code> és <code>Caddyfile</code>fájlokat, a projektkönyvtárból futtasd az alábbi parancsokat:</p>
 <pre><code>chmod 600 .env
 docker compose config --quiet
 docker compose up -d
 docker compose ps
 docker compose logs --tail=100 n8n n8n-runner postgres caddy
 curl -fsS https://n8n.example.com/healthz</code></pre>
-<p>Az utolsó parancs ellenőrzi a <strong>nyilvános HTTPS</strong> egészségügyi végpont. Ha a tanúsítvány kiadása még függőben van, ellenőrizze a Caddy naplókat és DNS/portokat, mielőtt a n8n megszakadt. Nyissa meg <code>https://n8n.example.com</code>, azonnal hozza létre az első tulajdonosi fiókot, és engedélyezze a megfelelő bejelentkezési védelmet. Győződjön meg arról, hogy a példány valóban egy munkafolyamatot hajt végre, nem csupán azt, hogy a szerkesztő betölti:</p>
+<p>Az utolsó parancs a <strong>nyilvános HTTPS-en</strong> elérhető állapotellenőrzési végpontot vizsgálja. Ha a tanúsítvány kiállítása még folyamatban van, előbb ellenőrizd a Caddy naplóit, a DNS-t és a portokat, mielőtt hibásnak ítélnéd az n8n-t. Nyisd meg a <code>https://n8n.example.com</code>címet, azonnal hozd létre az első tulajdonosi fiókot, és állítsd be a megfelelő bejelentkezési védelmet. Ellenőrizd, hogy a példány ténylegesen végrehajt egy munkafolyamatot, és nem csupán a szerkesztő töltődik be:</p>
 <ol>
-<li>A szerkesztőben hozzon létre egy munkafolyamatot az a <strong>Webhook</strong> ravaszt. Állítsa be <strong>HTTP Módszer</strong> hogy <code>GET</code>, válassza ki a <strong>Path</strong> <code>vps-check</code>, és állítsa be <strong>Válaszolj</strong> hogy <strong>Azonnal</strong>. Mentse el a munkafolyamatot.</li>
-<li>Kattintson <strong>Hallgassa meg a teszt eseményt</strong>, másolja a teljes <strong>Teszt URL</strong> n8n mutatja, és egy másik eszközről fut <code>curl -i 'PASTE_TEST_URL_HERE'</code> a másolt URL-lel. Várja, hogy a HTTP sikeres válasza és a bejövő esemény megjelenjen a n8n szerkesztőben. A teszt URL-ek csak akkor működnek, amikor a n8n figyeli az eseményt.</li>
-<li><strong>Közzététel</strong> a munkafolyamatot, kapcsolja át a csomópontot a megfelelőre <strong>Gyártási URL</strong>, másolja ki és futtassa <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> újra. Erősítse meg a végrehajtást a munkafolyamat alatt <strong>Kivégzések</strong> lapon. Az éles webhook-kérelmeknek közzé kell tenni a munkafolyamatot, és nem jelennek meg a hasznos terhelésük a szerkesztő tesztnézetében.</li>
+<li>A szerkesztőben hozz létre egy munkafolyamatot <strong>Webhook</strong> eseményindítóval. A <strong>HTTP Method</strong> mezőben válaszd a <code>GET</code>értéket, a <strong>Path</strong> <code>vps-check</code>mezőben add meg a <strong>Respond</strong> beállítást, értéke legyen <strong>Immediately</strong>. Mentsd el a munkafolyamatot.</li>
+<li>Kattints a <strong>Listen for Test Event</strong>gombra, másold ki az n8n által megjelenített teljes <strong>Test URL</strong> címet, majd egy másik eszközről futtasd a <code>curl -i 'PASTE_TEST_URL_HERE'</code> parancsot a kimásolt URL-lel. Sikeres HTTP-választ és a beérkező eseményt kell látnod az n8n szerkesztőjében. A teszt-URL csak addig működik, amíg az n8n figyeli a teszteseményt.</li>
+<li><strong>Publikáld</strong> a munkafolyamatot, a node-nál válts a <strong>Production URL</strong>címre, másold ki, majd futtasd újra a <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> parancsot. A végrehajtást ellenőrizd a munkafolyamat <strong>Executions</strong> lapján. Az éles webhook-kérelmekhez a munkafolyamat publikálása szükséges, és az adatok nem jelennek meg a szerkesztő tesztnézetében.</li>
 </ol>
-<p>Ez egy szándékosan egyszerű, nem hitelesített füstteszt: soha ne küldj neki titkokat. Tesztelés után vonja vissza a közzétételt/törölje, vagy konfigurálja a Webhook-hitelesítési/IP-korlátozásokat, mielőtt nyilvános végpontot használna valós adatokhoz. Tekintse meg a Webhook hivatalos teszt/gyártási dokumentációját.</p>
-<h3>6. A rögzített verziók módosítása előtt készítsen biztonsági másolatot</h3>
-<p>Mentse el a helyreállítható PostgreSQL kiírást <em>és</em> a tartós n8n adatmennyiség, <code>.env</code>/titkosítókulcsot és a szükséges külső fájlokat a kiszolgálón kívüli tárolásra. Ellenőrizze a visszaállítást a <a href="n8n-backup-and-restore.html">biztonsági mentési és helyreállítási útmutató</a> a gyártás frissítése előtt. Példaparancsok:</p>
+<p>Ez szándékosan egyszerű, hitelesítés nélküli működési próba: soha ne küldj hozzá titkos adatokat. A teszt után vond vissza a publikálását vagy töröld, illetve valódi adatok nyilvános végponton történő fogadása előtt állíts be webhook-hitelesítést és IP-korlátozásokat. Lásd a Webhook hivatalos teszt- és éles üzemű dokumentációját.</p>
+<h3>6. Rögzített verzió módosítása előtt készíts biztonsági mentést</h3>
+<p>Tárolj a szerveren kívül visszaállítható PostgreSQL-mentést <em>és</em> a tartós n8n-adatkötetet, a <code>.env</code>fájlt/titkosítási kulcsot, valamint a szükséges külső fájlokat. Az éles rendszer frissítése előtt a <a href="n8n-backup-and-restore.html">mentési és helyreállítási útmutató</a> alapján próbáld ki a visszaállítást. Példaparancsok:</p>
 <pre><code># Back up the database, encryption key, instance data,
 # and files before changing the pinned versions.
 docker compose exec -T postgres \
@@ -248,39 +248,39 @@ docker compose exec -T postgres \
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
-<p>Cserélje ki a rögzítettet <code>N8N_VERSION</code> csak a kiadási megjegyzések elolvasása után; a n8n és a futóképeknek együtt kell haladniuk. <strong>Ne fuss <code>docker compose down -v</code></strong> rutin karbantartás során, mert ez törli a megnevezett adatköteteket. PostgreSQL A főbb verzióváltásokhoz adatbázis-frissítés vagy kiíratási/visszaállítási terv szükséges; a Postgres 18 képének másik fő címkére való lecserélése nem automatikus migráció.</p>
-<p>Hiteles hivatkozások: n8n Docker Összeállítási útmutató, n8n fordított proxy/webhook konfiguráció és hivatalos PostgreSQL beépítési megjegyzések. Nem feltételezhető infrastruktúra-benchmark vagy szolgáltató-specifikus előre telepített szolgáltatás.</p>
+<p>A rögzített <code>N8N_VERSION</code> értékét csak a kiadási megjegyzések elolvasása után módosítsd; az n8n és a runner lemezképeinek verzióját együtt kell frissíteni. <strong>Ne futtasd a <code>docker compose down -v</code></strong> parancsot a szokásos karbantartás során, mert törli a névvel ellátott adatköteteket. A PostgreSQL főverziójának módosításához adatbázis-frissítés vagy mentési/visszaállítási terv szükséges; a Postgres 18 lemezképének lecserélése más főverzióra nem jelent automatikus migrációt.</p>
+<p>Elsődleges források: az n8n Docker Compose-útmutatója, az n8n fordítottproxy- és webhook-beállításai, valamint a PostgreSQL hivatalos telepítési leírásai. A példa nem feltételez infrastruktúra-teljesítménytesztet vagy szolgáltatóspecifikus, előtelepített funkciókat.</p>
 </section>
-<section class="section dark"><p class="eyebrow">KONFIGURÁCIÓ</p><h2>Szándékosan állítson be titkokat és nyilvános URL-eket</h2><div class="cards">
-<article><h3>Titkosító kulcs</h3><p>A gyártási hitelesítő adatok tárolása előtt állítson be és őrizzen meg egy erős n8n titkosítási kulcsot. Ugyanerre a kulcsra van szükség a helyreállítás után.</p></article>
-<article><h3>PostgreSQL-hitelesítő adatok</h3><p>Használjon dedikált adatbázis hitelesítő adatokat, és tartsa a jelszavakat a nyilvános forrás ellenőrzésén kívül.</p></article>
-<article><h3>Nyilvános gazdagépnév</h3><p>Állítsa be a valódi külső gazdagépnevet és a HTTPS eredetét a belső tárolócím helyett.</p></article>
-<article><h3>Webhook URL</h3><p>Állítsa be <code>N8N_WEBHOOK_URL</code> a nyilvánosan elérhető HTTPS alap URL-re, és állítsa be <code>N8N_PROXY_HOPS=1</code> ha van egy megbízható fordított proxy. <code>WEBHOOK_URL</code> egy elavult álnév a n8n 2.35.0-ban és későbbiekben; ne másolja át a régebbi oktatóanyagokból.</p></article>
+<section class="section dark"><p class="eyebrow">KONFIGURÁCIÓ</p><h2>A titkokat és a nyilvános URL-eket tudatosan állítsd be</h2><div class="cards">
+<article><h3>Titkosítási kulcs</h3><p>Az éles hitelesítő adatok tárolása előtt hozz létre és őrizz meg egy erős n8n-titkosítási kulcsot. Helyreállításkor ugyanerre a kulcsra lesz szükség.</p></article>
+<article><h3>PostgreSQL-hitelesítő adatok</h3><p>Használj külön adatbázis-hitelesítő adatokat, és a jelszavakat ne tárold nyilvános forráskódtárban.</p></article>
+<article><h3>Nyilvános hosztnév</h3><p>A belső konténercím helyett a tényleges külső hosztnevet és a HTTPS-alapú nyilvános címet állítsd be.</p></article>
+<article><h3>Webhook-URL</h3><p>Állítsd a <code>N8N_WEBHOOK_URL</code> változót a nyilvánosan elérhető HTTPS-alap URL-re, és ha egyetlen megbízható fordított proxy működik, állítsd be a <code>N8N_PROXY_HOPS=1</code> értéket. <code>WEBHOOK_URL</code> az n8n 2.35.0-s és újabb verzióiban elavult alias; ne másold át régi útmutatókból.</p></article>
 </div></section>
-<section class="section"><p class="eyebrow">KITARTÁS</p><h2>Tartsa fenn a n8n-t és az PostgreSQL.-t külön-külön</h2><div class="cards">
-<article><h3>n8n adatok</h3><p>Állandó tárhely csatlakoztatása a n8n adatkönyvtárhoz, hogy a kritikus példányállapot túlélje a tároló újratelepítését.</p></article>
-<article><h3>PostgreSQL adatok</h3><p>Az adatbázis-címtár a PostgreSQL tárolótól függetlenül megmarad.</p></article>
-<article><h3>Fájlengedélyek</h3><p>Tegye írhatóvá a csatolt elérési utakat a kívánt tárolófelhasználó számára anélkül, hogy a gazdagép tárolását szükségtelenül engedélyezné.</p></article>
-<article><h3>Munkafolyamat-fájlok</h3><p>Maradjon meg minden csatlakoztatott fájl vagy bináris adattároló, amelytől a termelési munkafolyamatok függnek.</p></article></div></section>
-<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Csatlakoztassa a n8n-t a privát adatbázis-szolgáltatáshoz</h2><div class="requirements">
-<div><b>Adatbázis típusa</b><span>Állítsa be a n8n-t az PostgreSQL-hoz, nehogy véletlenül visszaessen a SQLite-ba.</span></div>
-<div><b>Házigazda</b><span>Használja a PostgreSQL szolgáltatásnevet a privát Docker hálózaton.</span></div>
-<div><b>Hitelesítő adatok</b><span>Egyezzen meg a tervezett adatbázissal, az alkalmazás felhasználójával és a jelszóval.</span></div>
-<div><b>Készenlét</b><span>Hagyja, hogy a PostgreSQL készen álljon, mielőtt az n8n sikeres inicializálását várná.</span></div>
-<div><b>Hálózat</b><span>A tárolók közötti adatbázis eléréséhez nincs szükség nyilvános PostgreSQL portra.</span></div>
+<section class="section"><p class="eyebrow">TARTÓS ADATTÁROLÁS</p><h2>Az n8n és a PostgreSQL adatait külön őrizd meg</h2><div class="cards">
+<article><h3>n8n-adatok</h3><p>Csatlakoztass tartós tárhelyet az n8n adatkönyvtárához, hogy a példány fontos állapota konténer-újralétrehozás után is megmaradjon.</p></article>
+<article><h3>PostgreSQL-adatok</h3><p>Az adatbáziskönyvtárat a PostgreSQL-konténertől független tartós köteten tárold.</p></article>
+<article><h3>Fájljogosultságok</h3><p>A csatolt útvonalakat tedd írhatóvá a megfelelő konténerfelhasználó számára, de ne adj indokolatlanul széles jogosultságokat a gazdagép tárhelyéhez.</p></article>
+<article><h3>Munkafolyamat-fájlok</h3><p>Őrizd meg azokat a csatolt fájlokat és binárisadat-tárolókat, amelyektől az éles munkafolyamatok függenek.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Csatlakoztasd az n8n-t a privát adatbázisszolgáltatáshoz</h2><div class="requirements">
+<div><b>Adatbázistípus</b><span>Az n8n-t kifejezetten PostgreSQL használatára állítsd be, nehogy véletlenül SQLite-ot használjon.</span></div>
+<div><b>Hoszt</b><span>A privát Docker-hálózaton a PostgreSQL-szolgáltatás nevét használd.</span></div>
+<div><b>Hitelesítő adatok</b><span>Az adatbázisnév, az alkalmazásfelhasználó és a jelszó egyezzen a tervezett beállításokkal.</span></div>
+<div><b>Indításra kész állapot</b><span>Várd meg, amíg a PostgreSQL használatra kész, mielőtt az n8n sikeres inicializálását várnád.</span></div>
+<div><b>Hálózat</b><span>A konténerek közötti adatbázis-kapcsolathoz nincs szükség nyilvános PostgreSQL-portra.</span></div>
 </div></section>
-<section class="section"><p class="eyebrow">HTTPS &amp; PROXY</p><h2>Tegye a nyilvános n8n URL-t HTTPS mögé</h2><div class="cards">
-<article><h3>Fordított proxy</h3><p>Használja az Nginxet, a Caddy-t vagy a Traefik-et nyilvános belépési pontként, és továbbítsa a forgalmat a privát n8n szolgáltatáshoz.</p></article>
-<article><h3>TLS</h3><p>Adjon ki érvényes tanúsítványt a nyilvános gazdagépnévhez, és irányítsa át a HTTP forgalmat az HTTPS. -ba.</p></article>
-<article><h3>Továbbított fejlécek</h3><p>Adja át a n8n-ban leírt gazdagép-, protokoll- és kliensinformációkat, és konfigurálja a várható proxy ugrásszámot.</p></article>
-<article><h3>Webhook ellenőrzés</h3><p>Indítson el egy webhookot a VPS-on kívülről, és ellenőrizze, hogy az n8n létrehozza a kívülről elérhető HTTPS URL-t.</p></article></div>
-<p><a href="secure-n8n-on-a-vps.html">Teljes gyártásbiztonsági ellenőrző lista</a></p></section>
-<section class="section dark"><p class="eyebrow">ELSŐ KEZDÉS</p><h2>Gyártási használat előtt ellenőrizze a tartósságot</h2><div class="requirements">
-<div><b>Konténerek</b><span>Erősítse meg, hogy a n8n, PostgreSQL és a proxy rendben marad az indítás és az újraindítás után.</span></div>
-<div><b>Szerkesztő</b><span>Nyissa meg a nyilvános HTTPS gazdagépnevet, és ellenőrizze, hogy a hitelesítés megfelelően működik.</span></div>
-<div><b>Adatbázis</b><span>Hozzon létre tesztállapotot, hozzon létre újra tárolókat, és ellenőrizze, hogy az állapot továbbra is fennáll.</span></div>
-<div><b>Webhook</b><span>Futtasson le egy külső webhook-tesztet a DNS, TLS, a proxy és a nyilvános visszahívási URL érvényesítéséhez.</span></div>
-<div><b>Hitelesítő adatok</b><span>Ellenőrizze, hogy a titkosított hitelesítő adatok használhatók maradnak-e a n8n szerinti újraindítás után is.</span></div>
+<section class="section"><p class="eyebrow">HTTPS ÉS FORDÍTOTT PROXY</p><h2>A nyilvános n8n-címet HTTPS-en keresztül tedd elérhetővé</h2><div class="cards">
+<article><h3>Fordított proxy</h3><p>Nyilvános belépési pontként használj Nginxet, Caddyt vagy Traefiket, és a forgalmat továbbítsd a privát n8n-szolgáltatáshoz.</p></article>
+<article><h3>TLS</h3><p>Állíts be érvényes tanúsítványt a nyilvános hosztnévhez, és irányítsd át a HTTP-forgalmat HTTPS-re.</p></article>
+<article><h3>Továbbított fejlécek</h3><p>Továbbítsd az n8n számára szükséges hosztnév-, protokoll- és kliensinformációkat, és állítsd be a megfelelő proxyugrásszámot.</p></article>
+<article><h3>Webhookok ellenőrzése</h3><p>Indíts webhook-kérést a VPS-en kívülről, és ellenőrizd, hogy az n8n a kívülről elérhető HTTPS-URL-t állítja elő.</p></article></div>
+<p><a href="secure-n8n-on-a-vps.html">Teljes éles üzemi biztonsági ellenőrzőlista</a></p></section>
+<section class="section dark"><p class="eyebrow">ELSŐ INDÍTÁS</p><h2>Éles használat előtt ellenőrizd az adatok tartósságát</h2><div class="requirements">
+<div><b>Konténerek</b><span>Ellenőrizd, hogy az n8n, a PostgreSQL és a proxy az első indítás és újraindítás után is megfelelően működik.</span></div>
+<div><b>Szerkesztő</b><span>Nyisd meg a nyilvános HTTPS-hosztnevet, és ellenőrizd a hitelesítés működését.</span></div>
+<div><b>Adatbázis</b><span>Hozz létre tesztadatokat, indítsd újra a konténereket, és ellenőrizd, hogy az adatok megmaradnak.</span></div>
+<div><b>Webhook</b><span>Külső webhook-teszttel ellenőrizd a DNS, a TLS, a proxyzás és a nyilvános visszahívási URL helyes működését.</span></div>
+<div><b>Hitelesítő adatok</b><span>Ellenőrizd, hogy a titkosított hitelesítő adatok az n8n újraindítása után is használhatók.</span></div>
 </div></section>
 <section class="section"><p class="eyebrow">FRISSÍTÉSEK</p><h2>Frissítse a Docker telepítést anélkül, hogy a tárolókat biztonsági másolatként kezelné</h2><div class="cards">
 <article><h3>Olvassa el a kiadási megjegyzéseket</h3><p>Frissítés előtt tekintse át a n8n fontos módosításait, különösen a verziók kihagyásakor.</p></article>
