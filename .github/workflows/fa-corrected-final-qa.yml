@@ -1,0 +1,20 @@
+name: Persian corrected final QA
+on:
+  push:
+    branches: [fa-native-polish-final-20261009]
+    paths:
+      - .github/workflows/fa-corrected-final-qa.yml
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fa-native-polish-final-20261009
+      - name: Verify corrected Persian pages
+        shell: bash
+        run: |
+          python -m py_compile _fa_publish_qa.py
+          python -u _fa_publish_qa.py
