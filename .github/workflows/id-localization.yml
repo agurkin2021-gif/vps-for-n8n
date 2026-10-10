@@ -1,4 +1,5 @@
 name: Indonesian sequential HTML localization and publication QA
+# Indonesian polish v2
 on:
   workflow_dispatch:
   push:
