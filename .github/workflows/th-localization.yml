@@ -1,4 +1,4 @@
-# Thai editorial pass v2
+# Thai editorial pass v3 code-safe
 name: Thai sequential HTML localization and publication QA
 on:
   workflow_dispatch:
@@ -41,9 +41,11 @@ jobs:
               polish(idx)
               validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
               subprocess.run(["git","add",target,".github/th-translation-cache.json"],check=True)
-              subprocess.run(["git","commit","-m",f"Translate polish verify and save Thai PAGE {idx+1}/11"],check=True)
-              subprocess.run(["git","push","origin","HEAD:main"],check=True)
-              print(f"THAI_PAGE_{idx+1}/11 VERIFIED_SAVED {target}",flush=True)
+              changed=subprocess.run(["git","diff","--cached","--quiet"]).returncode!=0
+              if changed:
+                  subprocess.run(["git","commit","-m",f"Translate polish verify and save Thai PAGE {idx+1}/11"],check=True)
+                  subprocess.run(["git","push","origin","HEAD:main"],check=True)
+              print(f"THAI_PAGE_{idx+1}/11 VERIFIED_SAVED {target} changed={changed}",flush=True)
           PY
       - name: Recheck all Thai pages after sequential save
         shell: bash
