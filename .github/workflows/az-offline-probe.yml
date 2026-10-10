@@ -1,4 +1,4 @@
-name: Probe offline English to Azerbaijani neural model
+name: Probe M2M100 Azerbaijani offline MT (MIT license)
 on:
   push:
     branches: [main]
@@ -24,11 +24,12 @@ jobs:
           python -u - <<'PY'
           import time
           from transformers import AutoTokenizer,AutoModelForSeq2SeqLM
-          name="Helsinki-NLP/opus-mt-en-az"
+          name="facebook/m2m100_418M"
           start=time.monotonic()
           tokenizer=AutoTokenizer.from_pretrained(name)
           model=AutoModelForSeq2SeqLM.from_pretrained(name)
           model.eval()
+          tokenizer.src_lang="en"
           print("MODEL_LOAD_SECONDS",round(time.monotonic()-start,1),flush=True)
           texts=[
             "Choose your VPS",
@@ -41,7 +42,7 @@ jobs:
           import torch
           with torch.inference_mode():
             encoded=tokenizer(texts,return_tensors="pt",padding=True,truncation=True,max_length=512)
-            output=model.generate(**encoded,max_new_tokens=200,num_beams=4)
+            output=model.generate(**encoded,max_new_tokens=200,num_beams=4,forced_bos_token_id=tokenizer.get_lang_id("az"))
           for orig,targ in zip(texts,tokenizer.batch_decode(output,skip_special_tokens=True)):
             print("INPUT",orig,"\nOUTPUT",targ,flush=True)
           print("TOTAL_SECONDS",round(time.monotonic()-start,1),flush=True)
