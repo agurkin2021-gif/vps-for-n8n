@@ -87,10 +87,16 @@ def do_menu(match,path):
     inner=ANCHOR.sub(rewrite,inner)
     if found==0:
         new='<a href="'+target+'" hreflang="ar" lang="ar"'+(' aria-current="page"' if current else '')+'>'+AR_TITLE+'</a>'
-        tr=list(re.finditer(r'<a\b[^>]*>\s*한국어\s*</a>',inner,re.I))
-        if tr:
-            m=tr[-1];inner=inner[:m.end()]+new+inner[m.end():]
-        else:inner+=new
+        inner+=new
+    # Keep Arabic immediately after English so it is visible without scrolling.
+    am=list(re.finditer(r'<a\b[^>]*>\s*العربية\s*</a>',inner,re.I))
+    if am:
+        m=am[0];anchor=m.group();inner=inner[:m.start()]+inner[m.end():]
+        en=list(re.finditer(r'<a\b[^>]*>\s*English\s*</a>',inner,re.I))
+        if en:
+            m=en[0];inner=inner[:m.end()]+anchor+inner[m.end():]
+        else:
+            inner=anchor+inner
     return opening+inner+closing
 
 def do_link(match,path):
@@ -201,6 +207,9 @@ def audit(changed):
                 errors.append(path+": Arabic selector count "+str(len(anchors)));continue
             href=re.search(r'\bhref=(["\'])(.*?)\1',anchors[0].group(1),re.I)
             if not href or href.group(2)!=expected:errors.append(path+": incorrect Arabic menu link")
+            labels=[html.unescape(m.group(2)).strip() for m in ANCHOR.finditer(block.group(2))]
+            if "English" in labels and (AR_TITLE not in labels or labels.index(AR_TITLE)!=labels.index("English")+1):
+                errors.append(path+": Arabic is not immediately after English")
         if locale(path)=="ar" and "العربية ▾" not in text:errors.append(path+": Arabic button label missing")
 
     sm=ET.parse(ROOT/"sitemap.xml")
