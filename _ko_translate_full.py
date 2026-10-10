@@ -362,7 +362,7 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1vi\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1ko\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"한국어 ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
@@ -374,7 +374,7 @@ def process(enpath,japath):
             tag=re.sub(r'\bhref=["\'][^"\']*["\']','href="'+BASE+japath+'"',tag,count=1)
             if "aria-current=" not in tag:tag=tag[:-1]+' aria-current="page">'
         return tag+label+"</a>"
-    output=re.sub(r'(<a\b[^>]*>)(English|Tiếng Việt)</a>',fix_language_link,output)
+    output=re.sub(r'(<a\b[^>]*>)(English|한국어)</a>',fix_language_link,output)
     # Korean alternate must be present even on English source pages missing the tag.
     if not re.search(r'<link\b[^>]*hreflang=["\']ko["\']',output,re.I):
         output=output.replace("</head>",'<link rel="alternate" hreflang="ko" href="'+BASE+japath+'"/></head>',1)
@@ -395,8 +395,8 @@ def validate(src,out,enpath,japath):
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
         raise AssertionError(f"JavaScript changed: {enpath}")
     if not re.search(r'<html\b[^>]*lang=["\']ko',out,re.I):
-        raise AssertionError("lang vi missing")
-    canonical = BASE + ("vi/" if japath == "ko/index.html" else japath)
+        raise AssertionError("lang ko missing")
+    canonical = BASE + ("ko/" if japath == "ko/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):
         raise AssertionError("H1 count differs")
@@ -417,7 +417,7 @@ def validate(src,out,enpath,japath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _vi_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _ko_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]
