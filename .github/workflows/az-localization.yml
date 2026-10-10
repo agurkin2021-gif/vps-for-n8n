@@ -1,0 +1,86 @@
+name: Azerbaijani sequential localization and sitewide language selector QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/az-localization.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: az-localization-main
+  cancel-in-progress: false
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Verify authoritative English sitemap
+        shell: bash
+        run: |
+          python -m py_compile _az_translate_full.py _az_publish_qa.py
+          python - <<'PY'
+          from _az_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("AZ_SOURCE_ENGLISH_COUNT=11",flush=True)
+          PY
+      - name: PAGE 1 -> translate -> verify -> save -> PAGE 2 sequential
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _az_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for i,(source,target) in enumerate(PAGES,1):
+              print(f"AZ_PAGE {i}/11 SOURCE {source}",flush=True)
+              process(source,target)
+              validate((ROOT/source).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),source,target)
+              subprocess.run(["git","add",target,".github/az-translation-cache.json"],check=True)
+              has_changes=subprocess.run(["git","diff","--cached","--quiet"]).returncode!=0
+              if has_changes:
+                  subprocess.run(["git","commit","-m",f"Translate and verify Azerbaijani page {i}/11"],check=True)
+                  subprocess.run(["git","push","origin","HEAD:main"],check=True)
+              print(f"AZ_PAGE {i}/11 VERIFIED_SAVED {target}",flush=True)
+          PY
+      - name: Recheck all eleven Azerbaijani translations
+        shell: bash
+        run: |
+          python -u - <<'PY'
+          from _az_translate_full import PAGES,ROOT,validate
+          for i,(source,target) in enumerate(PAGES,1):
+              validate((ROOT/source).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),source,target)
+              print(f"AZ_RECHECK {i}/11 {target} PASS",flush=True)
+          PY
+      - name: Integrate footer menus on all languages and add sitemap
+        shell: bash
+        run: |
+          python -u _az_publish_qa.py
+          git diff --binary > /tmp/az-first.diff
+          python -u _az_publish_qa.py
+          git diff --binary > /tmp/az-second.diff
+          cmp /tmp/az-first.diff /tmp/az-second.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Azerbaijani menus across all languages with reciprocal hreflang and sitemap"
+            git push origin HEAD:main
+          fi
+      - name: Preserve translation cache after interruptions
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/az-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/az-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint Azerbaijani translations"
+              git push origin HEAD:main
+            fi
+          fi
