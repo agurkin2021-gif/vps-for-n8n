@@ -1,4 +1,4 @@
-# Hungarian first two pages — post-edited Hungarian strings and token QA
+# Hungarian pages 1-2 — clean cache and verified localization pass
 name: Hungarian localization — sequential two-page pass
 on:
   push:
