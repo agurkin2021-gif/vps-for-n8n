@@ -182,7 +182,7 @@ def remote_translate(input_text: str) -> str:
             return output
         except Exception as exc:
             error=exc
-            print("HU_TRANSLATE_RETRY",attempt,type(exc).__name__,str(exc)[:120],flush=True)
+            print("CS_TRANSLATE_RETRY",attempt,type(exc).__name__,str(exc)[:120],flush=True)
             time.sleep(min(40,2**attempt+.4))
     raise RuntimeError("Czech translation endpoint unavailable") from error
 
@@ -206,7 +206,7 @@ def preserve_exact_when_model_drops_token(raw: str) -> str:
     for word in {m.group() for m in MASK_PATTERN.finditer(raw)}:
         if raw.count(word)!=output.count(word):
             raise AssertionError("Exact technical token was lost: "+word)
-    print("HU_SAFE_TRANSLATION_FALLBACK",raw[:110],flush=True)
+    print("CS_SAFE_TRANSLATION_FALLBACK",raw[:110],flush=True)
     return output
 
 def translate_group(items: list[str]) -> list[str]:
@@ -222,7 +222,7 @@ def translate_group(items: list[str]) -> list[str]:
             raise ValueError(f"Translation changed segment separators: {len(pieces)} vs {len(items)}")
         translated=[restore_numbers(part.strip(),stored) for part,(_,stored) in zip(pieces,masked)]
     except Exception as exc:
-        print("HU_BATCH_RETRY_SEPARATELY",len(items),str(exc)[:170],flush=True)
+        print("CS_BATCH_RETRY_SEPARATELY",len(items),str(exc)[:170],flush=True)
         translated=[]
         for item,(part,stored) in zip(items,masked):
             one=remote_translate(part)
@@ -270,7 +270,7 @@ def _finish(items):
         cache[en]=ja
     CACHE_PATH.parent.mkdir(parents=True,exist_ok=True)
     CACHE_PATH.write_text(json.dumps(cache,ensure_ascii=False,separators=(',',':')),encoding="utf-8")
-    print("HU_SLOTS_VERIFIED",len(cache),flush=True)
+    print("CS_SLOTS_VERIFIED",len(cache),flush=True)
 
 def localize(s: str) -> str:
     key=html.unescape(s).strip()
@@ -418,7 +418,7 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1hu\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1cs\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"Čeština ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
@@ -478,7 +478,7 @@ def validate(src,out,enpath,japath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _hu_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _cs_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]
