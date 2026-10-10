@@ -40,6 +40,8 @@ jobs:
               subprocess.run(["git","add",target,".github/zh-tw-translation-cache.json"],check=True)
               if subprocess.run(["git","diff","--cached","--quiet"]).returncode:
                   subprocess.run(["git","commit","-m",f"Translate Traditional Chinese page {i+1}/11"],check=True)
+                  subprocess.run(["git","fetch","origin","main"],check=True)
+                  subprocess.run(["git","rebase","-X","ours","origin/main"],check=True)
                   subprocess.run(["git","push","origin","HEAD:main"],check=True)
           PY
       - name: Integrate Traditional Chinese across site after all pages pass
@@ -51,5 +53,7 @@ jobs:
           git add sitemap.xml
           if ! git diff --cached --quiet; then
             git commit -m "Integrate Traditional Chinese selectors, hreflang and sitemap"
+            git fetch origin main
+            git rebase -X ours origin/main
             git push origin HEAD:main
           fi
