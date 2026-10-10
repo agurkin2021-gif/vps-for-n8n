@@ -1,4 +1,4 @@
-# Thai editorial pass v3 code-safe
+# Thai editorial pass v4 fixed-protection
 name: Thai sequential HTML localization and publication QA
 on:
   workflow_dispatch:
