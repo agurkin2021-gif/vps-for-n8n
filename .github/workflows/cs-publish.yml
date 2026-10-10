@@ -1,0 +1,64 @@
+name: Czech editorial QA and final publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cs-publish.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cs-publish-full-site
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Czech editorial review and structural parity
+        shell: bash
+        run: |
+          python -m py_compile _cs_editorial_polish.py _cs_publish_qa.py
+          python -u _cs_editorial_polish.py
+      - name: Add Czech to every language selector, hreflang and sitemap
+        shell: bash
+        run: |
+          python -u _cs_publish_qa.py
+          git diff --binary > /tmp/cs-first.diff
+          python -u _cs_publish_qa.py
+          git diff --binary > /tmp/cs-second.diff
+          cmp /tmp/cs-first.diff /tmp/cs-second.diff
+          echo "CS_SITEWIDE_QA_AND_IDEMPOTENCE_PASS"
+      - name: Commit final checked localization and publish to main
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Czech 11 of 11 and selectors in all languages after parity QA"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git pull --rebase -X ours origin main
+              python -u _cs_publish_qa.py
+              git add -u sitemap.xml
+              if ! git diff --cached --quiet; then
+                git commit -m "Update Czech global navigation after concurrent changes"
+              fi
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final published-site correctness check
+        shell: bash
+        run: |
+          python -u _cs_publish_qa.py
+          if ! git diff --quiet; then
+            echo "Czech selector consistency failed on second pass"
+            exit 1
+          fi
+          echo "CS_FINAL_PUBLICATION_PASS_11_OF_11"
