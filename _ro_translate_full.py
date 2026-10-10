@@ -396,7 +396,7 @@ def validate(src,out,enpath,japath):
         raise AssertionError(f"JavaScript changed: {enpath}")
     if not re.search(r'<html\b[^>]*lang=["\']ro',out,re.I):
         raise AssertionError("lang ro missing")
-    canonical = BASE + ("id/" if japath == "ro/index.html" else japath)
+    canonical = BASE + ("ro/" if japath == "ro/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):
         raise AssertionError("H1 count differs")
