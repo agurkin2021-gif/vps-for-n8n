@@ -1,34 +1,20 @@
-name: Persian native editorial pass
+name: Persian final native QA
 on:
   push:
     branches: [fa-native-polish-20261009]
     paths:
       - .github/workflows/fa-native-polish.yml
 permissions:
-  contents: write
+  contents: read
 jobs:
-  polish:
+  qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: fa-native-polish-20261009
-      - name: Polish Persian pages sequentially
+      - name: Verify all Persian pages and integration
         shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          python -m py_compile _fa_native_polish.py
-          for i in 0 1 2 3 4 5 6 7 8 9 10; do
-            python -u _fa_native_polish.py "$i"
-            page=$(python -c "from _fa_native_polish import PAGES; print(PAGES[$i])")
-            git add "$page"
-            if ! git diff --cached --quiet; then
-              git commit -m "Native Persian polish PAGE $((i+1))/11"
-              git push origin HEAD:fa-native-polish-20261009
-            fi
-          done
-      - name: Verify Persian integration
-        shell: bash
-        run: |
+          python -m py_compile _fa_publish_qa.py
           python -u _fa_publish_qa.py
