@@ -127,7 +127,7 @@ def restore_numbers(s: str, stored):
         s=s[:m.start()]+prefix+token+suffix+s[m.end():]
     if re.search(r"§\s*\d",s):
         raise ValueError(f"Unresolved technical sentinels: {s[:160]!r}")
-    return s
+    return s.replace("§", "")
 
 def remote_translate(input_text: str) -> str:
     """Translate a batch of independent English segments to idiomatic Hungarian."""
@@ -391,6 +391,10 @@ def process(enpath,japath):
         output=output.replace("</head>",'<link rel="alternate" hreflang="hu" href="'+BASE+japath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"hu/index.html",BASE+"hu/")
+    # Hungarian phrasing around the protected n8n brand in the English home H1.
+    if enpath=="index.html":
+        output=output.replace("<h1>VPS részére <em>n8n</em></h1>",
+                              "<h1>VPS az <em>n8n</em> számára</h1>")
     validate(source,output,enpath,japath)
     dest=ROOT/japath
     dest.parent.mkdir(parents=True,exist_ok=True)
@@ -423,6 +427,7 @@ def validate(src,out,enpath,japath):
     if prices(src)!=prices(out):raise AssertionError("Price identifiers changed")
     if len(re.findall(r'\b(?:és|hogy|vagy|egy|az|a|nem|kell|lehet|ha|mert|ezt|ez|akkor|saját|alapján|szükséges)\b',visible(out),re.I))<5:
         raise AssertionError("Hungarian content absent")
+    if "§" in out:raise AssertionError("Protected-token separator leaked")
     if "<!--JSONLD_" in out:raise AssertionError("JSON-LD placeholder unresolved")
     if "</html>" not in out.lower():raise AssertionError("HTML not complete")
 
