@@ -202,12 +202,12 @@ def audit(changed):
     sm=ET.parse(ROOT/"sitemap.xml")
     urls=[x.text for x in sm.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
     en_expected={canonical(en) for en,_ in PAIRS}
-    ro_expected={canonical(vi) for _,vi in PAIRS}
+    nl_expected={canonical(vi) for _,vi in PAIRS}
     if not en_expected.issubset(set(urls)):errors.append("Sitemap missing English original")
-    if not ro_expected.issubset(set(urls)):errors.append("Sitemap missing Dutch equivalent")
-    if len(en_expected)!=len(ro_expected) or len(ro_expected)!=11:errors.append("English/Dutch page-count mismatch")
-    ro_urls=[u for u in urls if u.startswith(BASE+"nl/")]
-    if len(ro_urls)!=11:errors.append("Dutch sitemap expected 11 URLs, got "+str(len(ro_urls)))
+    if not nl_expected.issubset(set(urls)):errors.append("Sitemap missing Dutch equivalent")
+    if len(en_expected)!=len(nl_expected) or len(nl_expected)!=11:errors.append("English/Dutch page-count mismatch")
+    nl_urls=[u for u in urls if u.startswith(BASE+"nl/")]
+    if len(nl_urls)!=11:errors.append("Dutch sitemap expected 11 URLs, got "+str(len(nl_urls)))
     if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
 
     expected_en={"index.html","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html",
@@ -217,7 +217,7 @@ def audit(changed):
       (u.startswith(BASE) and "/" not in u.removeprefix(BASE) and u.endswith(".html"))}
     if actual_en!={("" if p=="index.html" else p) for p in expected_en}:errors.append("English sitemap no longer has exactly 11 originals")
 
-    print("DUTCH_QA english=11 translated=11 ro_sitemap="+str(len(ro_urls))+
+    print("DUTCH_QA english=11 translated=11 nl_sitemap="+str(len(nl_urls))+
           " footer_pages="+str(total)+" menus="+str(menus)+" changed="+str(changed)+
           " issues="+str(len(errors)),flush=True)
     if errors:raise AssertionError("\n".join(errors[:100]))
