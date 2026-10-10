@@ -1,0 +1,70 @@
+name: French sequential HTML localization and publication QA
+on:
+  push:
+    branches: [fr-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/fr-localization.yml
+permissions:
+  contents: write
+jobs:
+  translate-pages-sequentially:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fr-complete-sitemap-20261009
+      - name: Confirm authoritative English sitemap
+        shell: bash
+        run: |
+          python -m py_compile _fr_translate_full.py _fr_publish_qa.py
+          python - <<'PY'
+          from _fr_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("FRENCH_SOURCE_QA ENGLISH_PAGES=11")
+          PY
+      - name: PAGE N translate verify save before PAGE N+1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _fr_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,fr) in enumerate(PAGES):
+              print(f"FRENCH_PAGE_{idx+1}/11 OPEN {en}",flush=True)
+              process(en,fr)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/fr).read_text(encoding="utf-8"),en,fr)
+              subprocess.run(["git","add",fr,".github/fr-translation-cache.json"],check=True)
+              subprocess.run(["git","commit","-m",f"Translate verify and save French PAGE {idx+1}/11"],check=True)
+              subprocess.run(["git","push","origin","HEAD:fr-complete-sitemap-20261009"],check=True)
+              print(f"FRENCH_PAGE_{idx+1}/11 VERIFIED_SAVED {fr}",flush=True)
+          PY
+      - name: Integrate French in every language selector and validate sitemap
+        shell: bash
+        run: |
+          python -u _fr_publish_qa.py
+          git diff --binary > /tmp/fr-first-qa.diff
+          python -u _fr_publish_qa.py
+          git diff --binary > /tmp/fr-second-qa.diff
+          cmp /tmp/fr-first-qa.diff /tmp/fr-second-qa.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Add French to every language selector and reciprocal hreflang; sitemap QA"
+            git push origin HEAD:fr-complete-sitemap-20261009
+          fi
+      - name: Save verified French fragments after interruption
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/fr-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/fr-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified French strings after interrupted page"
+              git push origin HEAD:fr-complete-sitemap-20261009
+            fi
+          fi
