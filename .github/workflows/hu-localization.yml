@@ -1,0 +1,73 @@
+name: Hungarian localization — sequential two-page pass
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/hu-localization.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hu-localization-sequential
+  cancel-in-progress: false
+jobs:
+  translate-two:
+    runs-on: ubuntu-latest
+    timeout-minutes: 175
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify authoritative English sitemap and source code
+        run: |
+          python -m py_compile _hu_translate_full.py
+          python - <<'PY'
+          from _hu_translate_full import verify_source_sitemap, PAGES
+          assert verify_source_sitemap() == len(PAGES) == 11
+          print("HU_SOURCE_11_ENGLISH_PAGES_PASS", flush=True)
+          PY
+      - name: PAGE 1 translate verify save, then PAGE 2 translate verify save
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python - <<'PY'
+          import subprocess
+          from _hu_translate_full import PAGES, ROOT, process, validate, verify_source_sitemap
+          assert verify_source_sitemap() == len(PAGES) == 11
+          for idx in range(0, 2):
+              en, hu = PAGES[idx]
+              print(f"HU_PAGE_{idx+1}/11 OPEN {en}", flush=True)
+              process(en, hu)
+              validate((ROOT/en).read_text(encoding="utf-8"), (ROOT/hu).read_text(encoding="utf-8"), en, hu)
+              subprocess.run(["git", "add", hu, ".github/hu-translation-cache.json"], check=True)
+              if subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode != 0:
+                  subprocess.run(["git", "commit", "-m", f"Translate verify and save Hungarian page {idx+1}/11"], check=True)
+                  for attempt in range(3):
+                      subprocess.run(["git", "fetch", "origin", "main"], check=True)
+                      subprocess.run(["git", "rebase", "-X", "ours", "origin/main"], check=True)
+                      result = subprocess.run(["git", "push", "origin", "HEAD:main"])
+                      if result.returncode == 0:
+                          break
+                  else:
+                      raise RuntimeError("Cannot push verified Hungarian page")
+              print(f"HU_PAGE_{idx+1}/11 VERIFIED_AND_SAVED {hu}", flush=True)
+          PY
+      - name: Keep translated cache if interrupted
+        if: failure()
+        run: |
+          if [ -f .github/hu-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/hu-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint Hungarian translation cache after interruption"
+              git pull --rebase -X ours origin main
+              git push origin HEAD:main
+            fi
+          fi
