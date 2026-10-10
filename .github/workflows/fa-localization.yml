@@ -1,0 +1,70 @@
+name: Persian sequential HTML localization and publication QA
+on:
+  push:
+    branches: [fa-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/fa-localization.yml
+permissions:
+  contents: write
+jobs:
+  translate-pages-sequentially:
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fa-complete-sitemap-20261009
+      - name: Confirm authoritative English sitemap
+        shell: bash
+        run: |
+          python -m py_compile _fa_translate_full.py _fa_publish_qa.py
+          python - <<'PY'
+          from _fa_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          print("PERSIAN_SOURCE_QA ENGLISH_PAGES=11")
+          PY
+      - name: PAGE N translate verify save before PAGE N+1
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          from _fa_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for idx,(en,fa) in enumerate(PAGES):
+              print(f"PERSIAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
+              process(en,fa)
+              validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/fa).read_text(encoding="utf-8"),en,fa)
+              subprocess.run(["git","add",fa,".github/fa-translation-cache.json"],check=True)
+              subprocess.run(["git","commit","-m",f"Translate verify and save Persian PAGE {idx+1}/11"],check=True)
+              subprocess.run(["git","push","origin","HEAD:fa-complete-sitemap-20261009"],check=True)
+              print(f"PERSIAN_PAGE_{idx+1}/11 VERIFIED_SAVED {fa}",flush=True)
+          PY
+      - name: Integrate Persian in every language selector and validate sitemap
+        shell: bash
+        run: |
+          python -u _fa_publish_qa.py
+          git diff --binary > /tmp/fa-first-qa.diff
+          python -u _fa_publish_qa.py
+          git diff --binary > /tmp/fa-second-qa.diff
+          cmp /tmp/fa-first-qa.diff /tmp/fa-second-qa.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Add Persian to every language selector and reciprocal hreflang; sitemap QA"
+            git push origin HEAD:fa-complete-sitemap-20261009
+          fi
+      - name: Save verified Persian fragments after interruption
+        if: failure()
+        shell: bash
+        run: |
+          if [ -f .github/fa-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/fa-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint verified Persian strings after interrupted page"
+              git push origin HEAD:fa-complete-sitemap-20261009
+            fi
+          fi
