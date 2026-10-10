@@ -1,0 +1,32 @@
+name: Korean final publication QA
+on:
+  push:
+    branches: [ko-complete-sitemap-20261009]
+    paths:
+      - .github/workflows/ko-localization.yml
+permissions:
+  contents: write
+jobs:
+  finalize-korean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ko-complete-sitemap-20261009
+      - name: Run idempotent Korean integration and QA
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m py_compile _ko_publish_qa.py
+          python -u _ko_publish_qa.py
+          git diff --binary > /tmp/ko-first.diff
+          python -u _ko_publish_qa.py
+          git diff --binary > /tmp/ko-second.diff
+          cmp /tmp/ko-first.diff /tmp/ko-second.diff
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize Korean selectors hreflang and sitemap"
+            git push origin HEAD:ko-complete-sitemap-20261009
+          fi
