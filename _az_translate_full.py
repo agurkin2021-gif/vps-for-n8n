@@ -382,6 +382,9 @@ def process(enpath,azpath):
         output=output.replace("</head>",'<link rel="alternate" hreflang="az" href="'+BASE+azpath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"az/index.html",BASE+"az/")
+    # Azerbaijani word order needs the n8n brand before VPS even when the original H1 uses emphasis.
+    if enpath=="index.html":
+        output=output.replace("<h1>Bunun üçün VPS: <em>n8n</em></h1>", "<h1>n8n üçün <em>VPS</em></h1>",1)
     validate(source,output,enpath,azpath)
     dest=ROOT/azpath
     dest.parent.mkdir(parents=True,exist_ok=True)
