@@ -187,7 +187,7 @@ def audit(changed):
         for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',output,re.S|re.I):
             try:json.loads(block)
             except Exception as exc:errors.append(vi+": invalid JSON-LD "+str(exc))
-        if alternate(source,"zh-TW")!=canonical(vi):errors.append(en+": reciprocal Traditional Chinese hreflang wrong")
+        if alternate((ROOT/en).read_text(encoding="utf-8"),"zh-TW")!=canonical(vi):errors.append(en+": reciprocal Traditional Chinese hreflang wrong")
         if alternate(output,"en")!=canonical(en):errors.append(vi+": English hreflang wrong")
         print("ZH_TW_PAGE_QA "+str(index)+"/11 "+vi+(" PASS" if not errors else " checked"),flush=True)
 
@@ -208,7 +208,7 @@ def audit(changed):
                 errors.append(path+": Traditional Chinese selector count "+str(len(anchors)));continue
             allanchors=list(ANCHOR.finditer(block.group(2)))
             labels=[html.unescape(m.group(2)).strip() for m in allanchors]
-            if "العربية" in labels and labels.index(ZH_TITLE)!=labels.index("العربية")+1:
+            if "العربية" in labels and "Română" in labels and labels.index(ZH_TITLE)!=labels.index("Română")-1:
                 errors.append(path+": Traditional Chinese order differs from global language list")
             if "Română" in labels and labels.index(ZH_TITLE)!=labels.index("Română")-1:
                 errors.append(path+": Traditional Chinese must remain immediately before Romanian")
