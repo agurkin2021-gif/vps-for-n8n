@@ -76,7 +76,7 @@ def normalize_th_anchor(tag,current,url):
 
 def do_menu(match,path):
     opening,inner,closing=match.groups()
-    current=(locale(path)=="nl")
+    current=(locale(path)=="th")
     target=th_dest(path)
     kept=[]
     for m in ANCHOR.finditer(inner):
@@ -84,7 +84,7 @@ def do_menu(match,path):
         if html.unescape(label).strip()==TH_TITLE:
             continue
         kept.append(m.group())
-    new='<a href="'+target+'" hreflang="nl" lang="nl"'+(' aria-current="page"' if current else '')+'>'+TH_TITLE+'</a>'
+    new='<a href="'+target+'" hreflang="th" lang="th"'+(' aria-current="page"' if current else '')+'>'+TH_TITLE+'</a>'
     return opening+"".join(kept)+new+closing
 
 def do_link(match,path):
