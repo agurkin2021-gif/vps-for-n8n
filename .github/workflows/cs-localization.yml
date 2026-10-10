@@ -1,0 +1,104 @@
+name: Czech sequential localization and publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/cs-localization.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cs-localization-sequential
+  cancel-in-progress: false
+jobs:
+  translate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate scripts and authoritative English sitemap
+        run: |
+          python -m py_compile _cs_translate_full.py _cs_publish_qa.py
+          python - <<'PY'
+          from _cs_translate_full import verify_source_sitemap, PAGES
+          assert verify_source_sitemap() == len(PAGES) == 11
+          print("CS_ENGLISH_SITEMAP_11_PASS",flush=True)
+          PY
+      - name: Translate, verify and save two pages per pass
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess, time
+          from _cs_translate_full import PAGES, ROOT, process, validate, verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          def cmd(*a): return subprocess.run(list(a),check=True)
+          def push_verified():
+              for attempt in range(7):
+                  if subprocess.run(["git","push","origin","HEAD:main"]).returncode==0:return
+                  cmd("git","pull","--rebase","-X","ours","origin","main")
+                  time.sleep(2+attempt)
+              raise RuntimeError("Failed to publish verified Czech page")
+          for begin in range(0,len(PAGES),2):
+              print(f"CS_PAIR_{begin//2+1} START pages {begin+1}-{min(begin+2,len(PAGES))}",flush=True)
+              for i in range(begin,min(begin+2,len(PAGES))):
+                  en,target=PAGES[i]
+                  print(f"CS_PAGE_{i+1}/11 OPEN {en}",flush=True)
+                  process(en,target)
+                  validate((ROOT/en).read_text(encoding="utf-8"),
+                           (ROOT/target).read_text(encoding="utf-8"),en,target)
+                  cmd("git","add",target,".github/cs-translation-cache.json")
+                  if subprocess.run(["git","diff","--cached","--quiet"]).returncode:
+                      cmd("git","commit","-m",f"Czech page {i+1}/11 translated, checked and saved")
+                      push_verified()
+                  print(f"CS_PAGE_{i+1}/11 VERIFIED_SAVED {target}",flush=True)
+              print(f"CS_PAIR_{begin//2+1} PASS",flush=True)
+          PY
+      - name: Publish Czech language in all selectors and sitemap
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python -u _cs_publish_qa.py
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish 11 Czech pages in sitewide selectors, hreflang and sitemap"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git pull --rebase -X ours origin main
+              python -u _cs_publish_qa.py
+              git add -u sitemap.xml
+              if ! git diff --cached --quiet; then
+                git commit -m "Refresh Czech language links on latest site content"
+              fi
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final Czech parity and global footer QA
+        run: |
+          python -u _cs_publish_qa.py
+          if ! git diff --quiet; then
+            echo "Czech final QA is not idempotent"
+            exit 1
+          fi
+          echo "CS_ALL_11_PAGES_PUBLISHED_QA_PASS"
+      - name: Save Czech cache if interrupted
+        if: failure()
+        run: |
+          if [ -f .github/cs-translation-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/cs-translation-cache.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Checkpoint Czech translation cache"
+              git push origin HEAD:main || true
+            fi
+          fi
