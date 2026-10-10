@@ -33,7 +33,7 @@ jobs:
           import subprocess
           from _id_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
           assert verify_source_sitemap()==len(PAGES)==11
-          for idx,(en,target) in enumerate(PAGES[5:], start=5):
+          for idx,(en,target) in enumerate(PAGES[11:], start=11):
               print(f"INDONESIAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
               process(en,target)
               validate((ROOT/en).read_text(encoding="utf-8"),(ROOT/target).read_text(encoding="utf-8"),en,target)
