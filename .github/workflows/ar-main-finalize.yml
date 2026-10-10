@@ -1,5 +1,5 @@
 name: Arabic post-merge selector finalization
-# selector-order-v2
+# selector-order-v3-arabic-last
 on:
   push:
     branches: [main]
