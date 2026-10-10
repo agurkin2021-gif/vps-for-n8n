@@ -86,7 +86,7 @@ def do_menu(match,path):
         return normalize_ar_anchor(tag,current,target)+label+close
     inner=ANCHOR.sub(rewrite,inner)
     if found==0:
-        new='<a href="'+target+'" hreflang="fr" lang="fr"'+(' aria-current="page"' if current else '')+'>'+AR_TITLE+'</a>'
+        new='<a href="'+target+'" hreflang="ar" lang="ar"'+(' aria-current="page"' if current else '')+'>'+AR_TITLE+'</a>'
         tr=list(re.finditer(r'<a\b[^>]*>\s*한국어\s*</a>',inner,re.I))
         if tr:
             m=tr[-1];inner=inner[:m.end()]+new+inner[m.end():]
@@ -206,12 +206,12 @@ def audit(changed):
     sm=ET.parse(ROOT/"sitemap.xml")
     urls=[x.text for x in sm.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
     en_expected={canonical(en) for en,_ in PAIRS}
-    fr_expected={canonical(vi) for _,vi in PAIRS}
+    ar_expected={canonical(vi) for _,vi in PAIRS}
     if not en_expected.issubset(set(urls)):errors.append("Sitemap missing English original")
-    if not fr_expected.issubset(set(urls)):errors.append("Sitemap missing Arabic equivalent")
-    if len(en_expected)!=len(fr_expected) or len(fr_expected)!=11:errors.append("English/Arabic mandatory page-count mismatch")
-    fr_urls=[u for u in urls if u.startswith(BASE+"fr/")]
-    if len(fr_urls)!=14:errors.append("Arabic sitemap expected 14 URLs (11 equivalents + 3 retained Arabic regional/commercial pages), got "+str(len(fr_urls)))
+    if not ar_expected.issubset(set(urls)):errors.append("Sitemap missing Arabic equivalent")
+    if len(en_expected)!=len(ar_expected) or len(ar_expected)!=11:errors.append("English/Arabic mandatory page-count mismatch")
+    ar_urls=[u for u in urls if u.startswith(BASE+"ar/")]
+    if len(ar_urls)!=11:errors.append("Arabic sitemap expected 11 URLs, got "+str(len(ar_urls)))
     if len(set(urls))!=len(urls):errors.append("Sitemap duplicate URL")
 
     expected_en={"index.html","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html",
@@ -221,7 +221,7 @@ def audit(changed):
       (u.startswith(BASE) and "/" not in u.removeprefix(BASE) and u.endswith(".html"))}
     if actual_en!={("" if p=="index.html" else p) for p in expected_en}:errors.append("English sitemap no longer has exactly 11 originals")
 
-    print("ARABIC_QA english=11 translated=11 fr_sitemap="+str(len(fr_urls))+
+    print("ARABIC_QA english=11 translated=11 ar_sitemap="+str(len(ar_urls))+
           " footer_pages="+str(total)+" menus="+str(menus)+" changed="+str(changed)+
           " issues="+str(len(errors)),flush=True)
     if errors:raise AssertionError("\n".join(errors[:100]))
