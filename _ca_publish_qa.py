@@ -141,7 +141,7 @@ def visible(source):
     return html.unescape(re.sub(r'<[^>]*>'," ",source))
 def prices(source):
     return collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(source),re.I))
-def chinese_chars(source):
+def catalan_words(source):
     return len(re.findall(r'\b(?:de|per|amb|que|els|les|una|del|dels|aquest|aquesta)\b', visible(source), re.I))
 
 def alternate(text,lang):
@@ -180,7 +180,7 @@ def audit(changed):
         if canonical(vi) not in output:errors.append(vi+": self canonical missing")
         if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*noindex',output,re.I):errors.append(vi+": noindex")
         if "<!--JSONLD_" in output:errors.append(vi+": unresolved JSON-LD placeholder")
-        if chinese_chars(output)<5:errors.append(vi+": Catalan text missing")
+        if catalan_words(output)<5:errors.append(vi+": Catalan text missing")
         for attr in ("alt","aria-label","placeholder","aria-valuetext"):
             if len(re.findall(r'\b'+attr+r'=["\']',source,re.I))!=len(re.findall(r'\b'+attr+r'=["\']',output,re.I)):
                 errors.append(vi+": missing "+attr)
