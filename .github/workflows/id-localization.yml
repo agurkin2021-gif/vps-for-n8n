@@ -20,7 +20,7 @@ jobs:
         run: |
           python -m py_compile _id_translate_full.py _id_publish_qa.py
           python - <<'PY'
-          from _fa_translate_full import verify_source_sitemap,PAGES
+          from _id_translate_full import verify_source_sitemap,PAGES
           assert verify_source_sitemap()==len(PAGES)==11
           print("INDONESIAN_SOURCE_QA ENGLISH_PAGES=11")
           PY
@@ -31,7 +31,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python -u - <<'PY'
           import subprocess
-          from _fa_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
+          from _id_translate_full import PAGES,ROOT,process,validate,verify_source_sitemap
           assert verify_source_sitemap()==len(PAGES)==11
           for idx,(en,target) in enumerate(PAGES):
               print(f"INDONESIAN_PAGE_{idx+1}/11 OPEN {en}",flush=True)
