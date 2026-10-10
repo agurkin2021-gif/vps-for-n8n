@@ -45,6 +45,15 @@ EXACT = {
     "View requirements": "Consulta els requisits",
     "Best VPS for n8n: 6 provider options": "Millors VPS per a n8n: 6 opcions de proveïdors",
     "Best VPS for n8n in 2026: 6 Providers Compared": "Millors VPS per a n8n el 2026: comparativa de 6 proveïdors",
+    "n8n VPS Requirements": "Requisits del VPS per a n8n",
+    "n8n Backup and Restore": "Còpia de seguretat i restauració de n8n",
+    "n8n Cloud vs Self-Hosted": "n8n Cloud vs. n8n autoallotjat",
+    "Secure n8n on a VPS": "Com protegir n8n en un VPS",
+    "Install n8n on a VPS": "Com instal·lar n8n en un VPS",
+    "Docker Compose": "Docker Compose",
+    "Reverse proxy": "Proxy invers",
+    "TLS termination": "Terminació TLS",
+    "PostgreSQL credentials": "Credencials de PostgreSQL",
 }
 MASK_PATTERN = re.compile(
     r'\$\s*\d+(?:[.,]\d+)*(?:\s*/\s*(?i:day|month|year|mo))?'
