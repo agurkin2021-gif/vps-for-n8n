@@ -642,5 +642,10 @@
   "n8n pre-installed with PostgreSQL and SSL": "PostgreSQL və SSL ilə əvvəlcədən quraşdırılmış n8n",
   "n8n setup": "n8n quraşdırması",
   "requirements guide": "tələblər bələdçisi",
-  "who and what type of VPS offer should I choose?": "hansı provayderi və hansı növ VPS təklifini seçməliyəm?"
+  "who and what type of VPS offer should I choose?": "hansı provayderi və hansı növ VPS təklifini seçməliyəm?",
+  "ABOUT": "HAQQIMIZDA",
+  "About n8nVPS, an independent guide to VPS sizing and production infrastructure for self-hosted n8n.": "n8n-i öz serverində yerləşdirənlər üçün VPS resurslarının seçilməsi və işlək mühit infrastrukturu haqqında müstəqil bələdçi — n8nVPS barədə.",
+  "Language ▾": "Dil ▾",
+  "n8nVPS is an independent guide to choosing VPS resources for self-hosted n8n by workload, concurrency and production requirements.": "n8nVPS, n8n-i öz serverində yerləşdirmək üçün VPS resurslarının iş yükünə, paralel icralara və işlək mühit tələblərinə əsasən seçilməsi barədə müstəqil bələdçidir.",
+  "n8nVPS publishes infrastructure guidance for self-hosted n8n. Commercial partner links are disclosed where they appear.": "n8nVPS, n8n-in öz serverində yerləşdirilməsi üçün infrastruktur barədə bələdçilər dərc edir. Kommersiya tərəfdaşlığı keçidləri göründükləri yerlərdə ayrıca göstərilir."
 }
