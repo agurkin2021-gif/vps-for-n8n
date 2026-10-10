@@ -1,0 +1,30 @@
+name: Arabic post-merge selector finalization
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/ar-main-finalize.yml
+permissions:
+  contents: write
+jobs:
+  finalize-arabic-on-current-main:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply Arabic selector to all current pages and run QA
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m py_compile _ar_publish_qa.py
+          python -u _ar_publish_qa.py
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize Arabic selector on current main pages"
+            git push origin HEAD:main
+          fi
+          python -u _ar_publish_qa.py
