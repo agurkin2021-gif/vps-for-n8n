@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="nl"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Installeer n8n op een VPS</title>
+<meta content="Installeer n8n op een VPS met Docker Compose, PostgreSQL, permanente opslag, HTTPS, reverse proxy en correcte webhookconfiguratie." name="description"/>
+<meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" rel="canonical"/>
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
+<link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html"/>
+<link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html"/>
+<link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
+<link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="Installeer n8n op een VPS" property="og:title"/><meta content="Installeer n8n met Docker Compose, PostgreSQL, permanente opslag, HTTPS, reverse proxy en webhook-configuratie." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="Installeer n8n op een VPS" name="twitter:title"/><meta content="Installeer n8n met Docker Compose, PostgreSQL, permanente opslag, HTTPS, reverse proxy en webhook-configuratie." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Thuis","item":"https://agurkin2021-gif.github.io/vps-for-n8n/nl/"},{"@type":"ListItem","position":2,"name":"Installeer n8n op een VPS","item":"https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html"}]}</script><style id="install-n8n-hero-illustration-css">
+.install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
+.install-n8n-hero-copy{min-width:0}
+.install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.install-n8n-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.install-n8n-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 29px rgba(23,36,61,.13));transition:transform .18s ease}
+.install-n8n-hero-art a:hover svg,.install-n8n-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.install-n8n-hero-art a:focus-visible{outline:3px solid #ff6847}
+.install-n8n-hero .actions{margin:28px 0 10px}
+.install-n8n-hero .hero-affiliate-disclosure{font-size:13px;color:#636e80;line-height:1.55;margin:0}
+@media(max-width:790px){.install-n8n-hero{grid-template-columns:1fr;min-height:0;gap:20px}.install-n8n-hero-art a{max-width:410px}}
+@media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
+</style><link rel="alternate" hreflang="fa" href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ar" href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="id" href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ro" href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html"/><link rel="alternate" hreflang="nl" href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html"/></head><body>
+<header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">Nederlands ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" lang="tr" hreflang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" lang="vi" hreflang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" lang="ko" hreflang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" lang="fr" hreflang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a></div></div></header><main>
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">DOCKER-INSTALLATIE</p><h1>Installeer n8n op een VPS</h1><p class="lead">Installeer n8n op een VPS met Docker Compose en PostgreSQL. Een productie-implementatie heeft ook persistente applicatie- en databasegegevens nodig, een stabiele <code>N8N_ENCRYPTION_KEY</code>, een openbare hostnaam, HTTPS en correcte webhookconfiguratie. Verifieer deze onderdelen voordat u productieworkflows activeert.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">Kies een VPS voor n8n</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">Partnerlink: we kunnen een commissie verdienen op aankopen.</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="Kies een VPS voor het installeren van n8n"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+<linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
+<linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+</defs>
+<rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+<rect x="35" y="37" width="430" height="387" rx="25" stroke="#71859d" stroke-opacity=".27" stroke-width="2"/>
+<g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+<g stroke="#7496a9" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M248 114V91"/><path d="M163 202H112"/><path d="M338 202H391"/><path d="M160 287L112 338"/><path d="M339 290L393 337"/></g>
+<g transform="translate(193 62)">
+<rect width="111" height="67" rx="21" fill="#284b4d" stroke="#7fdac1" stroke-width="2.5"/>
+<rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+<path d="M50 26V20C50 7 65 7 65 20V26" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+<path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(158 133)">
+<rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+<rect x="19" y="21" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="147" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+<g stroke="#92a8bf" stroke-width="6" stroke-linecap="round"><path d="M67 38H139M67 51H117"/><path d="M67 101H139M67 114H115"/><path d="M67 164H139M67 177H113"/></g>
+<g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+<path d="M91 221V234" stroke="#91a4ba" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(50 167)">
+<rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff7755" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+<path d="M38 35L47 43L61 30"/>
+</g></g>
+<g transform="translate(354 170)">
+<rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<path d="M21 28L38 19L53 28L70 19L79 24V52L63 62L48 52L30 61L21 56V28Z" stroke="#ff795b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
+</g>
+<g transform="translate(44 309)">
+<rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="47" r="7"/><circle cx="77" cy="28" r="7"/><circle cx="77" cy="67" r="7"/><path d="M39 44L71 30M39 50L70 65"/></g>
+</g>
+<g transform="translate(346 309)">
+<rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3"><ellipse cx="55" cy="27" rx="26" ry="9" fill="#ffe8df"/><path d="M29 27V62C29 76 81 76 81 62V27"/><path d="M29 45C31 58 80 58 81 45"/></g>
+</g>
+<g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
+</svg></a></div></section>
+<section class="section dark"><p class="eyebrow">VOORWAARDEN</p><h2>Bereid de VPS voor voordat u met n8n begint</h2><div class="cards">
+<article><h3>Linux VPS</h3><p>Gebruik een onderhouden Linux-server die geschikt is voor n8n, PostgreSQL, Docker en de omgekeerde proxy.</p></article>
+<article><h3>DNS</h3><p>Wijs een domein of subdomein naar VPS voordat u TLS-certificaten uitgeeft en webhook-URL's publiceert.</p></article>
+<article><h3>Docker Componeren</h3><p>Installeer Docker Engine en de Compose-plug-in met behulp van ondersteunde pakketten voor het besturingssysteem.</p></article>
+<article><h3>Firewall</h3><p>Geef alleen de vereiste beheer- en webpoorten bloot. Houd PostgreSQL en interne applicatieservices privé.</p></article></div>
+<p><strong>Installeren op een VPS die al websites host?</strong> U kunt n8n toevoegen aan een server die u beheert als CPU, RAM en opslag dit toelaten. Als Nginx, Apache, Caddy of een andere reverse proxy echter al de poorten 80/443 bezit, <strong>niet</strong> start het voorbeeld Caddy container hieronder ongewijzigd: de poorten zullen conflicteren. Routeer in plaats daarvan een nieuw n8n-subdomein via uw bestaande reverse proxy met het juiste privénetwerk, of gebruik een schone VPS voor het exacte Compose-voorbeeld. Behoud de andere sites en hun TLS-configuratie; In het voorbeeld wordt ervan uitgegaan dat de poorten 80/443 beschikbaar zijn.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Kies een Linux VPS voor n8n</a></div><p id="affiliate-note"><small>Partnerlink: we kunnen een commissie verdienen op aankopen.</small></p></section>
+<section class="section"><p class="eyebrow">INZET STAPEL</p><h2>Componenten om te configureren</h2><div class="requirements">
+<div><b>Omgekeerde proxy</b><span>Ontvangt openbaar HTTPS-verkeer en stuurt dit door naar n8n.</span></div>
+<div><b>n8n</b><span>Voert de editor, triggers en workflows uit met persistente applicatiegegevens.</span></div>
+<div><b>PostgreSQL</b><span>Slaat de workflow, referenties en uitvoeringsstatus op voor de productie-implementatie.</span></div>
+<div><b>Aanhoudende volumes</b><span>Bewaar de applicatie- en databasestatus buiten wegwerpcontainers.</span></div>
+<div><b>Openbaar DNS</b><span>Wijst de hostnaam die wordt gebruikt door de editor en webhookproviders toe aan VPS.</span></div>
+</div></section>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">INSTALLATIE KOPIËREN EN AANPASSEN</p><h2>Installeer n8n op uw VPS met Docker Compose</h2>
+<p>Gebruik dit voorbeeld om een n8n-implementatie te bouwen op een <strong>zelfbeheerd Linux VPS</strong>. Je installeert en onderhoudt n8n zelf; het kiezen van een server via onze partner omvat geen vooraf geïnstalleerde n8n-instantie. In het voorbeeld worden n8n, PostgreSQL, een externe taskrunner en Caddy HTTPS gecombineerd in een particulier Compose-netwerk. Het is een configuratiesjabloon, <strong>geen claim van een live geteste implementatie</strong>.</p>
+<p><strong>Wilt u in plaats daarvan de snelste nieuwe installatie?</strong> n8n biedt ook een officiële éénregelige Docker-opstelling. U kunt het script downloaden en bekijken met <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> voordat u gaat rennen <code>sh get-n8n.sh</code>. Die optie start een eerste exemplaar met SQLite op een lokale URL en omvat n8n Assistant-sandboxservices; het is <strong>niet hetzelfde</strong> zoals deze door het publiek HTTPS, PostgreSQL gesteunde VPS-implementatie. De officiële volledige sandbox-stack heeft meer RAM en CPU nodig dan een gestroomlijnde n8n-installatie (de Compose-gids specificeert ten minste 4 GB RAM / 2 vCPU's). Voor een internetgerichte productie VPS gaat u verder met de handmatig geconfigureerde stapel hieronder.</p>
+<h3>1. Docker, DNS voorbereiden en openen</h3>
+<p>Maak verbinding via SSH met sudo-toegang en wijs een DNS A-record aan <code>n8n.example.com</code> naar uw VPS IPv4-adres. Op een <strong>vers Ubuntu 22.04, 24.04 of 26.04</strong> VPS, de volgende opdrachten installeren Docker Engine en de moderne <code>docker compose</code> plug-in van Docker's officiële ondertekende <code>apt</code> opslagplaats:</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Register Docker's signed apt repository
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>Dit is de productiegerichte repositorymethode in de officiële Docker Ubuntu installatiehandleiding. <strong>Installeer of verwijder Docker niet blindelings op een VPS waarop al containers of andere websites draaien</strong>; inspecteer eerst de bestaande installatie en mogelijke pakketconflicten. Gebruik voor Debian of een andere distributie de overeenkomstige officiële OS-specifieke instructies in plaats van Ubuntu-opdrachten.</p>
+<p>Controleer nu Docker zelf, de Compose-plug-in, DNS en de werkmap:</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
+getent hosts n8n.example.com
+mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
+<p>Als <code>getent hosts</code> retourneert geen adres of het verkeerde adres, corrigeer uw DNS voordat u met Caddy begint; vervangen <code>n8n.example.com</code> in deze handleiding met uw echte hostnaam. Voor Docker zijn normaal gesproken root-rechten vereist: als uw SSH-gebruiker de laatste niet kan uitvoeren <code>docker compose</code> commando's rechtstreeks, laat ze voorafgaan door <code>sudo</code>. Een gebruiker toevoegen aan de <code>docker</code> group verleent root-equivalente toegang en mag niet terloops op een gedeelde server worden gedaan.</p>
+<p>Houd uw feitelijke SSH-beheerpoort bereikbaar voordat u een firewall inschakelt. Sta inkomende HTTP (80) en HTTPS (443) toe voor certificaatuitgifte en de editor. In Docker gepubliceerde containerpoorten kunnen sommige UFW-regels omzeilen, dus bekijk de firewallrichtlijnen van Docker en publiceer alleen de beoogde Caddy-poorten. Dit Compose-voorbeeld doet dat bewust <strong>niet</strong> publiceer PostgreSQL (5432), n8n (5678) of task-runner broker (5679) op het openbare internet.</p>
+<h3>2. Creëer omgevingswaarden en behoud de sleutel</h3>
+<p>Genereer er drie vanuit de projectmap <strong>anders</strong> willekeurige hexadecimale waarden met:</p>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
+<p>Maak een bestand met de naam <code>.env</code> gebruik het onderstaande sjabloon en vervang elke <code>REPLACE_WITH_RANDOM_HEX</code> met een andere gegenereerde waarde en wijzig de hostnaam en tijdzone. De getoonde <code>2.42.5</code> label is de <strong>stabiele release vermeld op 8 oktober 2026</strong>, hier gebruikt als een gedateerd configuratievoorbeeld, <strong>geen garantie voor een live geteste implementatie of voor toekomstige veiligheid</strong>. Controleer vóór de installatie de huidige officiële n8n-releases en bewaar n8n en de taakrunner-image op dezelfde geverifieerde versie.</p>
+<pre><code># .env — replace the three example secrets
+# Pin a maintained n8n release; keep n8n and runner equal.
+N8N_VERSION=2.42.5
+N8N_HOST=n8n.example.com
+GENERIC_TIMEZONE=Etc/UTC
+POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
+N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
+RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
+<p>Nooit plegen <code>.env</code> naar een openbare opslagplaats. Bewaar de coderingssleutel en herstelinstructies veilig buiten de VPS. De sleutel moet hetzelfde blijven na recreatie of migratie van containers.</p>
+<h3>3. Schrijf compose.yaml voor een nieuwe installatie</h3>
+<p>Maak in dezelfde map een <code>compose.yaml</code>. In het voorbeeld worden de officiële n8n-conventies voor omgevingsvariabelen en de PostgreSQL 18 gebruikt <code>PGDATA</code> pad gedocumenteerd door het n8n hostingproject:</p>
+<pre><code>services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+      N8N_WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_PROXY_HOPS: "1"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  n8n-runner:
+    image: n8nio/runners:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+    depends_on:
+      - n8n
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:</code></pre>
+<p>De vier services hebben verschillende rollen: PostgreSQL slaat de databasestatus op, n8n voert workflows uit, <code>n8n-runner</code> voert runner-taken uit met een overeenkomende versie en gedeeld authenticatietoken, en Caddy handelt openbare HTTPS af. Een externe <em>taak loper</em> is geen Redis wachtrijmodus. Alleen Caddy publiceert hostpoorten. Deze slanke illustratie gebruikt één databaserol voor installatie; voor een sterkere scheiding van PostgreSQL-privileges raadpleegt u het officiële n8n PostgreSQL-implementatievoorbeeld.</p>
+<h3>4. Maak het HTTPS Caddybestand aan</h3>
+<p>Maak het bestand <code>Caddyfile</code> (hoofdletter C, geen extensie) ernaast <code>compose.yaml</code>. Vervang de voorbeeldhostnaam overal door uw eigen DNS-naam:</p>
+<pre><code>n8n.example.com {
+    reverse_proxy n8n:5678
+}</code></pre>
+<p>Caddy vraagt openbare TLS-certificaten aan en vernieuwt deze wanneer het domein correct wordt opgelost en extern verkeer de poorten 80/443 kan bereiken. Wijs DNS niet aan <code>localhost</code>. Als u Caddy vervangt door een andere reverse proxy, stuurt u de oorspronkelijke host-, protocol- en clientadresheaders door en past u deze aan <code>N8N_PROXY_HOPS</code> voor het werkelijke aantal vertrouwde proxy-hops.</p>
+<h3>5. Start de containers en test van buitenaf</h3>
+<p>Voer deze opdrachten uit vanuit de projectmap nadat u deze hebt opgeslagen <code>.env</code>, <code>compose.yaml</code> en <code>Caddyfile</code>:</p>
+<pre><code>chmod 600 .env
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100 n8n n8n-runner postgres caddy
+curl -fsS https://n8n.example.com/healthz</code></pre>
+<p>Het laatste commando controleert de <strong>openbaar HTTPS</strong> eindpunt voor de gezondheid. Als de certificaatuitgifte nog steeds in behandeling is, inspecteer dan de Caddy-logboeken en DNS/poorten voordat u concludeert dat n8n kapot is. Openen <code>https://n8n.example.com</code>, maak onmiddellijk het account van de eerste eigenaar en schakel de juiste inlogbeveiligingen in. Bevestig dat de instantie daadwerkelijk een workflow uitvoert, en niet alleen dat de editor laadt:</p>
+<ol>
+<li>Maak in de editor een workflow met a <strong>Webhook</strong> triggeren. Instellen <strong>HTTP Method</strong> naar <code>GET</code>, kies de <strong>Path</strong> <code>vps-check</code>, en instellen <strong>Reageer</strong> naar <strong>Onmiddellijk</strong>. Sla de werkstroom op.</li>
+<li>Klik <strong>Luister naar testgebeurtenis</strong>, kopieer het volledige <strong>Test-URL</strong> weergegeven door n8n, en vanaf een ander apparaat uitgevoerd <code>curl -i 'PASTE_TEST_URL_HERE'</code> met de gekopieerde URL. Verwacht een succesreactie van HTTP en de binnenkomende gebeurtenis verschijnt in de n8n-editor. Test-URL's werken alleen terwijl n8n naar de gebeurtenis luistert.</li>
+<li><strong>Publiceren</strong> de workflow, schakel het knooppunt naar zijn <strong>Productie-URL</strong>, kopieer het en voer het uit <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> opnieuw. Bevestig de uitvoering onder de workflow's <strong>Executies</strong> tabblad. Voor productiewebhookverzoeken moet de workflow worden gepubliceerd en wordt de payload niet weergegeven in de testweergave van de editor.</li>
+</ol>
+<p>Dit is een opzettelijk eenvoudige, niet-geverifieerde rooktest: stuur er nooit geheimen naar. Maak de publicatie/verwijdering ongedaan na het testen, of configureer Webhook-verificatie/IP-beperkingen voordat u een openbaar eindpunt voor echte gegevens gebruikt. Zie de officiële Webhook-test-/productiedocumentatie.</p>
+<h3>6. Maak een back-up voordat u vastgezette versies wijzigt</h3>
+<p>Sla een herstelbare PostgreSQL-dump op <em>en</em> het aanhoudende n8n datavolume, <code>.env</code>/encryptiesleutel en vereiste externe bestanden naar opslag buiten deze server. Controleer een herstel met behulp van de <a href="n8n-backup-herstel.html">back-up- en herstelgids</a> voordat de productie wordt bijgewerkt. Voorbeeldopdrachten:</p>
+<pre><code># Back up the database, encryption key, instance data,
+# and files before changing the pinned versions.
+docker compose exec -T postgres \
+  pg_dump -U n8n -d n8n &gt; n8n-db.sql
+# After securing the backup outside this VPS:
+docker compose pull
+docker compose up -d
+docker compose ps</code></pre>
+<p>Wijzig de vastgezette <code>N8N_VERSION</code> alleen na het lezen van de release-opmerkingen; zowel n8n- als runner-afbeeldingen moeten samen vooruitgaan. <strong>Niet rennen <code>docker compose down -v</code></strong> tijdens routineonderhoud, omdat daardoor benoemde datavolumes worden verwijderd. PostgreSQL wijzigingen in de grote versie vereisen een database-upgrade of een dump/herstelplan; het vervangen van de Postgres 18-afbeelding door een andere hoofdtag is geen automatische migratie.</p>
+<p>Gezaghebbende referenties: n8n Docker Handleiding opstellen, n8n reverse-proxy/webhook-configuratie en officiële PostgreSQL implementatie-aantekeningen. Er wordt niet uitgegaan van een infrastructuurbenchmark of providerspecifieke vooraf geïnstalleerde functie.</p>
+</section>
+<section class="section dark"><p class="eyebrow">CONFIGURATIE</p><h2>Stel bewust geheimen en openbare URL's in</h2><div class="cards">
+<article><h3>Encryptie sleutel</h3><p>Stel een sterke n8n-coderingssleutel in en bewaar deze voordat u productiereferenties opslaat. Na herstel is dezelfde sleutel vereist.</p></article>
+<article><h3>PostgreSQL-gegevens</h3><p>Gebruik speciale databasereferenties en houd wachtwoorden buiten het beheer van openbare bronnen.</p></article>
+<article><h3>Openbare hostnaam</h3><p>Configureer de echte externe hostnaam en HTTPS-oorsprong in plaats van een intern containeradres.</p></article>
+<article><h3>Webhook-URL</h3><p>Instellen <code>N8N_WEBHOOK_URL</code> naar de openbaar bereikbare HTTPS basis-URL en stel deze in <code>N8N_PROXY_HOPS=1</code> wanneer er één vertrouwde reverse proxy is. <code>WEBHOOK_URL</code> is een verouderde alias in n8n 2.35.0 en hoger; vermijd het kopiëren van oudere tutorials.</p></article>
+</div></section>
+<section class="section"><p class="eyebrow">PERSISTENTIE</p><h2>n8n en PostgreSQL afzonderlijk aanhouden</h2><div class="cards">
+<article><h3>n8n gegevens</h3><p>Monteer persistente opslag voor de n8n-gegevensdirectory, zodat de kritieke instantiestatus containerrecreatie overleeft.</p></article>
+<article><h3>PostgreSQL gegevens</h3><p>Bewaar de databasedirectory onafhankelijk van de PostgreSQL-container.</p></article>
+<article><h3>File permissions</h3><p>Maak gekoppelde paden schrijfbaar voor de beoogde containergebruiker zonder de hostopslag onnodig tolerant te maken.</p></article>
+<article><h3>Workflow-bestanden</h3><p>Behoud de opslag van gekoppelde bestanden of binaire gegevens waarvan productieworkflows afhankelijk zijn.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Verbind n8n met de privédatabaseservice</h2><div class="requirements">
+<div><b>Databasetype</b><span>Configureer n8n voor PostgreSQL in plaats van per ongeluk terug te vallen naar SQLite.</span></div>
+<div><b>Gastheer</b><span>Gebruik de PostgreSQL-servicenaam op het particuliere Docker-netwerk.</span></div>
+<div><b>Referenties</b><span>Match de beoogde database, applicatiegebruiker en wachtwoord.</span></div>
+<div><b>Bereidheid</b><span>Wacht totdat PostgreSQL gereed is voordat u verwacht dat n8n succesvol zal initialiseren.</span></div>
+<div><b>Netwerk</b><span>Voor container-naar-container-databasetoegang is geen openbare PostgreSQL-poort vereist.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">HTTPS &amp; PROXY</p><h2>Zet de openbare n8n URL achter HTTPS</h2><div class="cards">
+<article><h3>Omgekeerde proxy</h3><p>Gebruik Nginx, Caddy of Traefik als openbaar toegangspunt en stuur verkeer door naar de privé n8n-dienst.</p></article>
+<article><h3>TLS</h3><p>Geef een geldig certificaat uit voor de openbare hostnaam en stuur HTTP-verkeer om naar HTTPS.</p></article>
+<article><h3>Forwarded headers</h3><p>Geef de host-, protocol- en clientinformatie n8n door en configureer het verwachte aantal proxy-hops.</p></article>
+<article><h3>Webhook-verificatie</h3><p>Activeer een webhook van buiten de VPS en bevestig dat n8n de extern bereikbare HTTPS URL genereert.</p></article></div>
+<p><a href="n8n-vps-beveiliging.html">Volledige checklist voor productiebeveiliging</a></p></section>
+<section class="section dark"><p class="eyebrow">FIRST START</p><h2>Controleer de persistentie vóór productiegebruik</h2><div class="requirements">
+<div><b>Containers</b><span>Bevestig n8n, PostgreSQL en de proxy blijft gezond na het opstarten en opnieuw opstarten.</span></div>
+<div><b>Redacteur</b><span>Open de openbare HTTPS hostnaam en controleer of de authenticatie correct werkt.</span></div>
+<div><b>Database</b><span>Maak een teststatus, maak containers opnieuw en controleer of de status aanhoudt.</span></div>
+<div><b>Webhook</b><span>Voer een externe webhooktest uit om DNS, TLS, proxying en de openbare terugbel-URL te valideren.</span></div>
+<div><b>Referenties</b><span>Controleer of de gecodeerde inloggegevens bruikbaar blijven na een herstart van n8n.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">UPDATES</p><h2>Upgrade de Docker-implementatie zonder containers als back-ups te behandelen</h2><div class="cards">
+<article><h3>Lees de release-opmerkingen</h3><p>Controleer belangrijke n8n-wijzigingen voordat u een upgrade uitvoert, vooral als u versies overslaat.</p></article>
+<article><h3>Maak eerst een back-up</h3><p>Maak een herstelbare database- en instanceback-up voordat u de productie-image wijzigt.</p></article>
+<article><h3>Veilig recreëren</h3><p>Haal de geselecteerde image op en maak applicatiecontainers opnieuw, terwijl de persistente volumes behouden blijven.</p></article>
+<article><h3>Verifieer na de upgrade</h3><p>Controleer logboeken, editortoegang, inloggegevens en representatieve workflows voordat u de implementatie gezond verklaart.</p></article></div>
+<p><a href="n8n-backup-herstel.html">Handleiding voor back-up en herstel</a></p></section>
+<section class="section dark"><p class="eyebrow">GEMEENSCHAPPELIJKE FOUTEN</p><h2>Waarom een n8n Docker-installatie lokaal werkt, maar mislukt in productie</h2><div class="cards">
+<article><h3>Verkeerde webhook-URL</h3><p>Terugbelverzoeken verwijzen naar localhost, HTTP of een interne hostnaam in plaats van de openbare HTTPS-oorsprong.</p></article>
+<article><h3>Gebrek aan doorzettingsvermogen</h3><p>De applicatie- of databasestatus verdwijnt wanneer een container opnieuw wordt gemaakt.</p></article>
+<article><h3>Encryptiesleutel verloren</h3><p>Opgeslagen inloggegevens worden na het opnieuw opbouwen onbruikbaar omdat het nieuwe exemplaar een andere sleutel gebruikt.</p></article>
+<article><h3>Openbare databasepoort</h3><p>PostgreSQL wordt onnodig zichtbaar, ook al hoeft alleen n8n het te bereiken.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">VERIFICATIE NA DE POST-Implementatie</p><h2>Controleer de status voordat u echte workflows aansluit</h2><div class="cards"><article><h3>Controleer de containerstatus</h3><p>Rennen <code>docker compose ps</code> en controleer of de applicatie- en databaseservices naar behoren werken voordat u de implementatie als gezond beschouwt.</p></article><article><h3>Controleer het n8n gezondheidseindpunt</h3><p>Bij het Compose-voorbeeld hierboven wordt poort 5678 niet gepubliceerd op de host. Controleer het openbare eindpunt met <code>curl -fsS https://n8n.example.com/healthz</code> na het wijzigen van de hostnaam en gebruik <code>docker compose ps</code> plus servicelogboeken als HTTPS of de database niet gereed is.</p></article><article><h3>Applicatieversies vastzetten</h3><p>Beschouw een niet-beoordeelde update van een zwevende image niet als een onderhoudsstrategie. Noteer de n8n-versie die u gebruikt, lees de release-opmerkingen en maak een back-up voordat u deze wijzigt.</p></article><article><h3>Stoot PostgreSQL hoofdversies niet op hun plaats</h3><p>Als u alleen de hoofdafbeeldingstag van Postgres wijzigt, kan een bestaande gegevensmap incompatibel worden. Maak een back-up en volg de database-upgradeprocedure in plaats van ervan uit te gaan dat containerrecreatie een migratie van de hoofdversie uitvoert.</p></article></div><p>Huidige officiële Docker Componeergids</p></section><section class="section"><p class="eyebrow">Veelgestelde vragen</p><h2>n8n installeren met Docker: veelgestelde vragen</h2><div class="faq">
+<details><summary>Heeft n8n PostgreSQL nodig bij gebruik van Docker?</summary><p>Voor Docker is PostgreSQL niet vereist, en kleine implementaties kunnen SQLite gebruiken. Voor een productiegerichte VPS-implementatie biedt PostgreSQL een sterkere databasebasis en ondersteunt latere schaling in de wachtrijmodus.</p></details>
+<details><summary>Waarom een aanhoudend n8n-volume behouden als PostgreSQL gegevens opslaat?</summary><p>De persistente n8n-directory kan belangrijke instantiestatus en -configuratie bevatten. Bewaar deze volgens het implementatieontwerp in plaats van ervan uit te gaan dat de database het enige herstelmiddel is.</p></details>
+<details><summary>Waarom toont mijn webhook localhost?</summary><p>Het interne containeradres verschilt van de openbare oorsprong. Configureer de externe hostnaam, het protocol en de webhook-URL en zorg ervoor dat de reverse proxy de vereiste headers doorgeeft.</p></details>
+<details><summary>Moet poort 5678 openbaar zijn?</summary><p>Voor een normale productie-implementatie achter een omgekeerde proxy stelt u HTTPS bloot aan de proxy en houdt u de n8n-toepassingspoort intern, tenzij er een specifieke operationele reden is om dit niet te doen.</p></details>
+<details><summary>Heb ik Redis nodig?</summary><p>Niet voor een standaard Docker-implementatie met één exemplaar. Redis wordt relevant wanneer u opzettelijk overschakelt naar wachtrijmodus en werknemers.</p></details>
+<details><summary>Zijn externe n8n taaklopers hetzelfde als wachtrijmoduswerkers?</summary><p>Nee. Externe taaklopers voeren de ondersteunde taakcode afzonderlijk van het n8n-hoofdproces uit en gebruiken een gedeeld authenticatietoken. De wachtrijmodus Redis verdeelt de workflow-uitvoeringen en heeft zijn eigen infrastructuurvereisten. Dit voorbeeld toont een externe taakrunner, niet de wachtrijmodus Redis. Zorg ervoor dat de afbeeldingsversie van de hardloper overeenkomt met de n8n-versie.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Bekijk VPS Opties</a></div>
+<p><a href="n8n-vps-vereisten.html">VPS vereisten</a> · <a href="n8n-vps-beveiliging.html">Productiebeveiliging</a> · <a href="n8n-backup-herstel.html">Back-up en herstel</a> · <a href="n8n-queue-mode.html">Wachtrijmodus en werknemers</a> · <a href="index.html">Hoofdgids n8n VPS</a></p></section>
+<section class="section" data-best-vps-link="1"><h2>Aanbieders vergelijken?</h2><p>Voor providerkeuze, installatie met één klik, ondersteuningsgrenzen, back-ups, migratie, regio en schaling gebruikt u de <a href="beste-vps-voor-n8n.html">Beste VPS voor n8n-vergelijking</a>. Voor de omvang van de resources gaat u terug naar de <a href="index.html">hoofd VPS voor n8n gids</a>.</p></section></main><footer><b>n8nVPS</b><span>Onafhankelijke infrastructuurgids voor zelf-gehoste n8n.</span><p><a href="over-ons.html">Over ons</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">Nederlands ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
