@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Conservative native-Indonesian editorial polish; preserves HTML structure and technical values."""
 from pathlib import Path
-import sys
+import sys,re
 from _id_translate_full import PAGES,ROOT,validate
 
 GLOBAL=[
+ ("workeran","pekerjaan"),("Workeran","Pekerjaan"),
+ ("kesecretan","kerahasiaan"),("Kesecretan","Kerahasiaan"),
+ ("tunjangan","kuota"),("Tunjangan","Kuota"),
+ ("pemutakhiran","upgrade"),("Pemutakhiran","Upgrade"),
  ("Alur kerja","Workflow"),("alur kerja","workflow"),
  ("Pekerja","Worker"),("pekerja","worker"),
  ("Mode antrian","Queue Mode"),("mode antrian","Queue Mode"),
@@ -182,9 +186,12 @@ def polish(i):
         if n:
             text=text.replace(old,new);hits+=n
     for old,new in GLOBAL:
-        n=text.count(old)
-        if n:
-            text=text.replace(old,new);hits+=n
+        if old.isalpha():
+            text,n=re.subn(r'\\b'+re.escape(old)+r'\\b',new,text)
+        else:
+            n=text.count(old)
+            if n:text=text.replace(old,new)
+        hits+=n
     validate((ROOT/en).read_text(encoding="utf-8"),text,en,target)
     if text!=before:
         p.write_text(text,encoding="utf-8")
