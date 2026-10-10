@@ -384,7 +384,7 @@ def process(enpath,japath):
     dest=ROOT/japath
     dest.parent.mkdir(parents=True,exist_ok=True)
     dest.write_text(output,encoding="utf-8")
-    print(f"PAGE PASS {enpath} -> {japath}; chars={len(output)} dutch_markers={len(re.findall(r'\\b(?:de|het|een|voor|met|van|en|op|uw|u|dit|deze|wordt|zijn)\\b',html.unescape(re.sub(r'<[^>]*>',' ',output)),re.I))} requests={requests_made}",flush=True)
+    print(f"PAGE PASS {enpath} -> {japath}; chars={len(output)} dutch_markers={len(re.findall(r'\b(?:de|het|een|voor|met|van|en|op|uw|u|dit|deze|wordt|zijn)\b',html.unescape(re.sub(r'<[^>]*>',' ',output)),re.I))} requests={requests_made}",flush=True)
 
 def validate(src,out,enpath,japath):
     def signature(x):
@@ -410,7 +410,7 @@ def validate(src,out,enpath,japath):
         print("Numerical expressions added by translation (check that they express spelled-out amounts): "+str(n2-n1),flush=True)
     prices=lambda x:collections.Counter(re.findall(r'\$\s*\d+(?:[.,]\d+)*(?:/(?:day|month|year|mo))?',visible(x)))
     if prices(src)!=prices(out):raise AssertionError("Price identifiers changed")
-    if len(re.findall(r'\\b(?:de|het|een|voor|met|van|en|op|uw|u|dit|deze|wordt|zijn)\\b',visible(out),re.I))<5:
+    if len(re.findall(r'\b(?:de|het|een|voor|met|van|en|op|uw|u|dit|deze|wordt|zijn)\b',visible(out),re.I))<5:
         raise AssertionError("Dutch content absent")
     if "<!--JSONLD_" in out:raise AssertionError("JSON-LD placeholder unresolved")
     if "</html>" not in out.lower():raise AssertionError("HTML not complete")
