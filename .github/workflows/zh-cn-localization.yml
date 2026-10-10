@@ -1,0 +1,59 @@
+name: Simplified Chinese sequential localization
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/zh-cn-localization.yml
+      - _zh_cn_translate_full.py
+      - _zh_cn_publish_qa.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zh-cn-localization
+  cancel-in-progress: false
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate localization script
+        run: python -m py_compile _zh_cn_translate_full.py
+      - name: Translate and save pages sequentially
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python - <<'PY'
+          import subprocess
+          from _zh_cn_translate_full import PAGES,process,verify_source_sitemap
+          assert verify_source_sitemap()==len(PAGES)==11
+          for i,(source,target) in enumerate(PAGES):
+              print(f"ZH_CN PAGE {i+1}/11: {source}",flush=True)
+              process(source,target)
+              subprocess.run(["git","add",target,".github/zh-cn-translation-cache.json"],check=True)
+              if subprocess.run(["git","diff","--cached","--quiet"]).returncode:
+                  subprocess.run(["git","commit","-m",f"Translate Simplified Chinese page {i+1}/11"],check=True)
+                  subprocess.run(["git","fetch","origin","main"],check=True)
+                  subprocess.run(["git","rebase","-X","ours","origin/main"],check=True)
+                  subprocess.run(["git","push","origin","HEAD:main"],check=True)
+          PY
+      - name: Integrate Simplified Chinese across site after all pages pass
+        shell: bash
+        run: |
+          python -m py_compile _zh_cn_publish_qa.py
+          python -u _zh_cn_publish_qa.py
+          git add -u
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate Simplified Chinese selectors, hreflang and sitemap"
+            git fetch origin main
+            git rebase -X ours origin/main
+            git push origin HEAD:main
+          fi
