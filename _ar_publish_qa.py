@@ -88,15 +88,11 @@ def do_menu(match,path):
     if found==0:
         new='<a href="'+target+'" hreflang="ar" lang="ar"'+(' aria-current="page"' if current else '')+'>'+AR_TITLE+'</a>'
         inner+=new
-    # Keep Arabic immediately after English so it is visible without scrolling.
+    # Preserve the existing language order and keep Arabic as the newest language at the end.
     am=list(re.finditer(r'<a\b[^>]*>\s*العربية\s*</a>',inner,re.I))
     if am:
         m=am[0];anchor=m.group();inner=inner[:m.start()]+inner[m.end():]
-        en=list(re.finditer(r'<a\b[^>]*>\s*English\s*</a>',inner,re.I))
-        if en:
-            m=en[0];inner=inner[:m.end()]+anchor+inner[m.end():]
-        else:
-            inner=anchor+inner
+        inner+=anchor
     return opening+inner+closing
 
 def do_link(match,path):
@@ -208,8 +204,8 @@ def audit(changed):
             href=re.search(r'\bhref=(["\'])(.*?)\1',anchors[0].group(1),re.I)
             if not href or href.group(2)!=expected:errors.append(path+": incorrect Arabic menu link")
             labels=[html.unescape(m.group(2)).strip() for m in ANCHOR.finditer(block.group(2))]
-            if "English" in labels and (AR_TITLE not in labels or labels.index(AR_TITLE)!=labels.index("English")+1):
-                errors.append(path+": Arabic is not immediately after English")
+            if not labels or labels[-1]!=AR_TITLE:
+                errors.append(path+": Arabic is not the last language in selector")
         if locale(path)=="ar" and "العربية ▾" not in text:errors.append(path+": Arabic button label missing")
 
     sm=ET.parse(ROOT/"sitemap.xml")
