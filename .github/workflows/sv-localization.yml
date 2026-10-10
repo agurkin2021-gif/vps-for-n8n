@@ -1,0 +1,107 @@
+name: Swedish 11-page localization in verified two-page passes
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sv-localization.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sv-localization-sequential
+  cancel-in-progress: false
+jobs:
+  translate-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source sitemap and both Swedish scripts
+        run: |
+          python -m py_compile _sv_translate_full.py _sv_publish_qa.py
+          python - <<'PY'
+          from _sv_translate_full import verify_source_sitemap, PAGES
+          assert verify_source_sitemap() == len(PAGES) == 11
+          assert all(path.startswith('sv/') for _,path in PAGES)
+          print('SV_ENGLISH_SITEMAP_11_PASS', flush=True)
+          PY
+      - name: PAGE 1 to 11 - translate, verify, save two pages per pass
+        shell: bash
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess,time
+          from _sv_translate_full import PAGES, ROOT, process, validate, verify_source_sitemap
+          assert verify_source_sitemap() == len(PAGES) == 11
+          def run(*args): subprocess.run(list(args),check=True)
+          def publish():
+              for attempt in range(8):
+                  if subprocess.run(["git","push","origin","HEAD:main"]).returncode==0:
+                      return
+                  run("git","fetch","origin","main")
+                  run("git","rebase","-X","ours","origin/main")
+                  time.sleep(2+attempt)
+              raise RuntimeError("Could not publish verified Swedish pages")
+          for begin in range(0,len(PAGES),2):
+              end=min(begin+2,len(PAGES))
+              print(f"SV_PAIR_{begin//2+1}_START {begin+1}..{end}",flush=True)
+              paths=[]
+              for i in range(begin,end):
+                  en,target=PAGES[i]
+                  print(f"SV_PAGE_{i+1}/11_OPEN {en}",flush=True)
+                  process(en,target)
+                  validate((ROOT/en).read_text(encoding='utf-8'),
+                           (ROOT/target).read_text(encoding='utf-8'),en,target)
+                  paths.append(target)
+                  print(f"SV_PAGE_{i+1}/11_VERIFIED_SAVED {target}",flush=True)
+              run("git","add",*paths,".github/sv-translation-cache.json")
+              if subprocess.run(["git","diff","--cached","--quiet"]).returncode:
+                  run("git","commit","-m",f"Swedish pages {begin+1}-{end}/11 translated and verified")
+                  publish()
+              print(f"SV_PAIR_{begin//2+1}_PUBLISHED {len(paths)} pages",flush=True)
+          PY
+      - name: Add Swedish as the last option across all header and footer menus
+        shell: bash
+        run: |
+          git pull --rebase origin main
+          python -u _sv_publish_qa.py
+          git add -u sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Swedish in every language menu, hreflang and sitemap"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git pull --rebase -X ours origin main
+              python -u _sv_publish_qa.py
+              git add -u sitemap.xml
+              if ! git diff --cached --quiet; then
+                git commit -m "Refresh Swedish language switches after concurrent changes"
+              fi
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Check second-pass idempotence and all 11 Swedish pages
+        shell: bash
+        run: |
+          python -u _sv_publish_qa.py
+          git diff --exit-code
+          echo "SV_ALL_11_PAGES_PUBLISHED_AND_GLOBAL_QA_PASS"
+      - name: Checkpoint Swedish translations on interruption
+        if: failure()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/sv-translation-cache.json sv/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint verified Swedish translation progress"
+            git push origin HEAD:main || true
+          fi
