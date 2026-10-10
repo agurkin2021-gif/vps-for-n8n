@@ -1,4 +1,4 @@
-# Hungarian pages 9-10 — English sitemap source, sequential localization and validation
+# Hungarian page 11 — English sitemap source, sequential localization and validation
 name: Hungarian localization — sequential two-page pass
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
           assert verify_source_sitemap() == len(PAGES) == 11
           print("HU_SOURCE_11_ENGLISH_PAGES_PASS", flush=True)
           PY
-      - name: PAGE 9 translate verify save, then PAGE 10 translate verify save
+      - name: PAGE 11 translate verify save
         env:
           PYTHONUNBUFFERED: '1'
         run: |
@@ -41,7 +41,7 @@ jobs:
           import subprocess
           from _hu_translate_full import PAGES, ROOT, process, validate, verify_source_sitemap
           assert verify_source_sitemap() == len(PAGES) == 11
-          for idx in range(8, 10):
+          for idx in range(10, 11):
               en, hu = PAGES[idx]
               print(f"HU_PAGE_{idx+1}/11 OPEN {en}", flush=True)
               process(en, hu)
