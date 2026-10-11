@@ -56,6 +56,7 @@ jobs:
       - name: Validate complete publication and second-pass stability
         shell: bash
         run: |
+          # Coverage allows the existing simple pages without dropdowns.
           python -u _fi_publish_qa.py
           git diff --exit-code
           git log -1 --format='FI_PUBLISHED_COMMIT %h %s'
