@@ -146,7 +146,8 @@ def process(path, source):
             head += '<link rel="alternate" hreflang="he" href="' + target + '"/>'
         out = head + sep + rest
     # No page content, scripts, CSS, images or other languages may be changed.
-    original_main = re.search(r'<main\b[^>]*>[\s\S]*?</main>', source, re.I)
+    expected_main_source = normalize_hebrew_links(source) if path.startswith('he/') else source
+    original_main = re.search(r'<main\b[^>]*>[\s\S]*?</main>', expected_main_source, re.I)
     final_main = re.search(r'<main\b[^>]*>[\s\S]*?</main>', out, re.I)
     if (original_main.group() if original_main else None) != (final_main.group() if final_main else None):
         raise AssertionError(path + ': main content changed')
