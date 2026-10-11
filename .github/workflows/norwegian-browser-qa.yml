@@ -14,9 +14,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Install Chromium browser
         run: |
-          python3 -m pip install --user playwright==1.56.0
+          python3 -m pip install playwright==1.56.0
           python3 -m playwright install --with-deps chromium
       - name: Check all pages and responsive navigation
         shell: bash
