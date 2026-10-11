@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="fi"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Asenna n8n VPS-palvelimelle</title>
+<meta content="Asenna n8n VPS-palvelimelle Docker Composen ja PostgreSQL:n avulla. Ohjeessa käsitellään pysyvä tallennus, HTTPS, käänteinen välityspalvelin ja webhook-asetukset." name="description"/>
+<meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" rel="canonical"/>
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
+<link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html"/>
+<link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html"/>
+<link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
+<link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="Asenna n8n VPS-palvelimelle" property="og:title"/><meta content="Asenna n8n Docker Composella ja PostgreSQL:llä: pysyvä tallennus, HTTPS, käänteinen välityspalvelin ja webhook-asetukset." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="Asenna n8n VPS-palvelimelle" name="twitter:title"/><meta content="Asenna n8n Docker Composella ja PostgreSQL:llä: pysyvä tallennus, HTTPS, käänteinen välityspalvelin ja webhook-asetukset." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Etusivu","item":"https://agurkin2021-gif.github.io/vps-for-n8n/fi/"},{"@type":"ListItem","position":2,"name":"Asenna n8n VPS-palvelimelle","item":"https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html"}]}</script><style id="install-n8n-hero-illustration-css">
+.install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
+.install-n8n-hero-copy{min-width:0}
+.install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.install-n8n-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.install-n8n-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 29px rgba(23,36,61,.13));transition:transform .18s ease}
+.install-n8n-hero-art a:hover svg,.install-n8n-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.install-n8n-hero-art a:focus-visible{outline:3px solid #ff6847}
+.install-n8n-hero .actions{margin:28px 0 10px}
+.install-n8n-hero .hero-affiliate-disclosure{font-size:13px;color:#636e80;line-height:1.55;margin:0}
+@media(max-width:790px){.install-n8n-hero{grid-template-columns:1fr;min-height:0;gap:20px}.install-n8n-hero-art a{max-width:410px}}
+@media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
+</style><link rel="alternate" hreflang="fa" href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ar" href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="id" href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ro" href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html"/><link rel="alternate" hreflang="nl" href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html"/><link rel="alternate" hreflang="th" href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="az" href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="el" href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="zh-TW" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="zh-CN" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ca" href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="hu" href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="cs" href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="bg" href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="sv" href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="sr" href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="he" href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="fi" href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html"/></head><body>
+<header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">Suomi ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" lang="tr" hreflang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" lang="vi" hreflang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" lang="ko" hreflang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" lang="fr" hreflang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" hreflang="fi" lang="fi" aria-current="page">Suomi</a></div></div></header><main>
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">ASENNUS DOCKERILLA</p><h1>Asenna n8n VPS-palvelimelle</h1><p class="lead">Asenna n8n VPS-palvelimelle Docker Composen ja PostgreSQL:n avulla. Tuotantokäyttöönotossa tarvitaan myös pysyvä tallennus sovelluksen ja tietokannan tiedoille, muuttumaton <code>N8N_ENCRYPTION_KEY</code>, julkinen palvelinnimi, HTTPS ja oikein määritetyt webhookit. Varmista nämä ennen tuotantotyönkulkujen käyttöönottoa.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">Valitse VPS n8n:lle</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">Kumppanilinkki: voimme saada ostoksista palkkion.</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="Valitse VPS n8n:n asennusta varten"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+<linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
+<linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+</defs>
+<rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+<rect x="35" y="37" width="430" height="387" rx="25" stroke="#71859d" stroke-opacity=".27" stroke-width="2"/>
+<g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+<g stroke="#7496a9" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M248 114V91"/><path d="M163 202H112"/><path d="M338 202H391"/><path d="M160 287L112 338"/><path d="M339 290L393 337"/></g>
+<g transform="translate(193 62)">
+<rect width="111" height="67" rx="21" fill="#284b4d" stroke="#7fdac1" stroke-width="2.5"/>
+<rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+<path d="M50 26V20C50 7 65 7 65 20V26" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+<path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(158 133)">
+<rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+<rect x="19" y="21" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="147" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+<g stroke="#92a8bf" stroke-width="6" stroke-linecap="round"><path d="M67 38H139M67 51H117"/><path d="M67 101H139M67 114H115"/><path d="M67 164H139M67 177H113"/></g>
+<g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+<path d="M91 221V234" stroke="#91a4ba" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(50 167)">
+<rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff7755" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+<path d="M38 35L47 43L61 30"/>
+</g></g>
+<g transform="translate(354 170)">
+<rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<path d="M21 28L38 19L53 28L70 19L79 24V52L63 62L48 52L30 61L21 56V28Z" stroke="#ff795b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
+</g>
+<g transform="translate(44 309)">
+<rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="47" r="7"/><circle cx="77" cy="28" r="7"/><circle cx="77" cy="67" r="7"/><path d="M39 44L71 30M39 50L70 65"/></g>
+</g>
+<g transform="translate(346 309)">
+<rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3"><ellipse cx="55" cy="27" rx="26" ry="9" fill="#ffe8df"/><path d="M29 27V62C29 76 81 76 81 62V27"/><path d="M29 45C31 58 80 58 81 45"/></g>
+</g>
+<g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
+</svg></a></div></section>
+<section class="section dark"><p class="eyebrow">ESIVAATIMUKSET</p><h2>Valmistele VPS ennen n8n:n käynnistämistä</h2><div class="cards">
+<article><h3>Linux-VPS</h3><p>Käytä ylläpidettyä Linux-palvelinta, jonka resurssit riittävät n8n:lle, PostgreSQL:lle, Dockerille ja käänteiselle välityspalvelimelle.</p></article>
+<article><h3>DNS</h3><p>Osoita verkkotunnus tai aliverkkotunnus VPS:ään ennen TLS-varmenteiden myöntämistä ja webhook-osoitteiden julkaisemista.</p></article>
+<article><h3>Docker Compose</h3><p>Asenna Docker Engine ja Compose-lisäosa käyttöjärjestelmälle tuetuista paketeista.</p></article>
+<article><h3>Palomuuri</h3><p>Avaa vain tarvittavat ylläpito- ja verkkopalveluportit. Pidä PostgreSQL ja sisäiset sovelluspalvelut yksityisinä.</p></article></div>
+<p><strong>Asennatko VPS:lle, jolla on jo verkkosivustoja?</strong> Voit asentaa n8n:n hallitsemallesi palvelimelle, jos CPU, RAM ja tallennustila riittävät. Jos Nginx, Apache, Caddy tai muu käänteinen välityspalvelin kuitenkin käyttää jo portteja 80/443, <strong>älä</strong> käynnistä alla olevaa Caddy-esimerkkikonttia muuttamattomana: portit ovat ristiriidassa. Ohjaa sen sijaan uusi n8n-aliverkkotunnus olemassa olevan käänteisen välityspalvelimen kautta sopivaa yksityisverkkoa käyttäen tai käytä esimerkin mukaiseen Compose-asennukseen puhdasta VPS:ää. Säilytä muiden sivustojen toiminta ja TLS-määritykset; esimerkki olettaa porttien 80/443 olevan vapaina.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Valitse Linux-VPS n8n:lle</a></div><p id="affiliate-note"><small>Kumppanilinkki: voimme saada ostoksista palkkion.</small></p></section>
+<section class="section"><p class="eyebrow">KÄYTTÖÖNOTTOKOKONAISUUS</p><h2>Määritettävät osat</h2><div class="requirements">
+<div><b>Käänteinen välityspalvelin</b><span>Vastaanottaa julkisen HTTPS-liikenteen ja välittää sen n8n:lle.</span></div>
+<div><b>n8n</b><span>Suorittaa editorin, käynnistimet ja työnkulut pysyvillä sovellustiedoilla.</span></div>
+<div><b>PostgreSQL</b><span>Tallentaa työnkulkujen, tunnistetietojen ja suoritusten tilan tuotantoympäristössä.</span></div>
+<div><b>Pysyvät taltiot</b><span>Säilyttävät sovelluksen ja tietokannan tiedot erillään kertakäyttöisistä konteista.</span></div>
+<div><b>Julkinen DNS</b><span>Yhdistää editorin ja webhook-palveluntarjoajien käyttämän palvelinnimen VPS:ään.</span></div>
+</div></section>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">KOPIOI JA SOVITA ASENNUS</p><h2>Asenna n8n VPS:lle Docker Composella</h2>
+<p>Rakenna tällä esimerkillä n8n-käyttöönotto <strong>itse ylläpidettävälle Linux-VPS:lle</strong>. Asennat ja ylläpidät n8n:n itse; palvelimen valinta kumppanimme kautta ei sisällä esiasennettua n8n-instanssia. Esimerkissä yhdistyvät n8n, PostgreSQL, ulkoinen tehtäväsuoritin ja Caddyn HTTPS yksityisessä Compose-verkossa. Kyseessä on määritysmalli, <strong>ei väite käytännössä testatusta käyttöönotosta</strong>.</p>
+<p><strong>Haluatko mahdollisimman nopean uuden asennuksen?</strong> n8n tarjoaa myös virallisen yhden komennon Docker-asennuksen. Voit ladata ja tarkistaa sen skriptin komennolla <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> ennen komennon <code>sh get-n8n.sh</code>suorittamista. Tämä vaihtoehto käynnistää alkuinstanssin SQLite-tietokannalla paikalliseen URL-osoitteeseen ja sisältää n8n Assistantin eristetyn ympäristön palveluita. Se <strong>ei ole sama</strong> kuin tässä kuvattu julkista HTTPS:ää ja PostgreSQL:ää käyttävä VPS-asennus. Virallinen täysi eristetty ympäristö tarvitsee enemmän RAM-muistia ja CPU-tehoa kuin kevyt n8n-asennus (sen Compose-opas määrittää vähintään 4 GB RAM / 2 vCPU). Internetiin avattavaa tuotanto-VPS:ää varten jatka alla olevalla käsin määritettävällä kokonaisuudella.</p>
+<h3>1. Valmistele Docker, DNS ja käyttöoikeudet</h3>
+<p>Yhdistä SSH:lla sudo-oikeuksin ja osoita DNS:n A-tietue <code>n8n.example.com</code> VPS:si IPv4-osoitteeseen. Uudelle <strong>Ubuntu 22.04-, 24.04- tai 26.04-</strong> VPS:lle seuraavat komennot asentavat Docker Enginen ja nykyisen <code>docker compose</code> lisäosan Dockerin virallisesta allekirjoitetusta <code>apt</code> pakettivarastosta:</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Rekisteröi Dockerin allekirjoitettu apt-pakettivarasto
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>Tämä on virallisen Dockerin Ubuntu-asennusoppaan tuotantokäyttöön tarkoitettu pakettivarastomenetelmä. <strong>Älä asenna Dockeria uudelleen tai poista sitä harkitsematta VPS:llä, jossa suoritetaan jo kontteja tai muita verkkosivustoja</strong>; tarkista ensin nykyinen asennus ja mahdolliset pakettiristiriidat. Käytä Debianissa tai muussa jakelussa vastaavia virallisia käyttöjärjestelmäkohtaisia ohjeita Ubuntu-komentojen sijaan.</p>
+<p>Tarkista seuraavaksi Docker, Compose-lisäosa, DNS ja työhakemisto:</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
+getent hosts n8n.example.com
+mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
+<p>Jos <code>getent hosts</code> ei palauta osoitetta tai palauttaa väärän osoitteen, korjaa DNS ennen Caddyn käynnistämistä. Korvaa <code>n8n.example.com</code> kaikkialla oppaassa oikealla palvelinnimelläsi. Docker edellyttää tavallisesti pääkäyttäjän oikeuksia: jos SSH-käyttäjäsi ei voi suorittaa myöhempiä <code>docker compose</code> komentoja suoraan, lisää niiden eteen <code>sudo</code>. Käyttäjän lisääminen <code>docker</code> ryhmään myöntää käytännössä pääkäyttäjän oikeudet, joten sitä ei pidä tehdä kevyin perustein jaetulla palvelimella.</p>
+<p>Pidä SSH-ylläpidon todellinen portti saavutettavissa ennen palomuurin käyttöönottoa. Salli sisääntuleva HTTP (80) ja HTTPS (443) varmenteiden myöntämistä ja editoria varten. Dockerin julkaisemat konttiportit voivat ohittaa joitakin UFW-sääntöjä, joten tarkista Dockerin palomuuriohjeet ja julkaise vain tarkoitetut Caddy-portit. Tämä Compose-esimerkki ei tarkoituksella <strong>älä</strong> julkaise PostgreSQL:ää (5432), n8n:ää (5678) eikä tehtäväsuorittimen välityspalvelua (5679) julkiseen internetiin.</p>
+<h3>2. Luo ympäristöarvot ja säilytä avain</h3>
+<p>Luo projektihakemistossa kolme <strong>erilaista</strong> satunnaista heksadesimaaliarvoa komennolla:</p>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
+<p>Luo tiedosto nimeltä <code>.env</code> käyttäen alla olevaa mallia. Korvaa jokainen <code>REPLACE_WITH_RANDOM_HEX</code> eri satunnaisarvolla ja muuta palvelinnimi sekä aikavyöhyke. Esitetty <code>2.42.5</code> tunniste on <strong>8. lokakuuta 2026 ilmoitettu vakaa julkaisu</strong>, jota käytetään tässä päivätyn kokoonpanoesimerkin pohjana, <strong>ei takeena käytännössä testatusta asennuksesta tai tulevasta tietoturvasta</strong>. Tarkista viralliset ajantasaiset n8n-julkaisut ennen asennusta ja pidä n8n:n sekä sen tehtäväsuorittimen levykuvat samassa varmennetussa versiossa.</p>
+<pre><code># .env — replace the three example secrets
+# Kiinnitä ylläpidetty n8n-versio; käytä samaa versiota myös tehtäväsuorittimessa.
+N8N_VERSION=2.42.5
+N8N_HOST=n8n.example.com
+GENERIC_TIMEZONE=Etc/UTC
+POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
+N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
+RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
+<p>Älä koskaan tallenna <code>.env</code> julkiseen repositorioon. Säilytä salausavain ja palautusohjeet turvallisesti VPS:n ulkopuolella. Avaimen on pysyttävä samana kontin uudelleenluonnin tai siirron jälkeen.</p>
+<h3>3. Kirjoita compose.yaml uutta asennusta varten</h3>
+<p>Luo samaan hakemistoon tiedosto <code>compose.yaml</code>. Esimerkissä käytetään virallisia n8n-ympäristömuuttujakäytäntöjä ja PostgreSQL 18:n <code>PGDATA</code> polkua, joka on dokumentoitu n8n:n hosting-projektissa:</p>
+<pre><code>services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+      N8N_WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_PROXY_HOPS: "1"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  n8n-runner:
+    image: n8nio/runners:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+    depends_on:
+      - n8n
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:</code></pre>
+<p>Neljällä palvelulla on eri tehtävät: PostgreSQL tallentaa tietokannan tilan, n8n suorittaa työnkulut, <code>n8n-runner</code> suorittaa tehtäviä vastaavalla versiolla ja jaetulla todennustunnuksella, ja Caddy hoitaa julkisen HTTPS-yhteyden. Ulkoinen <em>tehtäväsuoritin</em> ei ole sama kuin Redis-jonotila. Vain Caddy julkaisee palvelinkoneen portteja. Tässä kevyessä esimerkissä käytetään asennuksen yksinkertaistamiseksi yhtä tietokantaroolia; PostgreSQL-oikeuksien tarkempaa eriyttämistä varten katso n8n:n virallinen PostgreSQL-käyttöönottoesimerkki.</p>
+<h3>4. Luo HTTPS:n Caddyfile</h3>
+<p>Luo tiedosto <code>Caddyfile</code> (iso C-kirjain, ei tiedostopäätettä) tiedoston <code>compose.yaml</code>viereen. Korvaa esimerkin palvelinnimi kaikkialla omalla DNS-nimelläsi:</p>
+<pre><code>n8n.example.com {
+    reverse_proxy n8n:5678
+}</code></pre>
+<p>Caddy pyytää ja uusii julkiset TLS-varmenteet, kun verkkotunnuksen DNS toimii ja ulkoinen liikenne pääsee portteihin 80/443. Älä osoita DNS:ää osoitteeseen <code>localhost</code>. Jos korvaat Caddyn toisella käänteisellä välityspalvelimella, välitä alkuperäisen palvelinnimen, protokollan ja asiakasosoitteen otsakkeet ja säädä <code>N8N_PROXY_HOPS</code> todellisten luotettujen välityspalvelinhyppyjen määrän mukaan.</p>
+<h3>5. Käynnistä kontit ja testaa ulkopuolelta</h3>
+<p>Suorita nämä komennot projektihakemistossa tiedostojen <code>.env</code>, <code>compose.yaml</code> ja <code>Caddyfile</code>:</p>
+<pre><code>chmod 600 .env
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100 n8n n8n-runner postgres caddy
+curl -fsS https://n8n.example.com/healthz</code></pre>
+<p>Viimeinen komento tarkistaa <strong>julkisen HTTPS-yhteyden</strong> terveyden tarkistuspisteen. Jos varmenteen myöntäminen on kesken, tarkista Caddyn lokit sekä DNS ja portit ennen kuin päättelet n8n:n olevan rikki. Avaa <code>https://n8n.example.com</code>, luo ensimmäinen omistajatili heti ja ota käyttöön asianmukainen kirjautumissuojaus. Varmista, että instanssi todella suorittaa työnkulun eikä pelkästään näytä editoria:</p>
+<ol>
+<li>Luo editorissa työnkulku, jonka käynnistimenä on <strong>Webhook</strong> . Aseta <strong>HTTP Method</strong> arvoksi <code>GET</code>, valitse <strong>Path</strong> <code>vps-check</code>ja aseta <strong>Respond</strong> arvoksi <strong>Immediately</strong>. Tallenna työnkulku.</li>
+<li>Napsauta <strong>Listen for Test Event</strong>, kopioi n8n:n näyttämä täydellinen <strong>Test URL</strong> ja suorita toiselta laitteelta komento <code>curl -i 'PASTE_TEST_URL_HERE'</code> kopioidulla URL-osoitteella. Odota onnistunutta HTTP-vastausta ja tarkista, että saapuva tapahtuma näkyy n8n-editorissa. Testi-URL toimii vain, kun n8n kuuntelee tapahtumaa.</li>
+<li><strong>Julkaise</strong> työnkulku, vaihda solmun osoitteeksi <strong>Production URL</strong>, kopioi se ja suorita <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> uudelleen. Varmista suoritus työnkulun <strong>Executions</strong> välilehdeltä. Tuotannon webhook-pyynnöt edellyttävät julkaistua työnkulkua, eivätkä ne näytä sisältöään editorin testinäkymässä.</li>
+</ol>
+<p>Tämä on tarkoituksella yksinkertainen, todentamaton toimintatesti: älä koskaan lähetä siihen salaisuuksia. Peru sen julkaisu tai poista se testauksen jälkeen, tai määritä webhookin todennus/IP-rajoitukset ennen julkisen päätepisteen käyttöä oikeilla tiedoilla. Katso virallinen webhookien testi- ja tuotantodokumentaatio.</p>
+<h3>6. Varmuuskopioi ennen kiinnitettyjen versioiden muuttamista</h3>
+<p>Tallenna palautettavissa oleva PostgreSQL-varmuuskopio <em>ja</em> sekä pysyvä n8n-datataltion sisältö, <code>.env</code>ja salausavain sekä tarvittavat ulkoiset tiedostot tämän palvelimen ulkopuolelle. Testaa palautus <a href="n8n-backup-and-restore.html">varmuuskopiointi- ja palautusoppaan</a> avulla ennen tuotannon päivittämistä. Esimerkkikomennot:</p>
+<pre><code># Back up the database, encryption key, instance data,
+# sekä tiedostot ennen kiinnitettyjen versioiden muuttamista.
+docker compose exec -T postgres \
+  pg_dump -U n8n -d n8n &gt; n8n-db.sql
+# Kun varmuuskopio on suojattu tämän VPS:n ulkopuolella:
+docker compose pull
+docker compose up -d
+docker compose ps</code></pre>
+<p>Muuta kiinnitettyä <code>N8N_VERSION</code> versiota vasta julkaisutietoihin tutustumisen jälkeen. n8n:n ja tehtäväsuorittimen levykuvat on päivitettävä samaan aikaan. <strong>Älä suorita komentoa <code>docker compose down -v</code></strong> rutiiniylläpidossa, sillä se poistaa nimetyt datataltiot. PostgreSQL:n pääversion muuttaminen edellyttää tietokannan päivitys- tai vienti- ja palautussuunnitelmaa; Postgres 18 -levykuvan korvaaminen toisen pääversion tunnisteella ei tee siirtoa automaattisesti.</p>
+<p>Luotettavat lähteet: n8n:n Docker Compose -opas, käänteisen välityspalvelimen ja webhookien asetukset sekä PostgreSQL:n viralliset käyttöönotto-ohjeet. Infrastruktuurin suorituskykytestiä tai palveluntarjoajakohtaista esiasennettua ominaisuutta ei oleteta.</p>
+</section>
+<section class="section dark"><p class="eyebrow">MÄÄRITYKSET</p><h2>Määritä salaisuudet ja julkiset URL-osoitteet harkiten</h2><div class="cards">
+<article><h3>Salausavain</h3><p>Aseta ja säilytä vahva n8n:n salausavain ennen tuotannon tunnistetietojen tallentamista. Sama avain tarvitaan palautuksen jälkeen.</p></article>
+<article><h3>PostgreSQL-tunnistetiedot</h3><p>Käytä erillisiä tietokantatunnuksia ja pidä salasanat poissa julkisesta versionhallinnasta.</p></article>
+<article><h3>Julkinen palvelinnimi</h3><p>Määritä todellinen ulkoinen palvelinnimi ja HTTPS-alkuperä sisäisen konttiosoitteen sijasta.</p></article>
+<article><h3>Webhook-osoite</h3><p>Aseta <code>N8N_WEBHOOK_URL</code> julkisesti saavutettavaan HTTPS-perusosoitteeseen ja aseta <code>N8N_PROXY_HOPS=1</code> kun käytössä on yksi luotettu käänteinen välityspalvelin. <code>WEBHOOK_URL</code> on vanhentunut alias n8n-versiosta 2.35.0 alkaen; älä kopioi sitä vanhoista oppaista.</p></article>
+</div></section>
+<section class="section"><p class="eyebrow">PYSYVÄ TALLENNUS</p><h2>Säilytä n8n:n ja PostgreSQL:n tiedot erikseen</h2><div class="cards">
+<article><h3>n8n:n tiedot</h3><p>Liitä pysyvä tallennus n8n:n datakansioon, jotta tärkeät instanssitiedot säilyvät myös kontin uudelleenluonnin jälkeen.</p></article>
+<article><h3>PostgreSQL:n tiedot</h3><p>Säilytä tietokantahakemisto erillään PostgreSQL-kontista.</p></article>
+<article><h3>Tiedosto-oikeudet</h3><p>Anna tarkoituksenmukaiselle konttikäyttäjälle kirjoitusoikeus liitettyihin polkuihin tekemättä palvelinkoneen tallennuksesta tarpeettoman avointa.</p></article>
+<article><h3>Työnkulkujen tiedostot</h3><p>Säilytä tuotantotyönkulkujen tarvitsemat liitetyt tiedostot ja binääritiedostojen tallennuspaikat.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Yhdistä n8n yksityiseen tietokantapalveluun</h2><div class="requirements">
+<div><b>Tietokannan tyyppi</b><span>Määritä n8n käyttämään PostgreSQL:ää, jotta se ei siirry vahingossa SQLiteen.</span></div>
+<div><b>Isäntänimi</b><span>Käytä PostgreSQL-palvelun nimeä yksityisessä Docker-verkossa.</span></div>
+<div><b>Tunnistetiedot</b><span>Varmista, että tietokanta, sovelluskäyttäjä ja salasana vastaavat tarkoitettuja arvoja.</span></div>
+<div><b>Käynnistysvalmius</b><span>Anna PostgreSQL:n valmistua ennen n8n:n alustuksen odottamista.</span></div>
+<div><b>Verkko</b><span>Konttien välinen tietokantayhteys ei edellytä julkista PostgreSQL-porttia.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">HTTPS JA VÄLITYSPALVELIN</p><h2>Suojaa n8n:n julkinen osoite HTTPS:llä</h2><div class="cards">
+<article><h3>Käänteinen välityspalvelin</h3><p>Käytä Nginxiä, Caddya tai Traefikia julkisena sisääntulopisteenä ja välitä liikenne yksityiselle n8n-palvelulle.</p></article>
+<article><h3>TLS</h3><p>Hanki kelvollinen varmenne julkiselle palvelinnimelle ja ohjaa HTTP-liikenne HTTPS:ään.</p></article>
+<article><h3>Välitetyt otsakkeet</h3><p>Välitä n8n:n tarvitsemat palvelinnimi-, protokolla- ja asiakastiedot sekä määritä välityspalvelinhyppyjen määrä oikein.</p></article>
+<article><h3>Webhookin tarkistus</h3><p>Käynnistä webhook VPS:n ulkopuolelta ja varmista, että n8n luo ulkoisesti saavutettavan HTTPS-osoitteen.</p></article></div>
+<p><a href="secure-n8n-on-a-vps.html">Tuotantoympäristön tietoturvan täydellinen tarkistuslista</a></p></section>
+<section class="section dark"><p class="eyebrow">ENSIMMÄINEN KÄYNNISTYS</p><h2>Tarkista pysyvyys ennen tuotantokäyttöä</h2><div class="requirements">
+<div><b>Kontit</b><span>Varmista, että n8n, PostgreSQL ja välityspalvelin pysyvät toimintakunnossa käynnistyksen ja uudelleenkäynnistyksen jälkeen.</span></div>
+<div><b>Editori</b><span>Avaa julkinen HTTPS-osoite ja tarkista todennuksen toiminta.</span></div>
+<div><b>Tietokanta</b><span>Luo testitietoja, luo kontit uudelleen ja varmista tietojen säilyminen.</span></div>
+<div><b>Webhook</b><span>Suorita ulkoinen webhook-testi DNS:n, TLS:n, välityksen ja julkisen kutsuosoitteen tarkistamiseksi.</span></div>
+<div><b>Tunnistetiedot</b><span>Varmista, että salatut tunnistetiedot ovat käyttökelpoisia n8n:n uudelleenkäynnistyksen jälkeen.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">PÄIVITYKSET</p><h2>Päivitä Docker-käyttöönotto pitämättä kontteja varmuuskopioina</h2><div class="cards">
+<article><h3>Lue julkaisutiedot</h3><p>Tarkista n8n:n tärkeät muutokset ennen päivitystä, etenkin jos ohitat versioita.</p></article>
+<article><h3>Varmuuskopioi ensin</h3><p>Tee palautettavissa oleva tietokannan ja instanssin varmuuskopio ennen tuotantolevykuvan muuttamista.</p></article>
+<article><h3>Luo kontit uudelleen turvallisesti</h3><p>Nouda valittu levykuva ja luo sovelluskontit uudelleen säilyttäen pysyvät taltiot.</p></article>
+<article><h3>Tarkista toiminta päivityksen jälkeen</h3><p>Tarkista lokit, editoriin pääsy, tunnistetiedot ja edustavat työnkulut ennen kuin toteat käyttöönoton toimivaksi.</p></article></div>
+<p><a href="n8n-backup-and-restore.html">Varmuuskopiointi- ja palautusopas</a></p></section>
+<section class="section dark"><p class="eyebrow">YLEISET ONGELMAT</p><h2>Miksi n8n:n Docker-asennus toimii paikallisesti mutta ei tuotannossa</h2><div class="cards">
+<article><h3>Väärä webhook-osoite</h3><p>Takaisinkutsut osoittavat localhostiin, HTTP:hen tai sisäiseen palvelinnimeen julkisen HTTPS-osoitteen sijasta.</p></article>
+<article><h3>Pysyvän tallennuksen puute</h3><p>Sovelluksen tai tietokannan tiedot katoavat kontin uudelleenluonnissa.</p></article>
+<article><h3>Kadonnut salausavain</h3><p>Tallennetut tunnistetiedot eivät enää toimi palvelimen uudelleenrakennuksen jälkeen, koska uusi instanssi käyttää eri avainta.</p></article>
+<article><h3>Julkinen tietokantaportti</h3><p>PostgreSQL näkyy tarpeettomasti julkisessa verkossa, vaikka vain n8n tarvitsee yhteyden siihen.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">KÄYTTÖÖNOTON JÄLKEINEN TARKISTUS</p><h2>Tarkista toimintakunto ennen oikeiden työnkulkujen yhdistämistä</h2><div class="cards"><article><h3>Tarkista konttien tila</h3><p>Suorita <code>docker compose ps</code> ja varmista, että sovellus- ja tietokantapalvelut toimivat odotetusti ennen kuin pidät käyttöönottoa onnistuneena.</p></article><article><h3>Tarkista n8n:n terveyden tarkistuspiste</h3><p>Yllä olevassa Compose-esimerkissä porttia 5678 ei julkaista palvelinkoneella. Tarkista julkinen päätepiste komennolla <code>curl -fsS https://n8n.example.com/healthz</code> palvelinnimen vaihtamisen jälkeen ja käytä <code>docker compose ps</code> sekä palvelulokeja, jos HTTPS tai tietokanta ei ole valmis.</p></article><article><h3>Kiinnitä sovellusversiot</h3><p>Älä pidä tarkistamattomien liukuvien levykuvatunnisteiden päivittämistä ylläpitostrategiana. Kirjaa käytössä oleva n8n-versio, lue julkaisutiedot ja varmuuskopioi ennen muutoksia.</p></article><article><h3>Älä vaihda PostgreSQL:n pääversiota suoraan</h3><p>Pelkkä Postgresin pääversion levykuvatunnisteen muuttaminen voi tehdä nykyisestä datahakemistosta yhteensopimattoman. Varmuuskopioi ja noudata tietokannan päivitysohjeita sen sijaan, että olettaisit kontin uudelleenluonnin hoitavan pääversion siirron.</p></article></div><p>Ajantasainen virallinen Docker Compose -opas</p></section><section class="section"><p class="eyebrow">UKK</p><h2>n8n:n asennus Dockerilla: usein kysytyt kysymykset</h2><div class="faq">
+<details><summary>Tarvitseeko n8n PostgreSQL:n Dockeria käytettäessä?</summary><p>Docker ei edellytä PostgreSQL:ää, ja pienet asennukset voivat käyttää SQLitea. Tuotantokäyttöön suunnitellussa VPS-asennuksessa PostgreSQL tarjoaa vahvemman tietokantapohjan ja tukee myöhempää jonotilan skaalausta.</p></details>
+<details><summary>Miksi n8n:lle tarvitaan pysyvä taltio, jos PostgreSQL tallentaa tiedot?</summary><p>Pysyvässä n8n-kansiossa voi olla tärkeää instanssitilaa ja määrityksiä. Säilytä se käyttöönottomallin mukaisesti sen sijaan, että olettaisit tietokannan olevan ainoa palautettava osa.</p></details>
+<details><summary>Miksi webhookissani näkyy localhost?</summary><p>Sisäinen konttiosoite eroaa julkisesta osoitteesta. Määritä ulkoinen palvelinnimi, protokolla ja webhook-osoite ja varmista, että käänteinen välityspalvelin välittää tarvittavat otsakkeet.</p></details>
+<details><summary>Pitääkö portin 5678 olla julkinen?</summary><p>Tavallisessa tuotantokäyttöönotossa käänteisen välityspalvelimen takana julkaise HTTPS välityspalvelimessa ja pidä n8n:n sovellusportti sisäisenä, ellei poikkeamiseen ole erityistä toiminnallista syytä.</p></details>
+<details><summary>Tarvitsenko Redisin?</summary><p>Et tavalliseen yhden instanssin Docker-käyttöönottoon. Redis tulee tarpeelliseksi, kun siirryt tarkoituksella jonotilaan ja työntekijäprosesseihin.</p></details>
+<details><summary>Ovatko ulkoiset n8n-tehtäväsuorittimet sama asia kuin jonotilan työntekijät?</summary><p>Eivät. Ulkoiset tehtäväsuorittimet suorittavat tuettua tehtäväkoodia erillään n8n:n pääprosessista ja käyttävät yhteistä todennustunnusta. Redis-jonotila hajauttaa työnkulkujen suorituksia ja sillä on omat infrastruktuurivaatimuksensa. Tämä esimerkki näyttää ulkoisen tehtäväsuorittimen, ei Redis-jonotilaa. Pidä tehtäväsuorittimen levykuva samassa versiossa n8n:n kanssa.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Näytä VPS-vaihtoehdot</a></div>
+<p><a href="n8n-vps-requirements.html">VPS-vaatimukset</a> · <a href="secure-n8n-on-a-vps.html">Tuotantoympäristön tietoturva</a> · <a href="n8n-backup-and-restore.html">Varmuuskopiointi ja palautus</a> · <a href="n8n-queue-mode.html">Jonotila ja työntekijäprosessit</a> · <a href="index.html">n8n:n VPS-pääopas</a></p></section>
+<section class="section" data-best-vps-link="1"><h2>Vertailetko palveluntarjoajia?</h2><p>Palveluntarjoajan valintaan, yhden napsautuksen asennukseen, tuen rajauksiin, varmuuskopioihin, siirtoihin, alueisiin ja skaalaukseen löydät tietoa <a href="best-vps-for-n8n.html">n8n:n parhaiden VPS-vaihtoehtojen vertailusta</a>. Resurssien mitoitusta varten palaa <a href="index.html">n8n:n VPS-pääoppaaseen</a>.</p></section></main><footer><b>n8nVPS</b><span>Riippumaton infrastruktuuriopas itse ylläpidettävälle n8n:lle.</span><p><a href="about.html">Tietoa meistä</a> · <a href="contact.html">Yhteystiedot</a> · <a href="privacy.html">Tietosuoja</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">Suomi ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" hreflang="fi" lang="fi" aria-current="page">Suomi</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
