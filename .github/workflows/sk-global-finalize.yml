@@ -1,0 +1,44 @@
+name: Publish Slovak navigation across every language
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/sk-global-finalize.yml"
+      - "scripts/integrate_sk_navigation.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: slovak-global-navigation
+  cancel-in-progress: false
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify all eleven Slovak pages and synchronize selectors
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/integrate_sk_navigation.py
+          python3 -u scripts/integrate_sk_navigation.py
+      - name: Commit and publish cross-language navigation
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Integrate Slovak in all header and footer language menus"
+            git push origin HEAD:main
+          fi
+      - name: Confirm committed changes and idempotence
+        shell: bash
+        run: |
+          python3 -u scripts/integrate_sk_navigation.py
+          git diff --exit-code
+          git log -1 --format='SK_SITEWIDE_NAV_COMMIT %h %s'
+          echo "SK_11_PAGES_AND_SITEWIDE_NAV_VERIFIED"
