@@ -34,9 +34,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -46,9 +46,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html",
-      "closes": false,
-      "horizontalOverflow": true,
-      "pass": false
+      "closes": true,
+      "horizontalOverflow": false,
+      "pass": true
     },
     {
       "width": 390,
@@ -58,9 +58,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/contact.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -70,9 +70,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html",
-      "closes": false,
-      "horizontalOverflow": true,
-      "pass": false
+      "closes": true,
+      "horizontalOverflow": false,
+      "pass": true
     },
     {
       "width": 390,
@@ -82,9 +82,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-cloud-vs-self-hosted.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -94,9 +94,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-vps-requirements.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -106,9 +106,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/privacy.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -118,9 +118,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/secure-n8n-on-a-vps.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 390,
@@ -130,9 +130,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
-      "closes": false,
-      "horizontalOverflow": true,
-      "pass": false
+      "closes": true,
+      "horizontalOverflow": false,
+      "pass": true
     },
     {
       "width": 1280,
@@ -166,9 +166,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -178,9 +178,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -190,9 +190,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/contact.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -202,9 +202,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html",
-      "closes": false,
-      "horizontalOverflow": true,
-      "pass": false
+      "closes": true,
+      "horizontalOverflow": false,
+      "pass": true
     },
     {
       "width": 1280,
@@ -214,9 +214,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-cloud-vs-self-hosted.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -226,9 +226,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-vps-requirements.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -238,9 +238,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/privacy.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     },
     {
       "width": 1280,
@@ -250,9 +250,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/secure-n8n-on-a-vps.html",
-      "closes": false,
-      "horizontalOverflow": true,
-      "pass": false
+      "closes": true,
+      "horizontalOverflow": false,
+      "pass": true
     },
     {
       "width": 1280,
@@ -262,9 +262,9 @@
       "menuVisible": true,
       "danishVisible": true,
       "selfHref": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
-      "closes": false,
+      "closes": true,
       "horizontalOverflow": false,
-      "pass": false
+      "pass": true
     }
   ],
   "transitionChecks": [
@@ -350,97 +350,6 @@
     }
   ],
   "responsive": [],
-  "failures": [
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/contact.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-cloud-vs-self-hosted.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-vps-requirements.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/privacy.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/secure-n8n-on-a-vps.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 390,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/contact.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-cloud-vs-self-hosted.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-vps-requirements.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/privacy.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/secure-n8n-on-a-vps.html",
-      "reason": "page menu or HTTP test"
-    },
-    {
-      "width": 1280,
-      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
-      "reason": "page menu or HTTP test"
-    }
-  ],
-  "result": "FAIL"
+  "failures": [],
+  "result": "PASS"
 }
