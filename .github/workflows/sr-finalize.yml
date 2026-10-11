@@ -1,0 +1,58 @@
+name: Complete Serbian language navigation sitewide
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sr-finalize.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: serbian-navigation-final-publication
+  cancel-in-progress: false
+jobs:
+  sync-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify and integrate Serbian in every existing language selector
+        shell: bash
+        run: |
+          python -m py_compile _sr_publish_qa.py
+          python -u _sr_publish_qa.py
+      - name: Commit sitewide Serbian switcher fixes and publish
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m "Complete Serbian navigation in every language header and footer"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then
+                echo "SR_GLOBAL_NAV_PUBLISHED"
+                break
+              fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              python -u _sr_publish_qa.py
+              git add -u
+              if ! git diff --cached --quiet; then
+                git commit -m "Resync Serbian global switchers after concurrent updates"
+              fi
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Verify committed navigation is stable on second pass
+        shell: bash
+        run: |
+          python -u _sr_publish_qa.py
+          git diff --exit-code
+          echo "SR_FINAL_PUBLICATION_QA_PASS"
