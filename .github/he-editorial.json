@@ -397,5 +397,14 @@
   "requirements guide": "מדריך הדרישות",
   "for technical headroom. This page keeps the provider-comparison intent separate.": "לבדיקת מרווח המשאבים הטכני. עמוד זה מוקדש להשוואת ספקים בלבד.",
   "When should I choose managed n8n instead of a VPS?": "מתי עדיף לבחור n8n מנוהל במקום VPS?",
-  "When reducing server administration matters more than root access and infrastructure control. Compare the support boundary, execution limits, backup responsibility and data-control requirements before deciding.": "כאשר הפחתת עבודת ניהול השרת חשובה לכם יותר מגישת root ושליטה בתשתית. לפני ההחלטה השוו את היקף התמיכה, מגבלות ההרצה, האחריות לגיבויים ודרישות השליטה בנתונים."
+  "When reducing server administration matters more than root access and infrastructure control. Compare the support boundary, execution limits, backup responsibility and data-control requirements before deciding.": "כאשר הפחתת עבודת ניהול השרת חשובה לכם יותר מגישת root ושליטה בתשתית. לפני ההחלטה השוו את היקף התמיכה, מגבלות ההרצה, האחריות לגיבויים ודרישות השליטה בנתונים.",
+  "Choose a VPS for the small business configuration": "בחירת VPS בתצורה המיועדת לעסק קטן",
+  "Choose the $0.07 per day budget VPS configuration": "בחירת תצורת VPS חסכונית במחיר $0.07 ליום",
+  "Choose the $0.50 per day light automation VPS configuration": "בחירת תצורת VPS לאוטומציות קלות במחיר $0.50 ליום",
+  "Choose the recommended $0.67 per day small business VPS configuration": "בחירת תצורת VPS מומלצת לעסק קטן במחיר $0.67 ליום",
+  "Choose the $1.34 per day data processing VPS configuration": "בחירת תצורת VPS לעיבוד נתונים במחיר $1.34 ליום",
+  "View VPS hosting options from our partner": "לצפייה באפשרויות אירוח VPS של השותף שלנו",
+  "Scrollable comparison of six n8n VPS providers": "טבלת השוואה ניתנת לגלילה בין שישה ספקי VPS ל-n8n",
+  "Home": "עמוד הבית",
+  "Best VPS for n8n": "שרתי VPS מומלצים ל-n8n"
 }
