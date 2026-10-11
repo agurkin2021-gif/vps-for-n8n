@@ -1,0 +1,107 @@
+name: One-shot Danish live HTTP verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/one-shot-danish-live-audit.yml'
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check live Pages and write report
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, re, time, urllib.request, urllib.error, concurrent.futures, xml.etree.ElementTree as ET
+          from pathlib import Path
+          from urllib.parse import urljoin
+          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          NAMES=["","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html","install-n8n-on-a-vps.html","n8n-cloud-vs-self-hosted.html","n8n-vps-requirements.html","privacy.html","secure-n8n-on-a-vps.html","n8n-queue-mode.html"]
+          TARGETS=[BASE+"da/"+p for p in NAMES]
+          SAMPLES={BASE+"":"da/",BASE+"bg/best-vps-for-n8n.html":"da/best-vps-for-n8n.html",BASE+"ru/o-proekte.html":"da/about.html",BASE+"sv/about.html":"da/about.html",BASE+"es/index.html":"da/",BASE+"fi/n8n-queue-mode.html":"da/n8n-queue-mode.html"}
+          SITE_URL=BASE+"sitemap.xml"
+          EXTRAS=[BASE+"styles.css",BASE+"n8n-queue-mode-hero.svg",BASE+"favicon.svg"]
+          URLS=TARGETS+list(SAMPLES)+[SITE_URL]+EXTRAS
+          def download(url):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (compatible; GitHubActionDanishAudit/1.0)","Accept":"text/html,application/xml,image/*,*/*"})
+              try:
+                  with urllib.request.urlopen(req,timeout=17) as resp:
+                      body=resp.read()
+                      return {"status":resp.status,"resolved_url":resp.url,"bytes":len(body),"content_type":resp.headers.get("Content-Type",""),"text":body.decode("utf-8","replace")}
+              except urllib.error.HTTPError as e:return {"status":e.code,"error":str(e)}
+              except Exception as e:return {"status":None,"error":repr(e)}
+          def parallel_fetch(urls):
+              with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+                  return dict(zip(urls,pool.map(download,urls)))
+          fetched=parallel_fetch(URLS)
+          # GitHub Pages may be deploying a very recent commit. Retry missing/non-200 pages once.
+          retry=[url for url,x in fetched.items() if x["status"]!=200]
+          if retry:
+              time.sleep(8)
+              fetched.update(parallel_fetch(retry))
+          def menu_links(text):
+              blocks=re.findall(r'<div class="lang-menu"[^>]*>[\s\S]*?</div>',text)
+              out=[]
+              for block in blocks:
+                  m=re.search(r'<a\b[^>]*href="([^"]+)"[^>]*>\s*Dansk\s*</a>',block,re.I)
+                  out.append(m.group(1) if m else None)
+              return out
+          def attr(text,pattern):
+              m=re.search(pattern,text,re.I|re.S)
+              return m.group(1) if m else None
+          pages=[]
+          for url in TARGETS:
+              data=fetched[url]
+              text=data.get("text","") if data["status"]==200 else ""
+              head=text.split("</head>",1)[0]
+              canonical=attr(head,r'<link\b(?=[^>]*rel="canonical")[^>]*href="([^"]+)"')
+              if not canonical: canonical=attr(head,r'<link\b(?=[^>]*href="([^"]+)")(?=[^>]*rel="canonical")[^>]*>')
+              da_alt=attr(head,r'<link\b(?=[^>]*hreflang="da")[^>]*href="([^"]+)"')
+              checks={
+                "http_200":data["status"]==200,
+                "html_content_type":"text/html" in data.get("content_type","").lower(),
+                "html_lang_da":bool(re.search(r'<html[^>]+lang="da"',text,re.I)),
+                "title_present":bool(re.search(r'<title>[^<]+</title>',head,re.I)),
+                "one_h1":len(re.findall(r'<h1\b',text,re.I))==1,
+                "canonical_self":canonical==url,
+                "hreflang_da_self":da_alt==url,
+                "two_danish_menu_links":menu_links(text)==[url,url],
+                "footer_selector":'footer-lang-switch' in text,
+                "css_path_relative":'href="../styles.css"' in text,
+              }
+              img=re.search(r'<img\b[^>]*src="([^"]+)"',text,re.I)
+              if img:checks["image_relative_path"]=urljoin(url,img.group(1))!=url
+              pages.append({"url":url,"status":data["status"],"bytes":data.get("bytes"),"title":attr(head,r'<title>([^<]+)</title>'),"checks":checks,"errors":[k for k,v in checks.items() if not v]})
+          samples=[]
+          for url, expected in SAMPLES.items():
+              data=fetched[url]
+              links=menu_links(data.get("text",""))
+              ok=data["status"]==200 and len(links)==2 and all(link==BASE+expected for link in links)
+              samples.append({"url":url,"status":data["status"],"expected_danish":BASE+expected,"menu_links":links,"pass":ok})
+          sitemap=fetched[SITE_URL]
+          sitemap_report={"status":sitemap["status"]}
+          if sitemap["status"]==200:
+              try:
+                  r=ET.fromstring(sitemap["text"])
+                  found=[item.text for item in r.iter() if item.tag.endswith("loc")]
+                  sset=set(found)
+                  sitemap_report.update({"url_count":len(found),"unique_count":len(sset),"danish_count":sum(u.startswith(BASE+"da/") for u in found),"all_danish_listed":all(u in sset for u in TARGETS),"valid_xml":True})
+              except Exception as e:sitemap_report.update({"valid_xml":False,"error":str(e)})
+          assets=[]
+          for url in EXTRAS:
+              data=fetched[url]
+              assets.append({"url":url,"status":data["status"],"bytes":data.get("bytes"),"content_type":data.get("content_type")})
+          success=all(not p["errors"] for p in pages) and all(p["pass"] for p in samples) and all(p["status"]==200 for p in assets) and sitemap_report.get("danish_count")==11 and sitemap_report.get("url_count")==416 and sitemap_report.get("unique_count")==416 and sitemap_report.get("all_danish_listed",False)
+          report={"result":"PASS" if success else "FAIL","method":"Real HTTPS GET from GitHub-hosted Ubuntu runner; HTML and asset checks, not rendered-browser interaction","checked_urls":len(URLS),"danish_pages":pages,"cross_language_navigation":samples,"sitemap":sitemap_report,"assets":assets}
+          Path(".github/danish_live_audit.json").write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+          print(json.dumps({"result":report["result"],"page_failures":[{"url":p["url"],"issues":p["errors"],"status":p["status"]} for p in pages if p["errors"]],"nav_failures":[p for p in samples if not p["pass"]],"sitemap":sitemap_report,"assets":assets},ensure_ascii=False,indent=2))
+          
+          PY
+          rm -f .github/workflows/one-shot-danish-live-audit.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Record independent live HTTPS verification of Danish site' && git push origin HEAD:main
