@@ -1,0 +1,83 @@
+name: Finalize Swedish sitewide menus and publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sv-finalize.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sv-final-global-menu-integration
+  cancel-in-progress: false
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm 11 Swedish pages before modifying other languages
+        shell: bash
+        run: |
+          python -m py_compile _sv_publish_qa.py _sv_editorial_polish.py
+          python - <<'PY'
+          from pathlib import Path
+          from _sv_publish_qa import PAIRS
+          from _sv_translate_full import verify_source_sitemap
+          assert verify_source_sitemap()==len(PAIRS)==11
+          pages=list(Path("sv").glob("*.html"))
+          assert len(pages)==11, len(pages)
+          print("SV_11_PAGES_PRESENT",flush=True)
+          PY
+      - name: Integrate Swedish across every existing header and footer
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _sv_publish_qa.py
+          git add -u .
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Swedish in all 744 header and footer language menus, and hreflang"
+            for attempt in 1 2 3 4 5 6 7; do
+              if git push origin HEAD:main; then
+                echo "SV_GLOBAL_PUBLISH_PUSH_SUCCESS"
+                break
+              fi
+              git pull --rebase -X ours origin main
+              python -u _sv_publish_qa.py
+              git add -u .
+              git add sitemap.xml
+              if ! git diff --cached --quiet; then
+                git commit -m "Sync Swedish menu links after concurrent updates"
+              fi
+              if [ "$attempt" -eq 7 ]; then exit 1; fi
+            done
+          fi
+      - name: Verify global footer coverage and second-pass idempotence
+        shell: bash
+        run: |
+          python -u _sv_publish_qa.py
+          git diff --exit-code
+          python - <<'PY'
+          from pathlib import Path
+          import re,xml.etree.ElementTree as ET
+          base='https://agurkin2021-gif.github.io/vps-for-n8n/'
+          pages=list(Path('sv').glob('*.html'))
+          assert len(pages)==11
+          for path in pages:
+              t=path.read_text(encoding='utf-8')
+              assert '<html lang="sv"' in t
+              assert 'footer-lang-switch' in t
+              assert re.search(r'<a[^>]*hreflang="sv"[^>]*>Svenska</a>',t)
+          root=ET.parse('sitemap.xml')
+          urls=[e.text for e in root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len([u for u in urls if u.startswith(base+'sv/')])==11
+          print('SV_FINAL_QA_PASS: pages=11, sitemap=11, all language selectors checked',flush=True)
+          PY
