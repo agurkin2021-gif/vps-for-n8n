@@ -1,0 +1,212 @@
+name: Hebrew final 3 pages - sitemap 9, 10 and 11
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/he-pages-9-11.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hebrew-sitemap-last-three
+  cancel-in-progress: false
+jobs:
+  translate-verify-save-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate canonical English sitemap and editorial dictionary
+        shell: bash
+        run: |
+          python -m py_compile _he_translate_full.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from _he_translate_full import verify_source_sitemap,PAGES,LOOKUP
+          assert verify_source_sitemap()==len(PAGES)==11
+          assert len(LOOKUP)==11
+          assert [en for en,_ in PAGES[8:]] == [
+            'privacy.html', 'secure-n8n-on-a-vps.html', 'n8n-queue-mode.html'
+          ]
+          d=json.loads(Path('.github/he-editorial.json').read_text(encoding='utf-8'))
+          assert len(d)>=1580, len(d)
+          for en in ('Privacy Policy | n8nVPS','Secure n8n on a VPS','n8n Queue Mode'):
+            assert en in d and len(d[en])>2
+          print('HE_SOURCE_SITEMAP_11_AND_EDITORIAL_PASS',len(d),flush=True)
+          PY
+      - name: PAGE 9 - TRANSLATE VERIFY SAVE privacy
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _he_translate_full.py 8
+          python - <<'PY'
+          from _he_translate_full import ROOT,PAGES,validate
+          en,he=PAGES[8]
+          s=(ROOT/en).read_text(encoding='utf-8')
+          t=(ROOT/he).read_text(encoding='utf-8')
+          validate(s,t,en,he)
+          assert 'מדיניות פרטיות | n8nVPS' in t
+          assert 'אנליטיקה וקישורי שותפים' in t
+          assert '<html lang="he" dir="rtl">' in t
+          assert t.count('>עברית</a>')==2
+          print('HE_PAGE_9_PRIVACY_PASS',flush=True)
+          PY
+          git add he/privacy.html .github/he-translation-cache.json
+          git commit -m "Translate verify save Hebrew sitemap page 9 Privacy"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo HE_PAGE_9_SAVED_AND_PUBLISHED
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: PAGE 10 - TRANSLATE VERIFY SAVE security
+        shell: bash
+        run: |
+          python -u _he_translate_full.py 9
+          python - <<'PY'
+          import re,json
+          from _he_translate_full import ROOT,PAGES,validate
+          en,he=PAGES[9]
+          s=(ROOT/en).read_text(encoding='utf-8')
+          t=(ROOT/he).read_text(encoding='utf-8')
+          validate(s,t,en,he)
+          assert '<html lang="he" dir="rtl">' in t
+          assert 'אבטחת n8n על שרת VPS' in t
+          assert all(k in t for k in ('HTTPS','Redis','PostgreSQL','SSRF','MFA'))
+          assert all(k in t for k in ('5678','5432','6379'))
+          assert t.count('>עברית</a>')==2
+          for v in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',t,re.S|re.I):
+              json.loads(v)
+          print('HE_PAGE_10_SECURITY_PASS',flush=True)
+          PY
+          git add he/secure-n8n-on-a-vps.html .github/he-translation-cache.json
+          git commit -m "Translate verify save Hebrew sitemap page 10 security"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo HE_PAGE_10_SAVED_AND_PUBLISHED
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: PAGE 11 - TRANSLATE VERIFY SAVE queue mode
+        shell: bash
+        run: |
+          python -u _he_translate_full.py 10
+          python - <<'PY'
+          import re,json
+          from _he_translate_full import ROOT,PAGES,validate
+          en,he=PAGES[10]
+          s=(ROOT/en).read_text(encoding='utf-8')
+          t=(ROOT/he).read_text(encoding='utf-8')
+          validate(s,t,en,he)
+          assert '<html lang="he" dir="rtl">' in t
+          assert 'מצב תור (Queue Mode) ב-n8n' in t
+          assert all(k in t for k in ('Redis','PostgreSQL','Worker','SQLite'))
+          assert all(k in t for k in ('64 MiB','2.34.0'))
+          assert t.count('>עברית</a>')==2
+          for v in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',t,re.S|re.I):
+              json.loads(v)
+          print('HE_PAGE_11_QUEUE_MODE_PASS',flush=True)
+          PY
+          git add he/n8n-queue-mode.html .github/he-translation-cache.json
+          git commit -m "Translate verify save Hebrew sitemap page 11 Queue Mode"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo HE_PAGE_11_SAVED_AND_PUBLISHED
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: Complete all eleven Hebrew URLs in the sitemap
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,BASE,PAGES,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          p=ROOT/'sitemap.xml'
+          data=p.read_text(encoding='utf-8')
+          existing=[node.text for node in ET.fromstring(data).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          for en,he in PAGES[8:]:
+              assert (ROOT/he).is_file(),he
+              url=BASE+he
+              if url not in existing:
+                  data=data.replace('</urlset>', '  <url><loc>'+url+'</loc></url>\n</urlset>',1)
+                  existing.append(url)
+          p.write_text(data,encoding='utf-8')
+          ET.parse(p)
+          assert len([u for u in existing if u.startswith(BASE+'he/')])==11
+          assert len(existing)==len(set(existing))
+          expected={BASE+('he/' if he=='he/index.html' else he) for _,he in PAGES}
+          assert expected <= set(existing)
+          print('HE_SITEMAP_FINAL_11_OF_11_PASS',flush=True)
+          PY
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish complete Hebrew 11 of 11 in sitemap.xml"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final all 11 page parity, source code, RTL, sitemap and SEO QA
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,json,xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,PAGES,BASE,validate,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          found=sorted((ROOT/'he').glob('*.html'))
+          assert len(found)==11,found
+          all_urls=[x.text for x in ET.parse(ROOT/'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len([u for u in all_urls if u.startswith(BASE+'he/')])==11
+          for en,he in PAGES:
+              source=(ROOT/en).read_text(encoding='utf-8')
+              target=(ROOT/he).read_text(encoding='utf-8')
+              validate(source,target,en,he)
+              assert re.search(r'<html\b[^>]*lang="he"[^>]*dir="rtl"',target)
+              assert len(re.findall(r'<h1(?:\s|>)',target,re.I))==1
+              assert target.count('>עברית</a>')==2
+              assert not re.search(r'<meta\b[^>]*noindex',target,re.I)
+              canonical=BASE+('he/' if he=='he/index.html' else he)
+              assert canonical in all_urls and canonical in target
+              for tag in ('style','script','pre','code'):
+                  if tag=='script':
+                      pat=r'<script\b(?![^>]*application/ld\+json)[^>]*>([\s\S]*?)</script>'
+                  else:
+                      pat=r'<'+tag+r'\b[^>]*>([\s\S]*?)</'+tag+r'>'
+                  assert re.findall(pat,source,re.I)==re.findall(pat,target,re.I),he+': '+tag
+              for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',target,re.I|re.S):
+                  json.loads(block)
+              print('HE_PAGE_VERIFIED',he,flush=True)
+          print('HE_FULL_11_OF_11_QA_PASS',flush=True)
+          PY
+          git diff --exit-code
+      - name: Checkpoint interrupted translation without skipping page verification
+        if: failure()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/he-translation-cache.json he/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint verified Hebrew translation after interruption"
+            git push origin HEAD:main || true
+          fi
