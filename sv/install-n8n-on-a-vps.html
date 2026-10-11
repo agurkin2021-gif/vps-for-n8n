@@ -82,7 +82,7 @@
 </g>
 <g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
 </svg></a></div></section>
-<section class="section dark"><p class="eyebrow">Förkunskaper</p><h2>Förbered VPS innan du börjar n8n</h2><div class="cards">
+<section class="section dark"><p class="eyebrow">Förkunskaper</p><h2>Förbered VPS:en innan du installerar n8n</h2><div class="cards">
 <article><h3>Linux VPS</h3><p>Använd en bibehållen Linux-server som är dimensionerad för n8n, PostgreSQL, Docker och den omvända proxyn.</p></article>
 <article><h3>DNS</h3><p>Placera en domän eller underdomain på VPS innan du utfärdar TLS certifikat och publicera webhook-adresser.</p></article>
 <article><h3>Docker Compose</h3><p>Installera Docker Motor och komponera plugin med hjälp av stödpaket för operativsystemet.</p></article>
@@ -98,7 +98,7 @@
 <section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">COPY-AND-ADAPT INSTALLATION</p><h2>Installera n8n på din VPS med Docker Compose</h2>
 <p>Använd detta exempel för att bygga en n8n driftsättning på en <strong>Självhanterad Linux VPS</strong>Du installerar och upprätthåller n8n själv; välja en server genom vår partner inkluderar inte en förinstallerad n8n instans. Exemplet kombinerar n8n, PostgreSQL, en extern uppgiftslöpare och Caddy HTTPS i ett privat sammansatt nätverk. Det är en konfigurationsmall, <strong>Inte ett krav på en live-testad driftsättning</strong>.</p>
 <p><strong>Vill du ha den snabbaste färska installationen istället?</strong> n8n ger också en officiell en-linje Docker setup. Du kan ladda ner och granska skriptet med <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> Innan du kör <code>sh get-n8n.sh</code>Det alternativet startar ett första instans med SQLite på en lokal URL och inkluderar n8n Assistant sandbox-tjänster; det är <strong>Inte samma</strong> som denna offentlig- HTTPS, PostgreSQL-stödda VPS driftsättning. Den officiella fulla sandlåda stack behöver mer RAM och CPU än en lean n8n installation (dess Compose guide anger minst 4 GB RAM / 2 vCPU). För en internetansluten produktion VPS, fortsätt med den manuellt konfigurerade stacken nedan.</p>
-<h3>1. Förbered Docker, DNS och tillgång</h3>
+<h3>1. Förbered Docker, DNS och åtkomst</h3>
 <p>Anslut över SSH med sudo access och peka en DNS A rekord för <code>n8n.example.com</code> till din VPS IPv4-adress. På en <strong>färsk Ubuntu 22.04, 24.04 eller 26.04</strong> VPS, följande kommandon installerar Docker Motor och den moderna <code>docker compose</code> plugin från Docker s officiella undertecknade <code>apt</code> Repository:</p>
 <pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
 sudo apt update
@@ -127,7 +127,7 @@ getent hosts n8n.example.com
 mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <p>Om <code>getent hosts</code> returnerar ingen adress eller fel adress, korrigera din DNS innan du börjar Caddy; ersätta <code>n8n.example.com</code> genom denna guide med ditt riktiga värdnamn. Docker kräver normalt rotprivilegier: om din SSH-användare inte kan köra den senare <code>docker compose</code> kommandon direkt, prefixa dem med <code>sudo</code>Lägga till en användare till användaren <code>docker</code> gruppen ger root-ekvivalent tillgång och bör inte göras tillfälligt på en delad server.</p>
 <p>Håll din faktiska SSH-administrationsport tillgänglig innan du aktiverar en brandvägg. Tillåt inkommande HTTP (80) och HTTPS (443) för utfärdande av certifikat och redaktör. Docker-publicerade containerhamnar kan kringgå vissa UFW-regler, så se över Docker s brandväggsvägledning och publicera endast de avsedda Caddy-portarna. Detta komponerar exempel medvetet gör <strong>Inte inte</strong> offentliggöra PostgreSQL (5432), n8n (5678) eller arbetsförmedlare (5679) till det allmänna internet.</p>
-<h3>2Skapa miljövärden och bevara nyckeln</h3>
+<h3>2. Skapa miljövariabler och spara krypteringsnyckeln</h3>
 <p>Från projektkatalogen genererar tre <strong>olika</strong> slumpmässiga hexadecimalvärden med:</p>
 <pre><code>openssl rand -hex 32
 openssl rand -hex 32
@@ -142,7 +142,7 @@ POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
 N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
 RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
 <p>Begå aldrig <code>.env</code> till ett offentligt förvar. Lagra krypteringsnyckeln och återställningsinstruktionerna säkert av VPS. Nyckeln måste vara densamma efter behållare rekreation eller migration.</p>
-<h3>3. Skriv compose.yaml för en ny installation</h3>
+<h3>3. Skapa compose.yaml för en ny installation</h3>
 <p>I samma katalog, skapa <code>compose.yaml</code>Exemplet använder de officiella n8n miljövänliga konventionerna och PostgreSQL 18 <code>PGDATA</code> Väg dokumenterad av värdprojektet n8n:</p>
 <pre><code>services:
   postgres:
@@ -217,13 +217,13 @@ volumes:
   caddy_data:
   caddy_config:</code></pre>
 <p>De fyra tjänsterna har olika roller: PostgreSQL lagrar databasstat, n8n driver arbetsflöden, <code>n8n-runner</code> utför löparuppgifter med en matchande version och delad autentiseringstoken, och Caddy hanterar offentlig HTTPS. En extern <em>Uppgift Runer</em> är inte Redis köläge. Endast Caddy publicerar värdportar. Denna magra illustration använder en enda databasroll för inställning, för starkare separation av PostgreSQL privilegier, konsultera den officiella n8n PostgreSQL driftsättningsexemplet.</p>
-<h3>4. Skapa HTTPS Caddyfile</h3>
+<h3>4. Skapa en Caddyfile för HTTPS</h3>
 <p>Skapa filen <code>Caddyfile</code> (kapital C, ingen förlängning) tillsammans <code>compose.yaml</code>Ersätt exemplet värdnamn överallt med ditt eget DNS namn:</p>
 <pre><code>n8n.example.com {
     reverse_proxy n8n:5678
 }</code></pre>
 <p>Caddy Förfrågningar och förnyar offentliga TLS certifikat när domänen löser korrekt och extern trafik kan nå hamnarna 80/443. Peka inte DNS till <code>localhost</code>Om du ersätter Caddy med en annan omvänd proxy, vidarebefordra den ursprungliga värden, protokoll och klientadressrubriker och justera <code>N8N_PROXY_HOPS</code> för det faktiska antalet betrodda proxyhopp.</p>
-<h3>5. Starta behållarna och testa utifrån</h3>
+<h3>5. Starta containrarna och testa extern åtkomst</h3>
 <p>Kör dessa kommandon från projektkatalogen efter att ha sparat <code>.env</code>, <code>compose.yaml</code> och <code>Caddyfile</code>:</p>
 <pre><code>chmod 600 .env
 docker compose config --quiet
@@ -238,8 +238,8 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 <li><strong>Publicera</strong> arbetsflödet, växla noden till dess <strong>ProduktionsURL</strong>Kopiera den och spring <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> igen. Bekräfta utförandet under arbetsflödet <strong>Avrättningar</strong> Tab. Produktions webhook-förfrågningar behöver arbetsflödet publiceras och visar inte sin nyttolast i redaktörens testvy.</li>
 </ol>
 <p>Detta är ett medvetet enkelt, oautentiserat röktest: skicka aldrig hemligheter till det. Publicera / ta bort det efter testning eller konfigurera Webhook-autentisering / IP-restriktioner innan du använder en offentlig slutpunkt för riktiga data. Se den officiella Webhook test/produktion dokumentation.</p>
-<h3>6. Back up innan du ändrar stiftade versioner</h3>
-<p>Spara en återhämtningsbar PostgreSQL dumpa <em>och</em> den ihållande n8n datavolymen, <code>.env</code>/krypteringsnyckel och krävde externa filer för lagring utanför denna server. Verifiera en återställning med hjälp av <a href="n8n-backup-and-restore.html">backup och recovery guide</a> före uppdatering av produktionen. Exempel kommandon:</p>
+<h3>6. Säkerhetskopiera innan du ändrar låsta versioner</h3>
+<p>Spara en återhämtningsbar PostgreSQL dumpa <em>och</em> den ihållande n8n-datavolymen, <code>.env</code>/krypteringsnyckel och krävde externa filer för lagring utanför denna server. Verifiera en återställning med hjälp av <a href="n8n-backup-and-restore.html">backup och recovery guide</a> före uppdatering av produktionen. Exempel kommandon:</p>
 <pre><code># Back up the database, encryption key, instance data,
 # and files before changing the pinned versions.
 docker compose exec -T postgres \
@@ -254,12 +254,12 @@ docker compose ps</code></pre>
 <section class="section dark"><p class="eyebrow">Förtroende</p><h2>Ställ in hemligheter och offentliga webbadresser medvetet</h2><div class="cards">
 <article><h3>Krypteringsnyckeln</h3><p>Ställ in och bevara en stark krypteringsnyckel på n8n innan produktionsuppgifter lagras. Samma nyckel krävs efter återhämtning.</p></article>
 <article><h3>Inloggningsuppgifter för PostgreSQL</h3><p>Använd dedikerade databasuppgifter och hålla lösenord utanför offentlig källkontroll.</p></article>
-<article><h3>Offentlig värdnamn</h3><p>Konfigurera det verkliga externa värdnamnet och HTTPS ursprung snarare än en intern behållare adress.</p></article>
-<article><h3>Webhook URL</h3><p>Set <code>N8N_WEBHOOK_URL</code> till den offentligt nåbara HTTPS bas URL och ställd <code>N8N_PROXY_HOPS=1</code> När det finns en pålitlig omvänd proxy. <code>WEBHOOK_URL</code> är ett förfallet alias i n8n 2.35.0 och senare; undvika att kopiera det från äldre handledning.</p></article>
+<article><h3>Offentligt värdnamn</h3><p>Konfigurera det verkliga externa värdnamnet och HTTPS ursprung snarare än en intern behållare adress.</p></article>
+<article><h3>Webhook-URL</h3><p>Set <code>N8N_WEBHOOK_URL</code> till den offentligt nåbara HTTPS bas URL och ställd <code>N8N_PROXY_HOPS=1</code> När det finns en pålitlig omvänd proxy. <code>WEBHOOK_URL</code> är ett förfallet alias i n8n 2.35.0 och senare; undvika att kopiera det från äldre handledning.</p></article>
 </div></section>
-<section class="section"><p class="eyebrow">PERSISTENCE</p><h2>Persist n8n och PostgreSQL separat</h2><div class="cards">
-<article><h3>n8n data</h3><p>Mount ihållande lagring för n8n datakatalogen så kritisk instans staten överlever behållare rekreation.</p></article>
-<article><h3>PostgreSQL data</h3><p>Bestå databaskatalogen oberoende av PostgreSQL behållaren.</p></article>
+<section class="section"><p class="eyebrow">PERSISTENCE</p><h2>Spara data för n8n och PostgreSQL separat</h2><div class="cards">
+<article><h3>n8n-data</h3><p>Mount ihållande lagring för n8n-datakatalogen så kritisk instans staten överlever behållare rekreation.</p></article>
+<article><h3>PostgreSQL-data</h3><p>Bestå databaskatalogen oberoende av PostgreSQL behållaren.</p></article>
 <article><h3>Filbehörighet</h3><p>Gör monterade vägar skrivbara av den avsedda behållaren användare utan att göra värdlagring onödigt tillåten.</p></article>
 <article><h3>Workflow filer</h3><p>Bestå alla monterade filer eller binär datalagring som produktionsflöden beror på.</p></article></div></section>
 <section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>Anslut n8n till den privata databastjänsten</h2><div class="requirements">
