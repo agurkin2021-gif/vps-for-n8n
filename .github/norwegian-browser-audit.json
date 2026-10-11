@@ -1,13 +1,13 @@
 {
-  "checked_at_utc": "2026-10-11T18:26:57.840737+00:00",
-  "run_id": "38163705913",
+  "checked_at_utc": "2026-10-11T18:29:00.177548+00:00",
+  "run_id": "38163928302",
   "browser": "Playwright Chromium headless",
   "mobile_width": 390,
   "desktop_width": 1280,
   "pages": 11,
   "cases": 22,
-  "passed": 12,
-  "all_passed": false,
+  "passed": 22,
+  "all_passed": true,
   "results": [
     {
       "page": "(home)",
@@ -47,7 +47,7 @@
       "page": "best-vps-for-n8n.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/best-vps-for-n8n.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -65,20 +65,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Beste VPS for n8n: 6 leverandører sammenlignet</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\" id=\"language-menu-0\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      -"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": " sammenlignet</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\" id=\"language-menu-0\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\" id=\"language-menu-0\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\" id=\"language-menu-0\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "about.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/about.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -96,20 +99,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Om n8nVPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling "
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Om n8nVPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "n8n-backup-and-restore.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-backup-and-restore.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -127,20 +133,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Sikkerhetskopiering og gjenoppretting av n8n</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, en"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "t\n    - locator resolved to <h1>Sikkerhetskopiering og gjenoppretting av n8n</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "contact.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/contact.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -158,20 +167,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Kontakt</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling in"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "g:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Kontakt</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "install-n8n-on-a-vps.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/install-n8n-on-a-vps.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -189,20 +201,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Installer n8n på en VPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n    "
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "or locator(\"h1\").first\n    - locator resolved to <h1>Installer n8n på en VPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "n8n-cloud-vs-self-hosted.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-cloud-vs-self-hosted.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -220,20 +235,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>n8n Cloud vs. selvhosting</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n  "
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": " locator(\"h1\").first\n    - locator resolved to <h1>n8n Cloud vs. selvhosting</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "n8n-vps-requirements.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-vps-requirements.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -251,20 +269,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>VPS-krav for n8n</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scr"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "iting for locator(\"h1\").first\n    - locator resolved to <h1>VPS-krav for n8n</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "privacy.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/privacy.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -282,20 +303,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Personvern</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Personvern</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "secure-n8n-on-a-vps.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/secure-n8n-on-a-vps.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -313,20 +337,23 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>Sikre n8n på en VPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - "
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": "ng for locator(\"h1\").first\n    - locator resolved to <h1>Sikre n8n på en VPS</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "n8n-queue-mode.html",
       "viewport": "mobile",
       "url": "https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-queue-mode.html",
-      "passed": false,
+      "passed": true,
       "checks": {
         "http_200": true,
         "title_present": true,
@@ -344,14 +371,17 @@
         "screenshot_saved": true,
         "header_menu_opens_on_click": true,
         "header_menu_fits_mobile_width": true,
-        "header_menu_closes_escape": true
+        "header_menu_closes_escape": true,
+        "header_menu_closes_outside_click": true,
+        "footer_menu_opens_on_click": true,
+        "footer_menu_fits_mobile_width": true,
+        "footer_menu_closes_escape": true,
+        "footer_menu_closes_outside_click": true,
+        "no_uncaught_javascript_errors": true
       },
-      "issues": [
-        "Locator.click: Timeout 8000ms exceeded.\nCall log:\n  - waiting for locator(\"h1\").first\n    - locator resolved to <h1>n8n i kømodus</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scroll"
-      ],
+      "issues": [],
       "horizontal_overflow_px": 0,
-      "unexpected_internal_targets": [],
-      "traceback": " waiting for locator(\"h1\").first\n    - locator resolved to <h1>n8n i kømodus</h1>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 100ms\n    - waiting for element to be visible, enabled and stable\n    - element is not stable\n  14 × retrying click action\n       - waiting 500ms\n       - waiting for element to be visible, enabled and stable\n       - element is visible, enabled and stable\n       - scrolling into view if needed\n       - done scrolling\n       - <div class=\"lang-menu\">…</div> from <header>…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n\n"
+      "unexpected_internal_targets": []
     },
     {
       "page": "(home)",
