@@ -111,24 +111,29 @@ def restore_numbers(s: str, stored):
         raise ValueError(f"Unresolved technical sentinels: {s[:160]!r}")
     return s.replace("§", "")
 
+_OFFLINE_TRANSLATOR=None
+
 def remote_translate(input_text: str) -> str:
-    """Translate a batch of independent English segments to idiomatic Hebrew."""
-    query=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"he","dt":"t","q":input_text})
-    url="https://translate.googleapis.com/translate_a/single?"+query
-    error=None
-    for attempt in range(7):
-        try:
-            request=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (compatible; article-localizer/1.0)"})
-            with urllib.request.urlopen(request,timeout=35) as response:
-                obj=json.load(response)
-            output="".join(part[0] or "" for part in obj[0] if part and part[0] is not None)
-            if not output.strip():raise ValueError("Translation service returned empty text")
-            return output
-        except Exception as exc:
-            error=exc
-            print("HU_TRANSLATE_RETRY",attempt,type(exc).__name__,str(exc)[:120],flush=True)
-            time.sleep(min(40,2**attempt+.4))
-    raise RuntimeError("Hebrew translation endpoint unavailable") from error
+    """Translate segments using a locally installed English-to-Hebrew model."""
+    global _OFFLINE_TRANSLATOR
+    if _OFFLINE_TRANSLATOR is None:
+        import argostranslate.translate as offline
+        languages=offline.get_installed_languages()
+        src=next((x for x in languages if x.code=="en"),None)
+        dst=next((x for x in languages if x.code=="he"),None)
+        if src is None or dst is None:
+            raise RuntimeError("English to Hebrew offline translation pack missing")
+        _OFFLINE_TRANSLATOR=src.get_translation(dst)
+        if _OFFLINE_TRANSLATOR is None:
+            raise RuntimeError("English to Hebrew offline translation is unavailable")
+    output=[]
+    for item in input_text.split(SEP):
+        translated=_OFFLINE_TRANSLATOR.translate(item)
+        if not translated.strip():
+            raise ValueError("Hebrew model returned an empty translation")
+        output.append(translated)
+    return SEP.join(output)
+
 
 def preserve_exact_when_model_drops_token(raw: str) -> str:
     """Last-resort token-preserving translation, only when sentence masking fails."""
