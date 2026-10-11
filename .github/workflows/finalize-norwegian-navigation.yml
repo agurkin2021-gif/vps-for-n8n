@@ -1,0 +1,168 @@
+name: Finalize Norwegian navigation across all pages
+on:
+  push:
+    paths:
+      - ".github/workflows/finalize-norwegian-navigation.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Add Norsk in header and footer on every HTML page
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import json
+          from urllib.parse import urlparse
+
+          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          NO_DIR = Path("no")
+          EN_FILES = ("index.html", "best-vps-for-n8n.html", "about.html",
+                      "n8n-backup-and-restore.html", "contact.html",
+                      "install-n8n-on-a-vps.html", "n8n-cloud-vs-self-hosted.html",
+                      "n8n-vps-requirements.html", "privacy.html",
+                      "secure-n8n-on-a-vps.html", "n8n-queue-mode.html")
+          MENU = re.compile(r'(<div\b[^>]*\bclass=["\'][^"\']*\blang-menu\b[^"\']*["\'][^>]*>)(.*?)(</div>)', re.I | re.S)
+          ANCHOR = re.compile(r'<a\b[^>]*>.*?</a>', re.I | re.S)
+          ATTR = lambda a, name: (re.search(r'\b'+name+r'=["\']([^"\']+)["\']', a, re.I) or [None, ""])[1]
+          LABEL = re.compile(r'<[^>]*>')
+          CODES = {"English":"en","Italiano":"it","Polski":"pl","Norsk":"no","Español":"es",
+                   "Русский":"ru","Português":"pt-br","Deutsch":"de","हिन्दी":"hi",
+                   "বাংলা":"bn","日本語":"ja","ਪੰਜਾਬੀ":"pa","मराठी":"mr","తెలుగు":"te",
+                   "தமிழ்":"ta","Türkçe":"tr","Tiếng Việt":"vi","한국어":"ko",
+                   "Français":"fr","فارسی":"fa","العربية":"ar","Bahasa Indonesia":"id",
+                   "Română":"ro","Nederlands":"nl","ไทย":"th","Azərbaycanca":"az",
+                   "Ελληνικά":"el","繁體中文":"zh-tw","简体中文":"zh-cn","Català":"ca",
+                   "Magyar":"hu","Čeština":"cs","Български":"bg","Svenska":"sv",
+                   "Srpski":"sr","עברית":"he","Suomi":"fi","Dansk":"da"}
+
+          def href(a):
+              return ATTR(a,"href")
+          def key(a):
+              lng = ATTR(a,"hreflang") or ATTR(a,"lang")
+              if lng:
+                  return lng.lower()
+              label = LABEL.sub("",a).strip()
+              if label in CODES:
+                  return CODES[label]
+              target = href(a)
+              if target.startswith(BASE):
+                  p = target[len(BASE):].split("/")
+                  if p and p[0] in set(CODES.values()):
+                      return p[0]
+              return label
+          def listanchors(section):
+              return ANCHOR.findall(section)
+          def menus(content):
+              return list(MENU.finditer(content))
+          def choose(src,code):
+              return next((a for a in src if key(a)==code),None)
+          def equivalent(src):
+              # Dansk is the stable 11-page comparator; fall back to English.
+              danish = choose(src,"da")
+              if danish and href(danish).startswith(BASE+"da/"):
+                  tail=href(danish)[len(BASE+"da/"):]
+                  if (NO_DIR / (tail if tail else "index.html")).is_file():
+                      return tail
+              en=choose(src,"en")
+              if en and href(en).startswith(BASE):
+                  tail=href(en)[len(BASE):]
+                  if tail in ("", "index.html"): return ""
+                  if tail in EN_FILES and (NO_DIR / tail).is_file(): return tail
+              return ""
+
+          eng={}
+          for filename in EN_FILES:
+              s=Path(filename).read_text(encoding="utf-8")
+              m=menus(s)
+              if len(m)!=2: raise RuntimeError("English reference missing menus: "+filename)
+              arr=listanchors(m[-1].group(2))
+              if len(arr)<38 or not choose(arr,"no"): raise RuntimeError("Incomplete reference: "+filename)
+              eng[filename]=arr
+
+          stats=dict(scanned=0,updated=0,already_ok=0,skipped=[],missing_norwegian=[],synced=0,seo_added=0,regional_home_links=0)
+          for file in sorted(Path(".").rglob("*.html")):
+              if any(p in (".git","node_modules","_site") for p in file.parts): continue
+              if file.parts and file.parts[0]=="no": continue
+              stats["scanned"]+=1
+              source=file.read_text(encoding="utf-8")
+              m=menus(source)
+              if len(m)!=2:
+                  stats["skipped"].append(str(file))
+                  continue
+              up=listanchors(m[0].group(2))
+              bottom=listanchors(m[1].group(2))
+              if len(up)<10 or len(bottom)<10:
+                  stats["skipped"].append(str(file))
+                  continue
+              present=bottom+up
+              if not choose(present,"da"): 
+                  stats["missing_norwegian"].append(str(file)+": missing Dansk")
+                  continue
+              tail=equivalent(present)
+              nor=BASE+"no/"+tail
+              en_anchor=choose(present,"en")
+              en_path=href(en_anchor)[len(BASE):] if en_anchor and href(en_anchor).startswith(BASE) else ""
+              en_file=en_path if en_path in EN_FILES else "index.html"
+              reference=eng[en_file]
+              bykey={}
+              for a in bottom+up+reference:
+                  k=key(a)
+                  if k not in bykey:
+                      bykey[k]=a
+              no_anchor='<a href="'+nor+'" hreflang="no" lang="no">Norsk</a>'
+              bykey["no"]=no_anchor
+              seq=[]
+              for a in reference+bottom+up:
+                  k=key(a)
+                  if k not in seq:
+                      seq.append(k)
+              if "no" not in seq: seq.append("no")
+              newanchors=[bykey[k] for k in seq]
+              fragment="".join(newanchors)
+              def replace_menu(mm):
+                  return mm.group(1)+fragment+mm.group(3)
+              updated=MENU.sub(replace_menu,source)
+              # On an exact page counterpart, reciprocal hreflang is valid.
+              is_home = file.name=="index.html" and (file.parent==Path(".") or file.parent.name in CODES.values())
+              counterpart=(tail!="" or is_home)
+              if counterpart and not re.search(r'<link\b(?=[^>]*\bhreflang=["\']no["\'])[^>]*>', updated, re.I):
+                  updated=re.sub(r'</head>', '<link rel="alternate" hreflang="no" href="'+nor+'"/></head>',updated,count=1,flags=re.I)
+                  stats["seo_added"]+=1
+              check=menus(updated)
+              if len(check)!=2:
+                  raise RuntimeError("Bad menu count: "+str(file))
+              chk=[listanchors(x.group(2)) for x in check]
+              langlists=[[key(x) for x in a] for a in chk]
+              if langlists[0]!=langlists[1] or len(set(langlists[0]))!=len(langlists[0]) or len(langlists[0])<38 or langlists[0].count("no")!=1:
+                  raise RuntimeError("Invalid menus: "+str(file)+" "+repr(langlists))
+              if updated!=source:
+                  file.write_text(updated,encoding="utf-8")
+                  stats["updated"]+=1
+                  if tail=="":stats["regional_home_links"]+=1
+              else:stats["already_ok"]+=1
+              stats["synced"]+=1
+
+          print(json.dumps(stats,ensure_ascii=False,indent=2))
+          if stats["skipped"] or stats["missing_norwegian"]:
+              # Don't commit a misleading "complete" site if some HTML pages failed.
+              raise SystemExit("Unprocessed HTML pages: see the audit above")
+
+          PY
+      - name: Publish navigation changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Synchronize Norwegian navigation across all languages"
+            git push origin HEAD:main
+          fi
