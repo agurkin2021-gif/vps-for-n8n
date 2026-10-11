@@ -1,0 +1,105 @@
+110|Køtilstand understøtter ikke filbaseret lagring af binære data som fælles vedvarende lagringsmodel for distribuerede workers.
+111|Ekstern lagring af binære data
+112|Når workflows skal bevare binære data på tværs af distribuerede workers, skal du bruge en lagerarkitektur, som alle nødvendige instanser kan tilgå, eksempelvis understøttet ekstern objektlagring.
+113|Store webhook-svar
+114|Webhook-svar fra workers sendes tilbage mod den modtagende proces. Store svar kan øge hukommelsesbelastningen i Redis og kræve bevidst konfiguration af lagring af svar.
+115|Planlæg, før du fordeler workers
+116|En arbejdsbelastning, der afhænger meget af lokale filer, skal ombygges til delt vedvarende lagring, før workers fordeles på flere maskiner.
+117|Grænse for store webhook-svar.
+118|Den aktuelle n8n-dokumentation angiver
+119|en standardværdi på
+120|64 MiB
+121|for et workersvar sendt tilbage gennem køen. Redis kan holde flere kopier undervejs, så budgettér med cirka 1.5 gange svarets størrelse i Redis-hukommelse pr. samtidigt stort svar. Uden aflastning fejler et for stort svar i stedet for på magisk vis at blive hurtigere med flere workers.
+122|Versions- og licensgrænser.
+123|Fra n8n
+124|2.34.0
+125|kan workers bruge
+126|til at flytte for store webhook-svar til læsbar fælles lagring af binære data, men opgrader først
+127|alle hoved- og webhookprocessorer
+128|til 2.34.0 eller nyere. Den valgte
+129|skal rent faktisk gemme data og kunne læses af alle deltagende processer. Ekstern S3- og Azure-lagring af binære data kræver en gyldig selvhostet
+130|Business- eller Enterprise-
+131|licens. Antag ikke, at Community Edition kan aktivere dem. Den
+132|binære tilstand kan flytte et for stort svar uden betalt eksternt lager, men hovedinstansen indlæser hele det gemte indhold i hukommelsen, og databaselagringen har sin egen grænse for filstørrelse. For
+133|aflastning af svarindhold specifikt
+134|beskriver n8n også en mulighed med delt
+135|lagring, hvor alle instanser monterer samme disk, men anbefaler udtrykkeligt ikke denne løsning. Forveksl ikke denne særlige vej til aflastning med understøttelse af filbaseret vedvarende lagring af binære data i en distribueret installation med køtilstand. Kontrollér udgave, version og lagerkonfiguration, før du aktiverer aflastning.
+136|OVERVÅGNING
+137|Undersøg, om køen faktisk hjælper
+138|Kølængde
+139|Hvis køen vokser hurtigere, end workers kan tømme den, er kørselskapaciteten utilstrækkelig, eller der er en anden flaskehals.
+140|Worker-CPU og RAM
+141|Mål belastning og hukommelsestoppe for hver worker. Hvis der står ledige workers, mens køen vokser, ligger begrænsningen et andet sted.
+142|Kørselsforsinkelse
+143|Mål forsinkelsen fra en kørsel oprettes, til den faktisk begynder, ikke kun selve workflowets køretid.
+144|Sundhedskontroller
+145|Health-endpoints for workers kan vise, om en worker kører, og om forbindelserne til databasen og Redis er klar.
+146|Kontrollér kørsel på en worker, ikke kun en grøn containerstatus.
+147|Kontrollér i en korrekt konfigureret Compose-installation
+148|og
+149|(erstat tjenestenavnet, hvis det er anderledes). Kør et harmløst
+150|publiceret produktionsworkflow
+151|med en planlagt trigger eller testwebhook, og sammenhold derefter kørslen i n8n's Executions-visning med faktisk behandling i workerens logfiler. At editoren åbner, en Redis-container kører, eller en kørsel er sat i kø, beviser
+152|ikke
+153|i sig selv, at en worker har udført opgaven.
+154|Kontrollér afhængigheder og tilgængelighed.
+155|Med eksemplernes standardnavne på tjenester bør
+156|modtage
+157|, når Redis-godkendelsen tillader det, og
+158|kontrollerer, om PostgreSQL er klar (tilpas legitimationsoplysninger og tjenestenavne). Aktivér
+159|på en worker, når du behøver dens private endpoints for
+160|og
+161|; readiness-endpointet kontrollerer forbindelser til Redis og databasen. Åbn ikke disse workerendpoints offentligt blot for at overvåge dem.
+162|Manuelle kørsler er en anden test.
+163|Som standard
+164|, så manuel kørsel af et workflow i editoren kan udføres på hovedprocessen, selv når køtilstand er korrekt konfigureret. Sæt den kun til
+165|, hvis du vil sende manuelle kørsler til workers og har afprøvet ændringen i et stagingmiljø. Workers i køtilstand er også forskellige fra n8n's eksterne task runners, som har særskilte konfigurationskrav til kørsel af Code-noder.
+166|VEJ TIL SKALERING
+167|Fjern én flaskehals ad gangen
+168|Trin 1
+169|Én n8n-instans med PostgreSQL; mål maksimal CPU-, RAM-belastning og samtidighed.
+170|Trin 2
+171|Øg VPS-ressourcerne, når vertikal skalering stadig kan fjerne den målte flaskehals uden problemer.
+172|Trin 3
+173|Indfør Redis og workers, når vedvarende parallel belastning begrunder distribueret kørsel.
+174|Trin 4
+175|Tilføj workers, eller juster samtidighed pr. worker, mens du overvåger PostgreSQL, Redis og kørselsforsinkelse.
+176|Trin 5
+177|Fordel kun komponenter på flere servere, når kapacitet, tilgængelighed eller driftskrav retfærdiggør den ekstra kompleksitet.
+178|Vælg større VPS-kapacitet, når skalering kræver det
+179|Partnerlink: Vi kan modtage provision ved køb.
+180|GRÆNSER FOR HØJ TILGÆNGELIGHED
+181|Køtilstand skalerer kørsler, men gør ikke automatisk hovedprocessen højtilgængelig
+182|Del krypteringsnøglen
+183|Hver worker skal bruge den samme
+184|som hovedinstansen, så workers kan dekryptere de legitimationsoplysninger, som workflowkørslerne behøver.
+185|Hold versionerne ens
+186|Hoved-, webhook- og workerprocesser bør køre samme n8n-version. Blandede versioner kan medføre inkompatibel adfærd ved løbende opdateringer.
+187|Webhookprocessorer er et separat skaleringslag
+188|Når mængden af indgående webhooks bliver flaskehalsen, kan dedikerede webhookprocessorer placeres bag en load balancer, mens workers udfører opgaverne. Tilføj ikke dette lag, medmindre den målte mængde anmodninger begrunder det.
+189|Multi-main er en særskilt funktion
+190|Flere hovedprocesser med høj tilgængelighed er ikke det samme som almindelig køtilstand. n8n beskriver i øjeblikket multi-main som en selvhostet Enterprise-funktion med ekstra krav til load balancer og sessioner.
+191|Officiel arkitektur og konfiguration af køtilstand
+192|FAQ
+193|n8n-køtilstand: Ofte stillede spørgsmål
+194|Kræver n8n's køtilstand Redis?
+195|Ja. Redis er beskedformidleren, der koordinerer afventende kørsler mellem hovedinstansen og workers.
+196|Kan køtilstand bruge SQLite?
+197|Nej, ikke i den distribuerede arkitektur med køtilstand. Hovedproces og workers kræver adgang til en fælles database, og n8n beskriver PostgreSQL som databasen til denne opsætning.
+198|Hvor mange workers bør jeg køre?
+199|Der er ikke ét antal, der passer til alle. Tag udgangspunkt i målt samtidighed og udnyttelse af workers, og øg derefter kapaciteten, mens du overvåger PostgreSQL, Redis, CPU, RAM og kølængde.
+200|Hvad betyder samtidighed pr. n8n-worker?
+201|Det er antallet af opgaver, som en worker må behandle parallelt. Den nuværende standard er 10, og n8n anbefaler en samtidighed på 5 eller mere frem for at oprette mange workers med lav samtidighed.
+202|Bør jeg aktivere køtilstand på en lille VPS?
+203|Kun hvis arbejdsbelastningen begrunder det. En lille installation, der kører fint på én instans, er normalt enklere at drive uden Redis og separate workers.
+204|Se VPS-muligheder
+205|VPS-krav
+206|VPS-pakker og dimensionering
+207|Sikkerhed i produktion
+208|Sikkerhedskopiering og gendannelse
+209|Hovedguide til VPS for n8n
+210|Sammenligner du udbydere?
+211|Når du skal vælge udbyder og vurdere installation med ét klik, supportafgrænsning, sikkerhedskopier, migrering, region og skalering, kan du se
+212|sammenligningen af de bedste VPS-løsninger til n8n
+213|. Til dimensionering af ressourcer kan du vende tilbage til
+214|hovedguiden til VPS for n8n
