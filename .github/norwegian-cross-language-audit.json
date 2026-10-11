@@ -1,0 +1,758 @@
+{
+  "checked_at_utc": "2026-10-11T18:31:38.220333+00:00",
+  "github_run_id": "38164122456",
+  "browser": "Playwright Chromium mobile 390px",
+  "norwegian_home": "https://agurkin2021-gif.github.io/vps-for-n8n/no/",
+  "base_inventory": {
+    "footer_link_count": 38,
+    "unique_labels": true,
+    "unique_urls": true,
+    "norwegian_in_menu": true,
+    "http_200": true
+  },
+  "languages_checked": 37,
+  "passed": 37,
+  "all_passed": true,
+  "results": [
+    {
+      "language": "English",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/"
+    },
+    {
+      "language": "Español",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/es/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/es/"
+    },
+    {
+      "language": "Русский",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ru/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ru/"
+    },
+    {
+      "language": "Português",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/"
+    },
+    {
+      "language": "Deutsch",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/de/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/de/"
+    },
+    {
+      "language": "हिन्दी",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/hi/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/hi/"
+    },
+    {
+      "language": "বাংলা",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/bn/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/bn/"
+    },
+    {
+      "language": "日本語",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ja/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ja/"
+    },
+    {
+      "language": "ਪੰਜਾਬੀ",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pa/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pa/"
+    },
+    {
+      "language": "मराठी",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/mr/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/mr/"
+    },
+    {
+      "language": "తెలుగు",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/te/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/te/"
+    },
+    {
+      "language": "தமிழ்",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ta/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ta/"
+    },
+    {
+      "language": "Türkçe",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/tr/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/tr/"
+    },
+    {
+      "language": "Tiếng Việt",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/vi/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/vi/"
+    },
+    {
+      "language": "한국어",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ko/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ko/"
+    },
+    {
+      "language": "Français",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fr/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fr/"
+    },
+    {
+      "language": "فارسی",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fa/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fa/"
+    },
+    {
+      "language": "Italiano",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/it/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/it/vps-n8n/"
+    },
+    {
+      "language": "Polski",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pl/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/pl/"
+    },
+    {
+      "language": "العربية",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ar/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ar/"
+    },
+    {
+      "language": "Bahasa Indonesia",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/id/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/id/"
+    },
+    {
+      "language": "繁體中文",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/"
+    },
+    {
+      "language": "简体中文",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/"
+    },
+    {
+      "language": "Català",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ca/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ca/"
+    },
+    {
+      "language": "Română",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ro/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/ro/"
+    },
+    {
+      "language": "Nederlands",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/nl/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/nl/"
+    },
+    {
+      "language": "ไทย",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/th/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/th/"
+    },
+    {
+      "language": "Azərbaycanca",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/az/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/az/"
+    },
+    {
+      "language": "Ελληνικά",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/el/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/el/"
+    },
+    {
+      "language": "Magyar",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/hu/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/hu/"
+    },
+    {
+      "language": "Čeština",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/cs/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/cs/"
+    },
+    {
+      "language": "Български",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/bg/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/bg/"
+    },
+    {
+      "language": "Svenska",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/sv/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/sv/"
+    },
+    {
+      "language": "Srpski",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/sr/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/sr/"
+    },
+    {
+      "language": "עברית",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/he/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/he/"
+    },
+    {
+      "language": "Suomi",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fi/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/fi/"
+    },
+    {
+      "language": "Dansk",
+      "requested_url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+      "success": true,
+      "checks": {
+        "norwegian_home_loads": true,
+        "target_in_norwegian_footer": true,
+        "target_page_http_200": true,
+        "target_page_lang_menu_top": true,
+        "target_page_lang_menu_footer": true,
+        "norsk_present_in_header": true,
+        "norsk_present_in_footer": true,
+        "norsk_link_points_to_home": true,
+        "return_to_norsk_http_200": true,
+        "returned_to_norwegian_home": true,
+        "norsk_not_lost_after_two_switches": true
+      },
+      "errors": [],
+      "actual_target_url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/"
+    }
+  ]
+}
