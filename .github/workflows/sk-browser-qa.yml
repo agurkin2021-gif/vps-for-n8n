@@ -1,0 +1,121 @@
+name: Slovak browser verification (11 pages and language switching)
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/sk-browser-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install headless browser
+        run: |
+          python3 -m pip install -q playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Open Slovak pages and verify cross-language roundtrips
+        shell: bash
+        run: |
+          python3 -u - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          SUFFIXES = ("", "best-vps-for-n8n.html", "about.html",
+                      "n8n-backup-and-restore.html", "contact.html",
+                      "install-n8n-on-a-vps.html", "n8n-cloud-vs-self-hosted.html",
+                      "n8n-vps-requirements.html", "privacy.html",
+                      "secure-n8n-on-a-vps.html", "n8n-queue-mode.html")
+          ORIGINS = (
+              ("English", BASE), ("Deutsch", BASE + "de/"),
+              ("Français", BASE + "fr/"), ("Русский", BASE + "ru/"),
+              ("Norsk", BASE + "no/"), ("Español", BASE + "es/"),
+              ("日本語", BASE + "ja/"), ("Polski", BASE + "pl/"),
+          )
+          report = {"page_checks": [], "roundtrip_checks": [], "errors": []}
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+              ctx = browser.new_context(viewport={"width": 390, "height": 844})
+              page = ctx.new_page()
+              try:
+                  for suffix in SUFFIXES:
+                      url = BASE + "sk/" + suffix
+                      result = {"url": url}
+                      try:
+                          response = page.goto(url, wait_until="domcontentloaded", timeout=40000)
+                          page.wait_for_load_state("load", timeout=20000)
+                          result["status"] = response.status if response else None
+                          result["lang"] = page.locator("html").get_attribute("lang")
+                          result["head_switches"] = page.locator('header .lang-menu a[lang="sk"]').count()
+                          result["footer_switches"] = page.locator('footer .lang-menu a[lang="sk"]').count()
+                          result["has_h1"] = page.locator("h1").count() == 1
+                          result["css"] = page.evaluate("document.styleSheets.length")
+                          result["pass"] = (result["status"] == 200 and result["lang"] == "sk"
+                                            and result["head_switches"] == 1
+                                            and result["footer_switches"] == 1
+                                            and result["has_h1"] and result["css"] >= 1)
+                      except Exception as exc:
+                          result["pass"] = False
+                          result["error"] = str(exc)[:600]
+                      print("SK_PAGE", json.dumps(result, ensure_ascii=False), flush=True)
+                      report["page_checks"].append(result)
+
+                  for lang, source in ORIGINS:
+                      row = {"language": lang, "source": source}
+                      try:
+                          r = page.goto(source, wait_until="domcontentloaded", timeout=40000)
+                          row["origin_status"] = r.status if r else None
+                          foot = page.locator("footer .lang-switch").first
+                          foot.locator("button").click(timeout=15000)
+                          slovak = foot.locator('a[lang="sk"]').first
+                          row["slovak_url"] = slovak.get_attribute("href")
+                          with page.expect_navigation(wait_until="domcontentloaded", timeout=40000) as event:
+                              slovak.click(timeout=15000)
+                          arrived = event.value
+                          row["slovak_status"] = arrived.status if arrived else None
+                          row["slovak_return_menu"] = page.locator("footer .lang-menu a").filter(has_text=lang).count() >= 1
+                          foot = page.locator("footer .lang-switch").first
+                          foot.locator("button").click(timeout=15000)
+                          back = foot.locator("a").filter(has_text=lang).first
+                          with page.expect_navigation(wait_until="domcontentloaded", timeout=40000) as event:
+                              back.click(timeout=15000)
+                          returned = event.value
+                          row["return_status"] = returned.status if returned else None
+                          row["slovak_remains_in_menu"] = page.locator('footer .lang-menu a[lang="sk"]').count() == 1
+                          row["pass"] = (row["origin_status"] == 200 and row["slovak_status"] == 200
+                                         and row["return_status"] == 200
+                                         and row["slovak_url"] == BASE + "sk/"
+                                         and row["slovak_return_menu"]
+                                         and row["slovak_remains_in_menu"])
+                      except Exception as exc:
+                          row["pass"] = False
+                          row["error"] = str(exc)[:600]
+                      print("SK_ROUNDTRIP", json.dumps(row, ensure_ascii=False), flush=True)
+                      report["roundtrip_checks"].append(row)
+              finally:
+                  browser.close()
+          report["page_pass"] = sum(x["pass"] for x in report["page_checks"])
+          report["roundtrip_pass"] = sum(x["pass"] for x in report["roundtrip_checks"])
+          report["complete"] = (report["page_pass"] == len(SUFFIXES)
+                                and report["roundtrip_pass"] == len(ORIGINS))
+          Path("sk-browser-qa-results.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf8")
+          print("SK_BROWSER_QA", report["page_pass"], "/", len(SUFFIXES),
+                "pages,", report["roundtrip_pass"], "/", len(ORIGINS),
+                "round trips; complete =", report["complete"], flush=True)
+          assert report["complete"], "Live browser checks failed; see report."
+          PY
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slovak-pages-browser-check
+          path: sk-browser-qa-results.json
+          if-no-files-found: warn
