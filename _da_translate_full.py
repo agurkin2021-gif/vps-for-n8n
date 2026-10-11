@@ -411,7 +411,13 @@ def process(enpath,japath):
 def validate(src,out,enpath,japath):
     def signature(x):
         return [("/" if m.group()[1:2]=="/" else "")+m.group(1).lower() for m in re.finditer(r'</?([a-z][\w-]*)\b[^>]*>',x,re.I) if m.group(1).lower() not in ("link","meta")]
-    if signature(src)!=signature(out):raise AssertionError(f"HTML structure changed: {enpath}")
+    da_menu_link = r'<a\b[^>]*\bhreflang=["\x27]da["\x27][^>]*>Dansk</a>'
+    selectors = re.findall(da_menu_link, out, re.I)
+    if len(selectors) != 2:
+        raise AssertionError(f"Expected exactly two Danish language selectors on {enpath}: {len(selectors)}")
+    normalized_out = re.sub(da_menu_link, '', out, flags=re.I)
+    if signature(src)!=signature(normalized_out):
+        raise AssertionError(f"HTML structure changed outside Danish language selectors: {enpath}")
     if [m.group(1) for m in CSS_TAG.finditer(src)] != [m.group(1) for m in CSS_TAG.finditer(out)]:
         raise AssertionError(f"CSS changed: {enpath}")
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
