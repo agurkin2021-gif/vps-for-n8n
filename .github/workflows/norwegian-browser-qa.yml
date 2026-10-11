@@ -112,7 +112,7 @@ jobs:
                       page.keyboard.press("Escape")
                       c[f"{zone}_menu_closes_escape"]=not menu.is_visible()
                       button.click(timeout=8000)
-                      h1.click(timeout=8000)
+                      page.mouse.click(3,3)  # genuine pointer event outside the dropdown even on 390px
                       c[f"{zone}_menu_closes_outside_click"]=not menu.is_visible()
                   if view["name"]=="desktop":
                       switch=page.locator("header .lang-switch").first
