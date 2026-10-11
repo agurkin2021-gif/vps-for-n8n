@@ -176,24 +176,29 @@ def restore_numbers(s: str, stored):
         raise ValueError(f"Unresolved technical sentinels: {s[:160]!r}")
     return s.replace("§", "")
 
+_OFFLINE_TRANSLATOR = None
+
 def remote_translate(input_text: str) -> str:
-    """Translate a batch of independent English segments to idiomatic Swedish."""
-    query=urllib.parse.urlencode({"client":"gtx","sl":"en","tl":"sv","dt":"t","q":input_text})
-    url="https://translate.googleapis.com/translate_a/single?"+query
-    error=None
-    for attempt in range(7):
-        try:
-            request=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (compatible; article-localizer/1.0)"})
-            with urllib.request.urlopen(request,timeout=35) as response:
-                obj=json.load(response)
-            output="".join(part[0] or "" for part in obj[0] if part and part[0] is not None)
-            if not output.strip():raise ValueError("Translation service returned empty text")
-            return output
-        except Exception as exc:
-            error=exc
-            print("SV_TRANSLATE_RETRY",attempt,type(exc).__name__,str(exc)[:120],flush=True)
-            time.sleep(min(40,2**attempt+.4))
-    raise RuntimeError("Swedish translation endpoint unavailable") from error
+    """Translate independent text segments using the installed offline English-to-Swedish model."""
+    global _OFFLINE_TRANSLATOR
+    if _OFFLINE_TRANSLATOR is None:
+        import argostranslate.translate as offline
+        languages=offline.get_installed_languages()
+        src=next((x for x in languages if x.code=="en"),None)
+        dst=next((x for x in languages if x.code=="sv"),None)
+        if src is None or dst is None:
+            raise RuntimeError("Offline English-to-Swedish language pack not installed")
+        _OFFLINE_TRANSLATOR=src.get_translation(dst)
+        if _OFFLINE_TRANSLATOR is None:
+            raise RuntimeError("Offline English-to-Swedish translator could not load")
+    texts=input_text.split(SEP)
+    translated=[]
+    for item in texts:
+        value=_OFFLINE_TRANSLATOR.translate(item)
+        if not value.strip():
+            raise ValueError("Offline Swedish model returned empty text")
+        translated.append(value)
+    return SEP.join(translated)
 
 def preserve_exact_when_model_drops_token(raw: str) -> str:
     """Last-resort token-preserving translation, only when sentence masking fails."""
