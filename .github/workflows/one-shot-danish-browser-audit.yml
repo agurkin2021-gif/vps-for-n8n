@@ -1,4 +1,4 @@
-name: Final Danish browser QA: 390 and 1280
+name: Final Danish browser QA 390 and 1280
 on:
   push:
     branches: [main]
