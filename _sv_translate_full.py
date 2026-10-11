@@ -35,7 +35,7 @@ LANGUAGE_NAMES = {
     "한국어", "Français", "Italiano", "Polski", "Svenska", "n8nVPS", "n8n", "VDSina",
 }
 LANGUAGE_NAMES.update({"Svenska", "Català", "Română", "Nederlands", "ไทย", "Azərbaycanca", "Ελληνικά", "العربية", "فارسی", "Bahasa Indonesia", "繁體中文", "简体中文"})
-LANGUAGE_NAMES.update({"Magyar","Svenska","Svenska"})
+LANGUAGE_NAMES.update({"Magyar","Čeština","Български","Svenska"})
 EXACT = {
     "FAQ": "Vanliga frågor",
     "Skip to content": "Hoppa till innehållet",
@@ -321,7 +321,7 @@ def patch_tag(tag: str,enpath: str,japath: str):
             if mlang:
                 lang=mlang.group(1).lower()
                 if lang=="sv":return name+BASE+japath+end
-                if lang in ("en","x-default"):return name+BASE+enpath+end
+                if lang in ("en","x-default"):return name+(BASE if enpath=="index.html" else BASE+enpath)+end
         if is_a and value.startswith(BASE):
             local=value[len(BASE):]
             bare,hashsep,fragment=local.partition("#")
@@ -432,13 +432,13 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1cs\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1sv\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"Svenska ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
         tag,label=m.group(1),m.group(2)
         if label=="English":
-            tag=re.sub(r'\bhref=["\'][^"\']*["\']','href="'+BASE+enpath+'"',tag,count=1)
+            tag=re.sub(r'\bhref=["\'][^"\']*["\']','href="'+(BASE if enpath=="index.html" else BASE+enpath)+'"',tag,count=1)
             tag=re.sub(r'\s+aria-current=["\']page["\']','',tag)
         elif label=="Svenska":
             tag=re.sub(r'\bhref=["\'][^"\']*["\']','href="'+BASE+japath+'"',tag,count=1)
