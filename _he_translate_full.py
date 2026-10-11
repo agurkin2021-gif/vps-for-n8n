@@ -26,7 +26,7 @@ PAGES = [
     ("secure-n8n-on-a-vps.html", "he/secure-n8n-on-a-vps.html"),
     ("n8n-queue-mode.html", "he/n8n-queue-mode.html"),
 ]
-LOOKUP = {a: b.removeprefix("he/") for a,b in PAGES[:8]}
+LOOKUP = {a: b.removeprefix("he/") for a,b in PAGES}
 SEP = "\n\n§§§\n\n"
 CACHE_PATH = ROOT / ".github" / "he-translation-cache.json"
 LANGUAGE_NAMES = {
