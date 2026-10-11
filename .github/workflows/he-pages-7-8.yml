@@ -1,0 +1,193 @@
+name: Hebrew translation - sitemap pages 7 and 8
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/he-pages-7-8.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hebrew-sitemap-pages-7-8
+  cancel-in-progress: false
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify English sitemap, editorial completeness and sequential scope
+        shell: bash
+        run: |
+          python -m py_compile _he_translate_full.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from _he_translate_full import PAGES, LOOKUP, verify_source_sitemap
+          assert verify_source_sitemap() == len(PAGES) == 11
+          assert len(LOOKUP) == 8
+          assert PAGES[6] == ('n8n-cloud-vs-self-hosted.html', 'he/n8n-cloud-vs-self-hosted.html')
+          assert PAGES[7] == ('n8n-vps-requirements.html', 'he/n8n-vps-requirements.html')
+          editorial=json.loads(Path('.github/he-editorial.json').read_text(encoding='utf-8'))
+          assert len(editorial) >= 1200, len(editorial)
+          for text in (
+              'n8n Cloud vs Self-Hosted',
+              'n8n VPS Requirements',
+              'Compare n8n Cloud vs self-hosted n8n on a VPS by cost, infrastructure control, maintenance, data location, scaling and technical responsibility.',
+              'For n8n VPS requirements, start with your workload rather than a universal hardware minimum.',
+          ):
+              if text.endswith('rather than a universal hardware minimum.'):
+                  assert any(k.startswith(text) for k in editorial)
+              else:
+                  assert text in editorial, text
+          print('HE_SITEMAP_11_EDITORIAL_REVIEW_PASS',len(editorial),flush=True)
+          PY
+      - name: PAGE 7 - translate, verify, save Cloud versus self-hosted
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _he_translate_full.py 6
+          python - <<'PY'
+          import json, re
+          from _he_translate_full import ROOT,PAGES,validate,BASE
+          en,he=PAGES[6]
+          source=(ROOT/en).read_text(encoding='utf-8')
+          target=(ROOT/he).read_text(encoding='utf-8')
+          validate(source,target,en,he)
+          assert '<html lang="he" dir="rtl">' in target
+          assert 'n8n Cloud לעומת אירוח עצמי' in target
+          assert 'מכסת ההרצות' in target
+          assert '2,500' in target and '10,000' in target and '8,640' in target
+          assert target.count('>עברית</a>') == 2
+          assert BASE+he in target
+          for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',target,re.I|re.S):
+              json.loads(block)
+          print('HE_PAGE_7_CLOUD_PARITY_AND_EDITORIAL_PASS',flush=True)
+          PY
+          git add he/n8n-cloud-vs-self-hosted.html .github/he-translation-cache.json
+          git commit -m "Translate verify and publish Hebrew page 7 n8n Cloud versus self-hosted"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo 'HE_PAGE_7_PUBLISHED'
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: PAGE 8 - translate, verify, save VPS requirements
+        shell: bash
+        run: |
+          python -u _he_translate_full.py 7
+          python - <<'PY'
+          import re,json
+          from _he_translate_full import ROOT,PAGES,validate,BASE
+          en,he=PAGES[7]
+          source=(ROOT/en).read_text(encoding='utf-8')
+          target=(ROOT/he).read_text(encoding='utf-8')
+          validate(source,target,en,he)
+          assert '<html lang="he" dir="rtl">' in target
+          assert '<title>דרישות VPS עבור n8n</title>' in target
+          assert '<h1>דרישות VPS עבור n8n</h1>' in target
+          assert '1 vCPU' in target and '4 GB' in target and '10,000' in target
+          assert 'PostgreSQL' in target and 'Redis' in target and 'Docker' in target
+          assert target.count('>עברית</a>') == 2
+          assert BASE+he in target
+          for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',target,re.I|re.S):
+              json.loads(block)
+          print('HE_PAGE_8_REQUIREMENTS_PARITY_AND_EDITORIAL_PASS',flush=True)
+          PY
+          git add he/n8n-vps-requirements.html .github/he-translation-cache.json
+          git commit -m "Translate verify and publish Hebrew page 8 n8n VPS requirements"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo 'HE_PAGE_8_PUBLISHED'
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: Add pages 7 and 8 to sitemap.xml without changing the English source list
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,BASE,PAGES,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          sitemap=ROOT/'sitemap.xml'
+          xml=sitemap.read_text(encoding='utf-8')
+          urls=[n.text for n in ET.fromstring(xml).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          for en,he in PAGES[6:8]:
+              assert (ROOT/he).is_file(),he
+              url=BASE+he
+              if url not in urls:
+                  xml=xml.replace('</urlset>','  <url><loc>'+url+'</loc></url>\n</urlset>',1)
+                  urls.append(url)
+          sitemap.write_text(xml,encoding='utf-8')
+          ET.parse(sitemap)
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==8
+          assert len(urls)==len(set(urls))
+          print('HE_SITEMAP_8_OF_11_PASS',flush=True)
+          PY
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Add verified Hebrew pages 7 and 8 to sitemap"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final English-Hebrew 8-page parity, SEO and localization audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,json,xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,PAGES,BASE,validate,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          assert len(list((ROOT/'he').glob('*.html')))==8
+          all_urls=[x.text for x in ET.parse(ROOT/'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len([u for u in all_urls if u.startswith(BASE+'he/')])==8
+          for en,he in PAGES[:8]:
+              source=(ROOT/en).read_text(encoding='utf-8')
+              target=(ROOT/he).read_text(encoding='utf-8')
+              validate(source,target,en,he)
+              assert re.search(r'<html\b[^>]*lang="he"[^>]*dir="rtl"',target)
+              assert len(re.findall(r'<h1(?:\s|>)',target,re.I))==1
+              assert target.count('>עברית</a>')==2
+              assert not re.search(r'<meta\b[^>]*noindex',target,re.I)
+              canon=BASE+('he/' if he=='he/index.html' else he)
+              assert canon in all_urls,canon
+              assert canon in target,canon
+              for tag in ('style','script'):
+                  if tag=='style':
+                      pat=r'<style\b[^>]*>([\s\S]*?)</style>'
+                  else:
+                      pat=r'<script\b(?![^>]*application/ld\+json)[^>]*>([\s\S]*?)</script>'
+                  assert re.findall(pat,source,re.I)==re.findall(pat,target,re.I)
+              for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',target,re.I|re.S):
+                  json.loads(block)
+              print('HE_VERIFIED',he,flush=True)
+          print('HE_PAGES_1_TO_8_FINAL_QA_PASS',flush=True)
+          PY
+          git diff --exit-code
+      - name: Preserve translated files if interrupted
+        if: failure()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/he-translation-cache.json he/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint Hebrew translation after interrupted two-page pass"
+            git push origin HEAD:main || true
+          fi
