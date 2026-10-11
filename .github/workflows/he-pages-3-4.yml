@@ -1,0 +1,183 @@
+name: Hebrew translation — sitemap pages 3 and 4
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/he-pages-3-4.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hebrew-sitemap-pages-3-4
+  cancel-in-progress: false
+jobs:
+  translate-verify-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install offline English-to-Hebrew translation engine
+        run: |
+          pip install --quiet 'argostranslate>=1.9,<2'
+          python - <<'PY'
+          import argostranslate.package as pkg
+          pkg.update_package_index()
+          packs=[p for p in pkg.get_available_packages() if p.from_code=='en' and p.to_code=='he']
+          assert packs, 'Offline Hebrew language pack not found'
+          pkg.install_from_path(packs[0].download())
+          print('HE_OFFLINE_MODEL_READY',flush=True)
+          PY
+      - name: Verify authoritative English sitemap and editorial glossary
+        shell: bash
+        run: |
+          python -m py_compile _he_translate_full.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from _he_translate_full import verify_source_sitemap,PAGES,LOOKUP
+          assert verify_source_sitemap()==len(PAGES)==11
+          assert len(LOOKUP)==4
+          assert PAGES[2]==('about.html','he/about.html')
+          assert PAGES[3]==('n8n-backup-and-restore.html','he/n8n-backup-and-restore.html')
+          d=json.loads(Path('.github/he-editorial.json').read_text(encoding='utf-8'))
+          assert len(d)>=600,len(d)
+          print('HE_SOURCE_SITEMAP_PASS_11 EDITORIAL='+str(len(d)),flush=True)
+          PY
+      - name: PAGE 3 — translate, verify, save and publish About
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _he_translate_full.py 2
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          from _he_translate_full import ROOT,PAGES,validate
+          en,he=PAGES[2]
+          source=(ROOT/en).read_text(encoding='utf-8')
+          out=(ROOT/he).read_text(encoding='utf-8')
+          validate(source,out,en,he)
+          assert '<html lang="he" dir="rtl">' in out
+          assert 'אודות n8nVPS' in out
+          assert 'מדריך עצמאי' in out
+          assert 'hreflang="he"' in out
+          assert out.count('>עברית</a>')==2
+          print('HE_PAGE_3_ABOUT_TRANSLATE_VERIFY_SAVE_PASS',flush=True)
+          PY
+          git add he/about.html .github/he-translation-cache.json
+          git commit -m "Translate verify save Hebrew page 3 of 11 About"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo 'HE_PAGE_3_PUBLISHED'
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: PAGE 4 — translate, verify, save and publish Backup Restore
+        shell: bash
+        run: |
+          python -u _he_translate_full.py 3
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          from _he_translate_full import ROOT,PAGES,validate
+          en,he=PAGES[3]
+          source=(ROOT/en).read_text(encoding='utf-8')
+          out=(ROOT/he).read_text(encoding='utf-8')
+          validate(source,out,en,he)
+          assert '<html lang="he" dir="rtl">' in out
+          assert 'גיבוי ושחזור של n8n' in out
+          assert 'מפתח ההצפנה' in out
+          assert 'PostgreSQL' in out and 'SQLite' in out
+          assert 'docker compose exec -T postgres pg_dump' in out
+          assert 'docker compose exec -T n8n n8n export:workflow' in out
+          assert out.count('>עברית</a>')==2
+          for block in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',out,re.I):
+              json.loads(block)
+          print('HE_PAGE_4_BACKUP_TRANSLATE_VERIFY_SAVE_PASS',flush=True)
+          PY
+          git add he/n8n-backup-and-restore.html .github/he-translation-cache.json
+          git commit -m "Translate verify save Hebrew page 4 of 11 backup and restore"
+          for attempt in 1 2 3 4 5 6; do
+            if git push origin HEAD:main; then
+              echo 'HE_PAGE_4_PUBLISHED'
+              break
+            fi
+            git fetch origin main
+            git rebase -X ours origin/main
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+          done
+      - name: Add two verified Hebrew URLs to sitemap
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,BASE,PAGES,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          sm=ROOT/'sitemap.xml'
+          s=sm.read_text(encoding='utf-8')
+          urls={x.text for x in ET.fromstring(s).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')}
+          for en,he in PAGES[2:4]:
+              assert (ROOT/he).is_file()
+              url=BASE+he
+              if url not in urls:
+                  s=s.replace('</urlset>','  <url><loc>'+url+'</loc></url>\n</urlset>',1)
+                  urls.add(url)
+          sm.write_text(s,encoding='utf-8')
+          ET.parse(sm)
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==4
+          assert all(BASE+path in urls for _,path in PAGES[2:4])
+          print('HE_SITEMAP_PASS_4_OF_11',flush=True)
+          PY
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Hebrew pages 3 and 4 in sitemap.xml"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final four-page inventory, parity, RTL and sitemap QA
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,xml.etree.ElementTree as ET
+          from _he_translate_full import ROOT,BASE,PAGES,validate,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          pages=sorted((ROOT/'he').glob('*.html'))
+          assert len(pages)==4, pages
+          urls=[e.text for e in ET.parse(ROOT/'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==4
+          for en,he in PAGES[:4]:
+              src=(ROOT/en).read_text(encoding='utf-8')
+              dst=(ROOT/he).read_text(encoding='utf-8')
+              validate(src,dst,en,he)
+              assert dst.count('>עברית</a>')==2
+              assert re.search(r'<html\b[^>]*lang="he"[^>]*dir="rtl"',dst)
+              assert BASE+('he/' if he=='he/index.html' else he) in urls
+              assert 'noindex' not in dst.lower()
+              print('HE_VERIFIED',he,flush=True)
+          print('HE_PAGES_1_TO_4_FINAL_QA_PASS',flush=True)
+          PY
+          git diff --exit-code
+      - name: Preserve translated cache on unexpected interruption
+        if: failure()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/he-translation-cache.json he/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint Hebrew translation after interrupted two-page pass"
+            git push origin HEAD:main || true
+          fi
