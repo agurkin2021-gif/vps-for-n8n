@@ -1,0 +1,194 @@
+name: Norwegian browser QA
+on:
+  push:
+    paths:
+      - ".github/workflows/norwegian-browser-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Install Chromium browser
+        run: |
+          python3 -m pip install --user playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Check all pages and responsive navigation
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, traceback
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import urljoin, urlsplit
+          from playwright.sync_api import sync_playwright, TimeoutError as BrowserTimeout
+
+          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/no/"
+          PAGES=["","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html",
+                 "contact.html","install-n8n-on-a-vps.html","n8n-cloud-vs-self-hosted.html",
+                 "n8n-vps-requirements.html","privacy.html","secure-n8n-on-a-vps.html",
+                 "n8n-queue-mode.html"]
+          VIEWS=[{"name":"mobile","width":390,"height":844},
+                 {"name":"desktop","width":1280,"height":800}]
+          dest=Path(".github/norwegian-browser-screenshots")
+          dest.mkdir(parents=True,exist_ok=True)
+          all_results=[]
+
+          def examine(browser, item, view):
+              url=BASE+item
+              result={"page":item or "(home)","viewport":view["name"],"url":url,
+                      "passed":False,"checks":{},"issues":[]}
+              c=result["checks"]
+              name=item.replace(".html","").replace("/","-") or "home"
+              context=browser.new_context(viewport={"width":view["width"],"height":view["height"]},
+                                          device_scale_factor=1,locale="nb-NO")
+              page=context.new_page()
+              errors=[]
+              page.on("pageerror",lambda err:errors.append(str(err)))
+              try:
+                  response=page.goto(url,wait_until="domcontentloaded",timeout=30000)
+                  page.wait_for_load_state("load",timeout=20000)
+                  c["http_200"]=bool(response and response.status==200)
+                  c["title_present"]=bool(page.title().strip())
+                  c["meta_description_present"]=bool(page.locator('meta[name="description"]').get_attribute("content"))
+                  c["document_lang_no"]=page.locator("html").get_attribute("lang") in ("no","nb")
+                  c["h1_count_one"]=page.locator("h1").count()==1
+                  c["canonical_correct"]=page.locator('link[rel="canonical"]').get_attribute("href")==url
+                  c["language_menus_two"]=page.locator(".lang-switch .lang-menu").count()==2
+                  c["norsk_in_both_menus"]=all(
+                      page.locator(f"{parent} .lang-menu a").filter(has_text="Norsk").count()==1
+                      for parent in ("header","footer"))
+                  c["language_options_min_38"]=all(
+                      page.locator(f"{parent} .lang-menu a").count()>=38
+                      for parent in ("header","footer"))
+                  info=page.evaluate("""() => ({
+                    innerWidth: innerWidth,
+                    scrollWidth: document.documentElement.scrollWidth,
+                    bodyScrollWidth: document.body.scrollWidth
+                  })""")
+                  c["horizontal_overflow_within_4px"]=(max(info["scrollWidth"],info["bodyScrollWidth"])-info["innerWidth"] <=4)
+                  result["horizontal_overflow_px"]=max(0,max(info["scrollWidth"],info["bodyScrollWidth"])-info["innerWidth"])
+                  h1=page.locator("h1").first
+                  c["h1_visible_in_viewport"]=h1.is_visible()
+                  if c["h1_visible_in_viewport"]:
+                      box=h1.bounding_box()
+                      c["h1_within_horizontal_viewport"]=bool(box and box["x"]>=-4 and box["x"]<view["width"] and box["width"]>30)
+                  internal_links=page.locator("main a[href]").evaluate_all(
+                      "(els) => els.map(e => e.getAttribute('href'))")
+                  missing=[]
+                  for href in internal_links:
+                      target=urljoin(url,href)
+                      path=urlsplit(target).path
+                      prefix="/vps-for-n8n/no/"
+                      if not path.startswith(prefix):continue
+                      tail=path[len(prefix):]
+                      if tail=="index.html":tail=""
+                      if tail not in PAGES and tail not in missing:missing.append(tail)
+                  result["unexpected_internal_targets"]=missing
+                  c["internal_links_match_11_pages"]=not missing
+                  page.screenshot(path=str(dest/f"{name}-{view['name']}.png"),full_page=False,
+                                  animations="disabled",timeout=10000)
+                  c["screenshot_saved"]=True
+                  for zone in ("header","footer"):
+                      switch=page.locator(f"{zone} .lang-switch").first
+                      button=switch.locator("button").first
+                      menu=switch.locator(".lang-menu").first
+                      button.scroll_into_view_if_needed(timeout=8000)
+                      button.click(timeout=8000)
+                      opened=menu.is_visible() and "open" in (switch.get_attribute("class") or "").split()
+                      c[f"{zone}_menu_opens_on_click"]=opened
+                      if opened:
+                          b=menu.bounding_box()
+                          c[f"{zone}_menu_fits_mobile_width"]=bool(b and b["x"]>=-4 and b["x"]+b["width"]<=view["width"]+4)
+                      else:c[f"{zone}_menu_fits_mobile_width"]=False
+                      page.keyboard.press("Escape")
+                      c[f"{zone}_menu_closes_escape"]=not menu.is_visible()
+                      button.click(timeout=8000)
+                      h1.click(timeout=8000)
+                      c[f"{zone}_menu_closes_outside_click"]=not menu.is_visible()
+                  if view["name"]=="desktop":
+                      switch=page.locator("header .lang-switch").first
+                      switch.locator("button").click(timeout=8000)
+                      en=switch.locator(".lang-menu a",has_text="English").first
+                      expected=en.get_attribute("href")
+                      if expected:
+                          with page.expect_navigation(wait_until="domcontentloaded",timeout=30000) as event:
+                              en.click(timeout=8000)
+                          navigated=event.value
+                          c["english_link_navigates_to_counterpart"]=bool(
+                              navigated and navigated.status==200 and page.url==expected)
+                      else:c["english_link_navigates_to_counterpart"]=False
+                  c["no_uncaught_javascript_errors"]=len(errors)==0
+                  if errors:result["javascript_errors"]=errors[:5]
+              except Exception as exc:
+                  result["issues"].append(str(exc)[:600])
+                  result["traceback"]=traceback.format_exc()[-1200:]
+              finally:
+                  for k,value in c.items():
+                      if value is False:result["issues"].append(k)
+                  result["passed"]=bool(c) and all(value is True for value in c.values()) and not result["issues"]
+                  context.close()
+              return result
+
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,args=["--no-sandbox"])
+              for view in VIEWS:
+                  for item in PAGES:
+                      r=examine(browser,item,view)
+                      all_results.append(r)
+                      print(f"{view['name']} {item or '(home)'}: "
+                            f"{'PASS' if r['passed'] else 'FAIL'} {r['issues']}",flush=True)
+              browser.close()
+          report={
+              "checked_at_utc":datetime.now(timezone.utc).isoformat(),
+              "run_id":os.getenv("GITHUB_RUN_ID",""),
+              "browser":"Playwright Chromium headless",
+              "mobile_width":390,"desktop_width":1280,
+              "pages":len(PAGES),"cases":len(all_results),
+              "passed":sum(r["passed"] for r in all_results),
+              "all_passed":all(r["passed"] for r in all_results),
+              "results":all_results}
+          out=Path(".github/norwegian-browser-audit.json")
+          out.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(f"TOTAL: {report['passed']}/{report['cases']} passed",flush=True)
+          PY
+      - name: Preserve screenshots and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: norwegian-browser-evidence
+          path: |
+            .github/norwegian-browser-screenshots/*.png
+            .github/norwegian-browser-audit.json
+          retention-days: 14
+          if-no-files-found: warn
+      - name: Save verified results
+        if: always()
+        shell: bash
+        run: |
+          if [ -f .github/norwegian-browser-audit.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/norwegian-browser-audit.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Record Chromium QA for 11 Norwegian pages at 390 and 1280"
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Require all browser checks to pass
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json,sys
+          from pathlib import Path
+          p=Path(".github/norwegian-browser-audit.json")
+          if not p.exists(): sys.exit("Missing browser QA audit")
+          report=json.loads(p.read_text())
+          if not report["all_passed"]: sys.exit("Browser QA FAILED; see .github/norwegian-browser-audit.json")
+          print("Browser QA PASS for all 22 cases")
+          PY
