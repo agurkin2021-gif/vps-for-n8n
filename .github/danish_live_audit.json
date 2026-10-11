@@ -1,0 +1,307 @@
+{
+  "result": "PASS",
+  "method": "Real HTTPS GET from GitHub-hosted Ubuntu runner; HTML and asset checks, not rendered-browser interaction",
+  "checked_urls": 21,
+  "danish_pages": [
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+      "status": 200,
+      "bytes": 47590,
+      "title": "VPS til n8n fra $0.07/dag – serverpakker og guide til dimensionering",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/best-vps-for-n8n.html",
+      "status": 200,
+      "bytes": 44637,
+      "title": "Bedste VPS til n8n i 2026: 6 udbydere sammenlignet",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
+      "status": 200,
+      "bytes": 13913,
+      "title": "Om n8nVPS | n8nVPS",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html",
+      "status": 200,
+      "bytes": 54683,
+      "title": "Sikkerhedskopiering og gendannelse af n8n",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/contact.html",
+      "status": 200,
+      "bytes": 13966,
+      "title": "Kontakt | n8nVPS",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html",
+      "status": 200,
+      "bytes": 48068,
+      "title": "Installer n8n på en VPS",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-cloud-vs-self-hosted.html",
+      "status": 200,
+      "bytes": 49027,
+      "title": "n8n Cloud kontra selvhosting: Pris og kontrol",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-vps-requirements.html",
+      "status": 200,
+      "bytes": 43893,
+      "title": "VPS-krav til n8n",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/privacy.html",
+      "status": 200,
+      "bytes": 14461,
+      "title": "Privatlivspolitik | n8nVPS",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/secure-n8n-on-a-vps.html",
+      "status": 200,
+      "bytes": 43272,
+      "title": "Sikker drift af n8n på en VPS",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true
+      },
+      "errors": []
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
+      "status": 200,
+      "bytes": 38166,
+      "title": "n8n i køtilstand",
+      "checks": {
+        "http_200": true,
+        "html_content_type": true,
+        "html_lang_da": true,
+        "title_present": true,
+        "one_h1": true,
+        "canonical_self": true,
+        "hreflang_da_self": true,
+        "two_danish_menu_links": true,
+        "footer_selector": true,
+        "css_path_relative": true,
+        "image_relative_path": true
+      },
+      "errors": []
+    }
+  ],
+  "cross_language_navigation": [
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/"
+      ],
+      "pass": true
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/bg/best-vps-for-n8n.html",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/best-vps-for-n8n.html",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/best-vps-for-n8n.html",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/best-vps-for-n8n.html"
+      ],
+      "pass": true
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/ru/o-proekte.html",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html"
+      ],
+      "pass": true
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/sv/about.html",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/about.html"
+      ],
+      "pass": true
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/es/index.html",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/"
+      ],
+      "pass": true
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/fi/n8n-queue-mode.html",
+      "status": 200,
+      "expected_danish": "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
+      "menu_links": [
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html",
+        "https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-queue-mode.html"
+      ],
+      "pass": true
+    }
+  ],
+  "sitemap": {
+    "status": 200,
+    "url_count": 416,
+    "unique_count": 416,
+    "danish_count": 11,
+    "all_danish_listed": true,
+    "valid_xml": true
+  },
+  "assets": [
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/styles.css",
+      "status": 200,
+      "bytes": 10461,
+      "content_type": "text/css; charset=utf-8"
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/n8n-queue-mode-hero.svg",
+      "status": 200,
+      "bytes": 5260,
+      "content_type": "image/svg+xml"
+    },
+    {
+      "url": "https://agurkin2021-gif.github.io/vps-for-n8n/favicon.svg",
+      "status": 200,
+      "bytes": 6,
+      "content_type": "image/svg+xml"
+    }
+  ]
+}
