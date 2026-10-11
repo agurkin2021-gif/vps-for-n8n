@@ -59,6 +59,309 @@ WORDS=[
 ("en-klicka","installation med ett klick")
 ]
 
+WORDS.extend([
+  [
+    "AI arbetsflöden: välj var modellen körs",
+    "AI-arbetsflöden: välj var modellen ska köras"
+  ],
+  [
+    "Varför arbetsflödesräkning ensam är fel sätt att välja en plan",
+    "Varför antalet arbetsflöden inte räcker för att välja VPS-plan"
+  ],
+  [
+    "Uppskatta din execution-historia lagring",
+    "Beräkna lagringsbehovet för körningshistorik"
+  ],
+  [
+    "Jag vill ha den lägsta friktionsstarten",
+    "Jag vill komma igång med så lite arbete som möjligt"
+  ],
+  [
+    "Jag förväntar mig köläge senare",
+    "Jag räknar med att använda köläge senare"
+  ],
+  [
+    "Vilken n8n backup bör skydda",
+    "Vad en säkerhetskopia av n8n måste skydda"
+  ],
+  [
+    "Distributionskonfiguration",
+    "Driftsättningskonfiguration"
+  ],
+  [
+    "Logisk export mot fullständig katastrofåtervinning",
+    "Logisk export jämfört med fullständig katastrofåterställning"
+  ],
+  [
+    "Workflow och credential export",
+    "Export av arbetsflöden och inloggningsuppgifter"
+  ],
+  [
+    "Entity export",
+    "Export av objekt"
+  ],
+  [
+    "Fullständig återhämtning",
+    "Fullständig återställning"
+  ],
+  [
+    "Leverantören snapshot",
+    "Ögonblicksbild från leverantören"
+  ],
+  [
+    "Exekveringshistoria",
+    "Körningshistorik"
+  ],
+  [
+    "Databasbackup kanske inte täcker varje arbetsflödesberoende",
+    "En databassäkerhetskopia kanske inte omfattar alla beroenden i arbetsflödet"
+  ],
+  [
+    "ihållande .n8n",
+    "Beständig .n8n-katalog"
+  ],
+  [
+    "gemenskapsnoder",
+    "community-noder"
+  ],
+  [
+    "Säkerhetskopiera databasen konsekvent",
+    "Skapa konsekventa säkerhetskopior av databasen"
+  ],
+  [
+    "Förbered VPS innan du börjar n8n",
+    "Förbered VPS:en innan du installerar n8n"
+  ],
+  [
+    "1. Förbered Docker, DNS och tillgång",
+    "1. Förbered Docker, DNS och åtkomst"
+  ],
+  [
+    "2Skapa miljövärden och bevara nyckeln",
+    "2. Skapa miljövariabler och spara krypteringsnyckeln"
+  ],
+  [
+    "3. Skriv compose.yaml för en ny installation",
+    "3. Skapa compose.yaml för en ny installation"
+  ],
+  [
+    "4. Skapa HTTPS Caddyfile",
+    "4. Skapa en Caddyfile för HTTPS"
+  ],
+  [
+    "5. Starta behållarna och testa utifrån",
+    "5. Starta containrarna och testa extern åtkomst"
+  ],
+  [
+    "6. Back up innan du ändrar stiftade versioner",
+    "6. Säkerhetskopiera innan du ändrar låsta versioner"
+  ],
+  [
+    "Offentlig värdnamn",
+    "Offentligt värdnamn"
+  ],
+  [
+    "Webhook URL",
+    "Webhook-URL"
+  ],
+  [
+    "Persist n8n och PostgreSQL separat",
+    "Spara data för n8n och PostgreSQL separat"
+  ],
+  [
+    "n8n data",
+    "n8n-data"
+  ],
+  [
+    "PostgreSQL data",
+    "PostgreSQL-data"
+  ],
+  [
+    "n8n Cloud vs Self-Hosted: Kostnad och kontroll",
+    "n8n Cloud kontra egen drift: kostnad och kontroll"
+  ],
+  [
+    "Välj genom ansvar, inte av serverpriset ensam",
+    "Välj utifrån ansvar, inte enbart serverpris"
+  ],
+  [
+    "Antingen kan produktionsklart",
+    "Båda alternativen kan användas i produktion"
+  ],
+  [
+    "One-click n8n VPS är inte alltid en förvaltad tjänst",
+    "En n8n-VPS med ettklicksinstallation är inte alltid en hanterad tjänst"
+  ],
+  [
+    "Exempel: Vad kostar egentligen en egen värd n8n månad?",
+    "Exempel: Vad kostar en egenhostad n8n-instans per månad?"
+  ],
+  [
+    "Självvärdering är inte bara VPS faktura",
+    "Egen drift handlar inte bara om VPS-fakturan"
+  ],
+  [
+    "Misslyckande kostnad",
+    "Kostnaden för driftstopp"
+  ],
+  [
+    "Där egenhostadering förändrar arkitekturen",
+    "När egen drift förändrar arkitekturen"
+  ],
+  [
+    "Vad du tar på när du själv värd",
+    "Vilket ansvar du tar vid egen drift"
+  ],
+  [
+    "Minsta, praktisk produktion och tyngre arbetsbelastningar",
+    "Minimikrav, praktisk produktionsmiljö och tyngre arbetsbelastningar"
+  ],
+  [
+    "Ljus, alltid-på instans",
+    "Lättviktig instans som alltid är igång"
+  ],
+  [
+    "Real VPS specifikationer för att jämföra din n8n arbetsbelastning",
+    "Verkliga VPS-specifikationer för din n8n-belastning"
+  ],
+  [
+    "Har n8n ett officiellt minimum VPS?",
+    "Har n8n officiella minimikrav för VPS?"
+  ],
+  [
+    "Payload storlek",
+    "Storlek på datamängder"
+  ],
+  [
+    "Hur man berättar om n8n behöver mer RAM, CPU eller disk",
+    "Så avgör du om n8n behöver mer RAM, CPU eller lagring"
+  ],
+  [
+    "CPU/samvaluta",
+    "CPU och samtidighet"
+  ],
+  [
+    "SQLite, PostgreSQL och ihållande uppgifter",
+    "SQLite, PostgreSQL och beständig datalagring"
+  ],
+  [
+    "Disk tillväxt",
+    "Lagringsbehov över tid"
+  ],
+  [
+    "Uppskattning n8n exekveringshistorik lagring innan beställning",
+    "Beräkna lagringsutrymmet för n8n-körningshistorik före beställning"
+  ],
+  [
+    "Analytics och affiliate länkar",
+    "Analysverktyg och affiliatelänkar"
+  ],
+  [
+    "HTTPS Endast",
+    "Endast HTTPS"
+  ],
+  [
+    "Harden SSH",
+    "Säkra SSH"
+  ],
+  [
+    "Skydda referenser",
+    "Skydda inloggningsuppgifter"
+  ],
+  [
+    "Proxy konfiguration",
+    "Proxykonfiguration"
+  ],
+  [
+    "Säker cookies",
+    "Säkra cookies"
+  ],
+  [
+    "Container exponering",
+    "Exponering av containrar"
+  ],
+  [
+    "Håll backend tjänster privat",
+    "Håll backendtjänster privata"
+  ],
+  [
+    "Skydda krypteringsnyckeln och kreditgränsen",
+    "Skydda krypteringsnyckeln och åtkomstuppgifterna"
+  ],
+  [
+    "Miljöhemligheter",
+    "Hemligheter i miljövariabler"
+  ],
+  [
+    "Behörig omfattning",
+    "Behörigheternas omfattning"
+  ],
+  [
+    "Noder kan utöka säkerhetsgränsen",
+    "Noder kan öka angreppsytan"
+  ],
+  [
+    "Stanna i vanlig läge när",
+    "Behåll vanligt läge när"
+  ],
+  [
+    "Skala vertikalt först när",
+    "Skala upp servern först när"
+  ],
+  [
+    "Vad varje queue-mode distribution behöver",
+    "Vad varje installation med köläge behöver"
+  ],
+  [
+    "Matcha n8n konfiguration",
+    "Anpassa n8n-konfigurationen"
+  ],
+  [
+    "Arbetsförmåga",
+    "Worker-kapacitet"
+  ],
+  [
+    "Arbetare skala både genom räkning och av jobb per arbetstagare",
+    "Skala med fler workers och rätt antal jobb per worker"
+  ],
+  [
+    "Öka valutan när",
+    "Öka samtidigheten när"
+  ],
+  [
+    "Lägg till arbetstagare när",
+    "Lägg till workers när"
+  ],
+  [
+    "Minska valutan när",
+    "Minska samtidigheten när"
+  ],
+  [
+    "Se PostgreSQL",
+    "Övervaka PostgreSQL"
+  ],
+  [
+    "Queue mode kan lägga till exekvering handoff latens",
+    "Köläge kan ge extra fördröjning när körningar lämnas över"
+  ],
+  [
+    "Förbise inte delad lagring",
+    "Glöm inte delad lagring"
+  ],
+  [
+    "Filsystembegränsning",
+    "Begränsningar i filsystemet"
+  ],
+  [
+    "Stora webhook svar",
+    "Stora webhook-svar"
+  ],
+  [
+    "Planera innan de distribuerar arbetare",
+    "Planera innan du driftsätter workers"
+  ]
+])
+
 P_RE = re.compile(r'(<p\b[^>]*>)([^<]*)(</p>)',re.I|re.S)
 TOKENS = re.compile(r'(<[^>]*>)',re.S)
 
