@@ -1,0 +1,138 @@
+name: Norwegian cross-language switch QA
+on:
+  push:
+    paths:
+      - ".github/workflows/norwegian-cross-language-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cross-language:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install browser
+        run: |
+          python3 -m pip install playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
+      - name: Verify switching between Norwegian and all other languages
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, traceback
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/no/"
+          ROOT="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          results=[]
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,args=["--no-sandbox"])
+              source=browser.new_page(viewport={"width":390,"height":844})
+              initial=source.goto(BASE,wait_until="domcontentloaded",timeout=35000)
+              source.wait_for_load_state("load",timeout=20000)
+              baseline=source.locator("footer .lang-switch .lang-menu a").evaluate_all(
+                  "(els) => els.map(a=>({label:a.textContent.trim(),href:a.href}))")
+              names=[x["label"] for x in baseline]
+              urls=[x["href"] for x in baseline]
+              inventory={
+                  "footer_link_count":len(baseline),
+                  "unique_labels":len(set(names))==len(names),
+                  "unique_urls":len(set(urls))==len(urls),
+                  "norwegian_in_menu":names.count("Norsk")==1,
+                  "http_200":bool(initial and initial.status==200)
+              }
+              source.close()
+              for item in baseline:
+                  if item["label"]=="Norsk":continue
+                  label=item["label"]
+                  address=item["href"]
+                  row={"language":label,"requested_url":address,"success":False,
+                       "checks":{},"errors":[]}
+                  ctx=browser.new_context(viewport={"width":390,"height":844},locale="nb-NO")
+                  page=ctx.new_page()
+                  checks=row["checks"]
+                  try:
+                      r=page.goto(BASE,wait_until="domcontentloaded",timeout=35000)
+                      checks["norwegian_home_loads"]=bool(r and r.status==200)
+                      menu=page.locator("footer .lang-switch").first
+                      menu.locator("button").click(timeout=10000)
+                      link=menu.locator(".lang-menu a").filter(has_text=label).first
+                      checks["target_in_norwegian_footer"]=link.count()==1
+                      if link.count()==0:raise RuntimeError("Target language absent in Norwegian footer")
+                      with page.expect_navigation(wait_until="domcontentloaded",timeout=35000) as event:
+                          link.click(timeout=10000)
+                      dest=event.value
+                      checks["target_page_http_200"]=bool(dest and dest.status==200)
+                      row["actual_target_url"]=page.url
+                      checks["target_page_lang_menu_top"]=page.locator("header .lang-switch .lang-menu a").count()>=38
+                      checks["target_page_lang_menu_footer"]=page.locator("footer .lang-switch .lang-menu a").count()>=38
+                      checks["norsk_present_in_header"]=page.locator("header .lang-switch .lang-menu a").filter(has_text="Norsk").count()==1
+                      checks["norsk_present_in_footer"]=page.locator("footer .lang-switch .lang-menu a").filter(has_text="Norsk").count()==1
+                      if checks["norsk_present_in_footer"]:
+                          foot=page.locator("footer .lang-switch").first
+                          foot.locator("button").click(timeout=10000)
+                          backlink=foot.locator(".lang-menu a").filter(has_text="Norsk").first
+                          checks["norsk_link_points_to_home"]=backlink.get_attribute("href")==BASE
+                          with page.expect_navigation(wait_until="domcontentloaded",timeout=35000) as return_event:
+                              backlink.click(timeout=10000)
+                          response=return_event.value
+                          checks["return_to_norsk_http_200"]=bool(response and response.status==200)
+                          checks["returned_to_norwegian_home"]=page.url.rstrip("/")==BASE.rstrip("/")
+                          checks["norsk_not_lost_after_two_switches"]=page.locator("footer .lang-menu a").filter(has_text="Norsk").count()==1
+                  except Exception as e:
+                      row["errors"].append(str(e)[:900])
+                      row["traceback"]=traceback.format_exc()[-1000:]
+                  finally:
+                      row["success"]=bool(checks) and all(x is True for x in checks.values()) and not row["errors"]
+                      print(f"{label}: {'PASS' if row['success'] else 'FAIL'} {checks} {row['errors']}",flush=True)
+                      results.append(row)
+                      ctx.close()
+              browser.close()
+          report={"checked_at_utc":datetime.now(timezone.utc).isoformat(),
+                  "github_run_id":os.getenv("GITHUB_RUN_ID",""),
+                  "browser":"Playwright Chromium mobile 390px",
+                  "norwegian_home":BASE,"base_inventory":inventory,
+                  "languages_checked":len(results),
+                  "passed":sum(r["success"] for r in results),
+                  "all_passed":all(inventory.values()) and len(results)>=37 and all(r["success"] for r in results),
+                  "results":results}
+          path=Path(".github/norwegian-cross-language-audit.json")
+          path.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+          print(f"Cross-language QA {report['passed']}/{len(results)}; full_pass={report['all_passed']}",flush=True)
+          PY
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: norwegian-cross-language-evidence
+          path: .github/norwegian-cross-language-audit.json
+          if-no-files-found: warn
+      - name: Commit results
+        if: always()
+        run: |
+          if [ -f .github/norwegian-cross-language-audit.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .github/norwegian-cross-language-audit.json
+            if ! git diff --cached --quiet; then
+              git commit -m "Audit switching from all languages back to Norsk in mobile browser"
+              git pull --rebase origin main
+              git push origin HEAD:main
+            fi
+          fi
+      - name: Require all language switches
+        run: |
+          python3 - <<'PY'
+          import json,sys
+          with open(".github/norwegian-cross-language-audit.json",encoding="utf8") as f:r=json.load(f)
+          assert r["all_passed"], f"Cross-language switching failed: {r['passed']}/{r['languages_checked']}"
+          print("All Norwegian language switches verified in Chromium")
+          PY
