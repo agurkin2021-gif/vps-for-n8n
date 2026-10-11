@@ -32,3 +32,9 @@ html[lang="ja"] pre>code{white-space:pre}
 
 /* Mobile footer language menu must open inside the viewport, not beyond the left edge. */
 @media(max-width:560px){footer .footer-lang-switch .lang-menu{left:0;right:auto;max-width:calc(100vw - 32px)}}
+
+/* Keep long technical commands scrollable without widening the page, across every locale. */
+pre{max-width:100%;min-width:0;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+pre>code{white-space:pre}
+/* Avoid min-content expansion of translated long words in grid cards. */
+.cards>article{min-width:0;overflow-wrap:anywhere}
