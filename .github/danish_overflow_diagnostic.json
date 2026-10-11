@@ -1,0 +1,535 @@
+{
+  "cases": [
+    {
+      "path": "da/n8n-backup-and-restore.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 1109,
+      "bodyScrollWidth": 1109,
+      "overflowPx": 719,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1109,
+          "width": 1079,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# RESTORE ONLY TO A FRESH, EMPTY TARGET DATABASE # Adapt Postgres"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1041,
+          "width": 1011,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# After fresh-instance owner setup AND providing the correct key "
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1032,
+          "width": 1002,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Execute from your Docker Compose project; the n8n service must "
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 849,
+          "width": 819,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Run only on the intended CLEAN recovery instance docker compose"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 772,
+          "width": 742,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# In the Docker Compose project; adapt service, DB and user names"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 685,
+          "width": 655,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Only for SQLite and the default /home/node/.n8n mount # Stop n8"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 675,
+          "width": 645,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Run only on the intended CLEAN recovery instance docker compose"
+        }
+      ],
+      "offenders": 7
+    },
+    {
+      "path": "n8n-backup-and-restore.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 1109,
+      "bodyScrollWidth": 1109,
+      "overflowPx": 719,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1109,
+          "width": 1079,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# RESTORE ONLY TO A FRESH, EMPTY TARGET DATABASE # Adapt Postgres"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1041,
+          "width": 1011,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# After fresh-instance owner setup AND providing the correct key "
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 1032,
+          "width": 1002,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Execute from your Docker Compose project; the n8n service must "
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 849,
+          "width": 819,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Run only on the intended CLEAN recovery instance docker compose"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 772,
+          "width": 742,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# In the Docker Compose project; adapt service, DB and user names"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 685,
+          "width": 655,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Only for SQLite and the default /home/node/.n8n mount # Stop n8"
+        },
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 675,
+          "width": 645,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Run only on the intended CLEAN recovery instance docker compose"
+        }
+      ],
+      "offenders": 7
+    },
+    {
+      "path": "da/install-n8n-on-a-vps.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 981,
+      "bodyScrollWidth": 981,
+      "overflowPx": 591,
+      "offending": [
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 981,
+          "width": 963,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation sudo a"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 596,
+          "width": 578,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "chmod 600 .env docker compose config --quiet docker compose up -d"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 577,
+          "width": 559,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# .env — replace the three example secrets # Pin a maintained n8n"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 538,
+          "width": 520,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Back up the database, encryption key, instance data, # and file"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 529,
+          "width": 511,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "services: postgres: image: postgres:18 restart: unless-stopped en"
+        }
+      ],
+      "offenders": 5
+    },
+    {
+      "path": "install-n8n-on-a-vps.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 981,
+      "bodyScrollWidth": 981,
+      "overflowPx": 591,
+      "offending": [
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 981,
+          "width": 963,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation sudo a"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 596,
+          "width": 578,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "chmod 600 .env docker compose config --quiet docker compose up -d"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 577,
+          "width": 559,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# .env — replace the three example secrets # Pin a maintained n8n"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 538,
+          "width": 520,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Back up the database, encryption key, instance data, # and file"
+        },
+        {
+          "element": "main. > section#vps-n8n-install-walkthrough.section > pre. > code.",
+          "left": 18,
+          "right": 529,
+          "width": 511,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "services: postgres: image: postgres:18 restart: unless-stopped en"
+        }
+      ],
+      "offenders": 5
+    },
+    {
+      "path": "da/n8n-queue-mode.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 743,
+      "bodyScrollWidth": 743,
+      "overflowPx": 353,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 743,
+          "width": 713,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Merge with the existing services; do not replace your full Comp"
+        }
+      ],
+      "offenders": 1
+    },
+    {
+      "path": "n8n-queue-mode.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 743,
+      "bodyScrollWidth": 743,
+      "overflowPx": 353,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > pre. > code.",
+          "left": 30,
+          "right": 743,
+          "width": 713,
+          "ownScrollWidth": 0,
+          "ownClientWidth": 0,
+          "cssOverflowX": "visible",
+          "whiteSpace": "pre",
+          "snippet": "# Merge with the existing services; do not replace your full Comp"
+        }
+      ],
+      "offenders": 1
+    },
+    {
+      "path": "da/secure-n8n-on-a-vps.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "secure-n8n-on-a-vps.html",
+      "width": 390,
+      "status": 200,
+      "viewport": 390,
+      "documentScrollWidth": 390,
+      "bodyScrollWidth": 390,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "da/n8n-backup-and-restore.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "n8n-backup-and-restore.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "da/install-n8n-on-a-vps.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1287,
+      "bodyScrollWidth": 1287,
+      "overflowPx": 7,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > div.cards > article.",
+          "left": 1065,
+          "right": 1287,
+          "width": 222,
+          "ownScrollWidth": 220,
+          "ownClientWidth": 220,
+          "cssOverflowX": "visible",
+          "whiteSpace": "normal",
+          "snippet": "Opgrader ikke PostgreSQL's hovedversion direkte Hvis du kun ændre"
+        }
+      ],
+      "offenders": 1
+    },
+    {
+      "path": "install-n8n-on-a-vps.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "da/n8n-queue-mode.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "n8n-queue-mode.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    },
+    {
+      "path": "da/secure-n8n-on-a-vps.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1291,
+      "bodyScrollWidth": 1291,
+      "overflowPx": 11,
+      "offending": [
+        {
+          "element": "main. > section.section.dark > div.cards > article.",
+          "left": 952,
+          "right": 1291,
+          "width": 340,
+          "ownScrollWidth": 338,
+          "ownClientWidth": 338,
+          "cssOverflowX": "visible",
+          "whiteSpace": "normal",
+          "snippet": "Adgangsomfang for legitimationsoplysninger Brug tjenestekonti og "
+        }
+      ],
+      "offenders": 1
+    },
+    {
+      "path": "secure-n8n-on-a-vps.html",
+      "width": 1280,
+      "status": 200,
+      "viewport": 1280,
+      "documentScrollWidth": 1280,
+      "bodyScrollWidth": 1280,
+      "overflowPx": 0,
+      "offending": [],
+      "offenders": 0
+    }
+  ],
+  "menuTests": [
+    {
+      "path": "da/",
+      "width": 390,
+      "opened": true,
+      "closed": true
+    },
+    {
+      "path": "da/about.html",
+      "width": 390,
+      "opened": true,
+      "closed": true
+    },
+    {
+      "path": "da/n8n-queue-mode.html",
+      "width": 390,
+      "opened": true,
+      "closed": true
+    },
+    {
+      "path": "da/",
+      "width": 1280,
+      "opened": true,
+      "closed": true
+    },
+    {
+      "path": "da/about.html",
+      "width": 1280,
+      "opened": true,
+      "closed": true
+    },
+    {
+      "path": "da/n8n-queue-mode.html",
+      "width": 1280,
+      "opened": true,
+      "closed": true
+    }
+  ],
+  "errors": []
+}
