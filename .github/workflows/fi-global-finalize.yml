@@ -1,0 +1,62 @@
+name: Finnish sitewide language integration
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fi-global-finalize.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: finnish-global-nav-publish
+  cancel-in-progress: false
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Finnish 11 of 11 pages and sitemap
+        shell: bash
+        run: |
+          python -m py_compile _fi_publish_qa.py
+          python - <<'PY'
+          from _fi_publish_qa import verify_sources
+          total = verify_sources()
+          print(f'FINNISH_SOURCE_QA_PASS 11/11 sitemap_urls={total}', flush=True)
+          PY
+      - name: Add Finnish to every site header, footer and hreflang
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _fi_publish_qa.py
+          git add -u .
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Finnish throughout all language selectors and hreflang"
+            ok=0
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:main; then ok=1; break; fi
+              git fetch origin main
+              git rebase origin/main
+              python -u _fi_publish_qa.py
+              git add -u .
+              if ! git diff --cached --quiet; then
+                git commit -m "Synchronize Finnish selectors after concurrent updates"
+              fi
+            done
+            test "$ok" -eq 1
+          fi
+      - name: Validate complete publication and second-pass stability
+        shell: bash
+        run: |
+          python -u _fi_publish_qa.py
+          git diff --exit-code
+          git log -1 --format='FI_PUBLISHED_COMMIT %h %s'
+          echo FI_ALL_11_AND_GLOBAL_MENUS_PASS
