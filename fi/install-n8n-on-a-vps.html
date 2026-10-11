@@ -100,7 +100,7 @@
 <p><strong>Haluatko mahdollisimman nopean uuden asennuksen?</strong> n8n tarjoaa myös virallisen yhden komennon Docker-asennuksen. Voit ladata ja tarkistaa sen skriptin komennolla <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> ennen komennon <code>sh get-n8n.sh</code>suorittamista. Tämä vaihtoehto käynnistää alkuinstanssin SQLite-tietokannalla paikalliseen URL-osoitteeseen ja sisältää n8n Assistantin eristetyn ympäristön palveluita. Se <strong>ei ole sama</strong> kuin tässä kuvattu julkista HTTPS:ää ja PostgreSQL:ää käyttävä VPS-asennus. Virallinen täysi eristetty ympäristö tarvitsee enemmän RAM-muistia ja CPU-tehoa kuin kevyt n8n-asennus (sen Compose-opas määrittää vähintään 4 GB RAM / 2 vCPU). Internetiin avattavaa tuotanto-VPS:ää varten jatka alla olevalla käsin määritettävällä kokonaisuudella.</p>
 <h3>1. Valmistele Docker, DNS ja käyttöoikeudet</h3>
 <p>Yhdistä SSH:lla sudo-oikeuksin ja osoita DNS:n A-tietue <code>n8n.example.com</code> VPS:si IPv4-osoitteeseen. Uudelle <strong>Ubuntu 22.04-, 24.04- tai 26.04-</strong> VPS:lle seuraavat komennot asentavat Docker Enginen ja nykyisen <code>docker compose</code> lisäosan Dockerin virallisesta allekirjoitetusta <code>apt</code> pakettivarastosta:</p>
-<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+<pre><code># Uusi Ubuntu 22.04 / 24.04 / 26.04 -asennus virallisista lähteistä
 sudo apt update
 sudo apt install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -126,14 +126,14 @@ sudo docker run --rm hello-world
 getent hosts n8n.example.com
 mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <p>Jos <code>getent hosts</code> ei palauta osoitetta tai palauttaa väärän osoitteen, korjaa DNS ennen Caddyn käynnistämistä. Korvaa <code>n8n.example.com</code> kaikkialla oppaassa oikealla palvelinnimelläsi. Docker edellyttää tavallisesti pääkäyttäjän oikeuksia: jos SSH-käyttäjäsi ei voi suorittaa myöhempiä <code>docker compose</code> komentoja suoraan, lisää niiden eteen <code>sudo</code>. Käyttäjän lisääminen <code>docker</code> ryhmään myöntää käytännössä pääkäyttäjän oikeudet, joten sitä ei pidä tehdä kevyin perustein jaetulla palvelimella.</p>
-<p>Pidä SSH-ylläpidon todellinen portti saavutettavissa ennen palomuurin käyttöönottoa. Salli sisääntuleva HTTP (80) ja HTTPS (443) varmenteiden myöntämistä ja editoria varten. Dockerin julkaisemat konttiportit voivat ohittaa joitakin UFW-sääntöjä, joten tarkista Dockerin palomuuriohjeet ja julkaise vain tarkoitetut Caddy-portit. Tämä Compose-esimerkki ei tarkoituksella <strong>älä</strong> julkaise PostgreSQL:ää (5432), n8n:ää (5678) eikä tehtäväsuorittimen välityspalvelua (5679) julkiseen internetiin.</p>
+<p>Pidä SSH-ylläpidon todellinen portti saavutettavissa ennen palomuurin käyttöönottoa. Salli sisääntuleva HTTP (80) ja HTTPS (443) varmenteiden myöntämistä ja editoria varten. Dockerin julkaisemat konttiportit voivat ohittaa joitakin UFW-sääntöjä, joten tarkista Dockerin palomuuriohjeet ja julkaise vain tarkoitetut Caddy-portit. Tässä Compose-esimerkissä ei <strong>julkaista</strong> PostgreSQL:ää (5432), n8n:ää (5678) eikä tehtäväsuorittimen välityspalvelua (5679) julkiseen internetiin.</p>
 <h3>2. Luo ympäristöarvot ja säilytä avain</h3>
 <p>Luo projektihakemistossa kolme <strong>erilaista</strong> satunnaista heksadesimaaliarvoa komennolla:</p>
 <pre><code>openssl rand -hex 32
 openssl rand -hex 32
 openssl rand -hex 32</code></pre>
-<p>Luo tiedosto nimeltä <code>.env</code> käyttäen alla olevaa mallia. Korvaa jokainen <code>REPLACE_WITH_RANDOM_HEX</code> eri satunnaisarvolla ja muuta palvelinnimi sekä aikavyöhyke. Esitetty <code>2.42.5</code> tunniste on <strong>8. lokakuuta 2026 ilmoitettu vakaa julkaisu</strong>, jota käytetään tässä päivätyn kokoonpanoesimerkin pohjana, <strong>ei takeena käytännössä testatusta asennuksesta tai tulevasta tietoturvasta</strong>. Tarkista viralliset ajantasaiset n8n-julkaisut ennen asennusta ja pidä n8n:n sekä sen tehtäväsuorittimen levykuvat samassa varmennetussa versiossa.</p>
-<pre><code># .env — replace the three example secrets
+<p>Luo tiedosto nimeltä <code>.env</code> käyttäen alla olevaa mallia. Korvaa jokainen <code>REPLACE_WITH_RANDOM_HEX</code> eri satunnaisarvolla ja muuta palvelinnimi sekä aikavyöhyke. Tässä esitetty <code>2.42.5</code>-versiotunniste on <strong>8. lokakuuta 2026 ilmoitettu vakaa julkaisu</strong>, jota käytetään tässä päivätyn kokoonpanoesimerkin pohjana, <strong>ei takeena käytännössä testatusta asennuksesta tai tulevasta tietoturvasta</strong>. Tarkista viralliset ajantasaiset n8n-julkaisut ennen asennusta ja pidä n8n:n sekä sen tehtäväsuorittimen levykuvat samassa varmennetussa versiossa.</p>
+<pre><code># .env — korvaa kolme esimerkkisalaisuutta
 # Kiinnitä ylläpidetty n8n-versio; käytä samaa versiota myös tehtäväsuorittimessa.
 N8N_VERSION=2.42.5
 N8N_HOST=n8n.example.com
@@ -224,14 +224,14 @@ volumes:
 }</code></pre>
 <p>Caddy pyytää ja uusii julkiset TLS-varmenteet, kun verkkotunnuksen DNS toimii ja ulkoinen liikenne pääsee portteihin 80/443. Älä osoita DNS:ää osoitteeseen <code>localhost</code>. Jos korvaat Caddyn toisella käänteisellä välityspalvelimella, välitä alkuperäisen palvelinnimen, protokollan ja asiakasosoitteen otsakkeet ja säädä <code>N8N_PROXY_HOPS</code> todellisten luotettujen välityspalvelinhyppyjen määrän mukaan.</p>
 <h3>5. Käynnistä kontit ja testaa ulkopuolelta</h3>
-<p>Suorita nämä komennot projektihakemistossa tiedostojen <code>.env</code>, <code>compose.yaml</code> ja <code>Caddyfile</code>:</p>
+<p>Suorita nämä komennot projektihakemistossa tallennettuasi tiedostot <code>.env</code>, <code>compose.yaml</code> ja <code>Caddyfile</code>:</p>
 <pre><code>chmod 600 .env
 docker compose config --quiet
 docker compose up -d
 docker compose ps
 docker compose logs --tail=100 n8n n8n-runner postgres caddy
 curl -fsS https://n8n.example.com/healthz</code></pre>
-<p>Viimeinen komento tarkistaa <strong>julkisen HTTPS-yhteyden</strong> terveyden tarkistuspisteen. Jos varmenteen myöntäminen on kesken, tarkista Caddyn lokit sekä DNS ja portit ennen kuin päättelet n8n:n olevan rikki. Avaa <code>https://n8n.example.com</code>, luo ensimmäinen omistajatili heti ja ota käyttöön asianmukainen kirjautumissuojaus. Varmista, että instanssi todella suorittaa työnkulun eikä pelkästään näytä editoria:</p>
+<p>Viimeinen komento tarkistaa <strong>julkisen HTTPS-palvelun</strong> terveystarkistuspisteen. Jos varmenteen myöntäminen on kesken, tarkista Caddyn lokit sekä DNS ja portit ennen kuin päättelet n8n:n olevan rikki. Avaa <code>https://n8n.example.com</code>, luo ensimmäinen omistajatili heti ja ota käyttöön asianmukainen kirjautumissuojaus. Varmista, että instanssi todella suorittaa työnkulun eikä pelkästään näytä editoria:</p>
 <ol>
 <li>Luo editorissa työnkulku, jonka käynnistimenä on <strong>Webhook</strong> . Aseta <strong>HTTP Method</strong> arvoksi <code>GET</code>, valitse <strong>Path</strong> <code>vps-check</code>ja aseta <strong>Respond</strong> arvoksi <strong>Immediately</strong>. Tallenna työnkulku.</li>
 <li>Napsauta <strong>Listen for Test Event</strong>, kopioi n8n:n näyttämä täydellinen <strong>Test URL</strong> ja suorita toiselta laitteelta komento <code>curl -i 'PASTE_TEST_URL_HERE'</code> kopioidulla URL-osoitteella. Odota onnistunutta HTTP-vastausta ja tarkista, että saapuva tapahtuma näkyy n8n-editorissa. Testi-URL toimii vain, kun n8n kuuntelee tapahtumaa.</li>
@@ -239,8 +239,8 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 </ol>
 <p>Tämä on tarkoituksella yksinkertainen, todentamaton toimintatesti: älä koskaan lähetä siihen salaisuuksia. Peru sen julkaisu tai poista se testauksen jälkeen, tai määritä webhookin todennus/IP-rajoitukset ennen julkisen päätepisteen käyttöä oikeilla tiedoilla. Katso virallinen webhookien testi- ja tuotantodokumentaatio.</p>
 <h3>6. Varmuuskopioi ennen kiinnitettyjen versioiden muuttamista</h3>
-<p>Tallenna palautettavissa oleva PostgreSQL-varmuuskopio <em>ja</em> sekä pysyvä n8n-datataltion sisältö, <code>.env</code>ja salausavain sekä tarvittavat ulkoiset tiedostot tämän palvelimen ulkopuolelle. Testaa palautus <a href="n8n-backup-and-restore.html">varmuuskopiointi- ja palautusoppaan</a> avulla ennen tuotannon päivittämistä. Esimerkkikomennot:</p>
-<pre><code># Back up the database, encryption key, instance data,
+<p>Tallenna palautettavissa oleva PostgreSQL-varmuuskopio <em>ja</em> pysyvän n8n-datataltion sisältö, <code>.env</code>-tiedosto ja salausavain sekä tarvittavat ulkoiset tiedostot palvelimen ulkopuolelle. Testaa palautus <a href="n8n-backup-and-restore.html">varmuuskopiointi- ja palautusoppaan</a> avulla ennen tuotannon päivittämistä. Esimerkkikomennot:</p>
+<pre><code># Varmuuskopioi tietokanta, salausavain ja instanssin tiedot,
 # sekä tiedostot ennen kiinnitettyjen versioiden muuttamista.
 docker compose exec -T postgres \
   pg_dump -U n8n -d n8n &gt; n8n-db.sql
