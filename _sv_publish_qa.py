@@ -220,6 +220,9 @@ def audit(changed):
     if errors:raise AssertionError("\n".join(errors[:100]))
 
 def main():
+    # Polish machine-translated Swedish text before parity and publication checks.
+    from _sv_editorial_polish import run as editorial_run
+    editorial_run()
     changed=0
     pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html") if ".git" not in f.parts and f.name!="404.html")
     for path in pages:
