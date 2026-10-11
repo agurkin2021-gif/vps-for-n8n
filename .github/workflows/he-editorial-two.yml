@@ -1,0 +1,109 @@
+name: Hebrew editorial revision for two completed pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/he-editorial-two.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hebrew-editorial-first-two
+  cancel-in-progress: false
+jobs:
+  editorial-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check English sitemap and cached Hebrew strings
+        run: |
+          python -m py_compile _he_translate_full.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from _he_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(PAGES)==11
+          assert len(json.loads(Path('.github/he-editorial.json').read_text(encoding='utf-8')))>=400
+          assert len(json.loads(Path('.github/he-translation-cache.json').read_text(encoding='utf-8')))>=100
+          print('HE_EDITORIAL_SOURCE_AND_CACHE_PASS',flush=True)
+          PY
+      - name: PAGE 1 - translate with reviewed terminology, verify, save, publish
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _he_translate_full.py 0
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('he/index.html').read_text(encoding='utf-8')
+          assert 'הפעילו Webhooks' in s
+          assert 'התצורה המומלצת' in s or 'התצורה המיועדת לעסק קטן' in s
+          assert 'הרחקו את עצמכם' not in s
+          assert 'A A A A' not in s
+          assert 'lang="he" dir="rtl"' in s
+          print('HE_HOMEPAGE_EDITORIAL_PASS',flush=True)
+          PY
+          git add he/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Editorially polish Hebrew homepage with verified source parity"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: PAGE 2 - translate with reviewed terminology, verify, save, publish
+        shell: bash
+        run: |
+          python -u _he_translate_full.py 1
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('he/best-vps-for-n8n.html').read_text(encoding='utf-8')
+          assert 'בקצרה:' in s
+          assert 'מדובר בהצעות אירוח שונות' in s
+          assert 'גישה ל-root' in s or 'גישת root' in s
+          assert 'lang="he" dir="rtl"' in s
+          print('HE_PROVIDER_COMPARISON_EDITORIAL_PASS',flush=True)
+          PY
+          git add he/best-vps-for-n8n.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Editorially polish Hebrew VPS provider comparison with verified parity"
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then break; fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              if [ "$attempt" -eq 6 ]; then exit 1; fi
+            done
+          fi
+      - name: Final two-page structure, SEO, metadata and locale QA
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,re,xml.etree.ElementTree as ET
+          from pathlib import Path
+          from _he_translate_full import ROOT,PAGES,validate,verify_source_sitemap,BASE
+          assert verify_source_sitemap()==11
+          pages=list((ROOT/'he').glob('*.html'))
+          assert len(pages)==2
+          urls=[el.text for el in ET.parse(ROOT/'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==2
+          for en,he in PAGES[:2]:
+            src=(ROOT/en).read_text(encoding='utf-8')
+            out=(ROOT/he).read_text(encoding='utf-8')
+            validate(src,out,en,he)
+            assert BASE+('he/' if he=='he/index.html' else he) in urls
+            assert re.search(r'<html[^>]*lang="he"[^>]*dir="rtl"',out)
+            for chunk in re.findall(r'<script\b[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',out,re.I|re.S):
+              json.loads(chunk)
+            print('HE_EDITORIAL_FINAL_QA_PASS',he,flush=True)
+          PY
+          git diff --exit-code
+          echo 'HE_TWO_PAGE_EDITORIAL_PUBLICATION_PASS'
