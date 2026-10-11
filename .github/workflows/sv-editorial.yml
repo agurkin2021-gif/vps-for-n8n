@@ -1,0 +1,52 @@
+name: Swedish native terminology and heading audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sv-editorial.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sv-editorial-finish
+  cancel-in-progress: false
+jobs:
+  editorial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Correct Swedish technical headings, validate markup and menus
+        shell: bash
+        run: |
+          python -m py_compile _sv_editorial_polish.py _sv_publish_qa.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _sv_publish_qa.py
+          git add -u .
+          git add sitemap.xml
+          if ! git diff --cached --quiet; then
+            git commit -m "Improve Swedish technical terminology and headings on all 11 pages"
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:main; then break; fi
+              git pull --rebase -X ours origin main
+              python -u _sv_publish_qa.py
+              git add -u .
+              git add sitemap.xml
+              if ! git diff --cached --quiet; then
+                git commit -m "Reapply Swedish editorial corrections after concurrent commits"
+              fi
+              if [ "$attempt" -eq 5 ]; then exit 1; fi
+            done
+          fi
+      - name: Revalidate all pages and every locale without unstaged changes
+        run: |
+          python -u _sv_publish_qa.py
+          git diff --exit-code
+          echo "SV_SWEDISH_CONTENT_AND_GLOBAL_LANGUAGE_SWITCH_QA_PASS"
