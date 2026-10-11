@@ -128,3 +128,14 @@ jobs:
           assert len([u for u in urls if u.startswith(BASE+'he/')])==2
           print('HE_FIRST_TWO_PAGES_FINAL_PASS')
           PY
+      - name: Preserve translated Hebrew strings on interruption
+        if: failure()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/he-translation-cache.json he/ 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint Hebrew translation cache after interrupted pass"
+            git push origin HEAD:main || true
+          fi
