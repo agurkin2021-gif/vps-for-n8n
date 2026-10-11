@@ -1,0 +1,89 @@
+name: Danish pages 1 and 2 – sequential localization
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/da-first-two.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: da-translation-first-pair
+  cancel-in-progress: false
+
+jobs:
+  translate-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install English to Danish translation package
+        shell: bash
+        run: |
+          python -m pip install -q 'argostranslate>=1.9,<2'
+          python - <<'PY'
+          import argostranslate.package as p
+          p.update_package_index()
+          packages = [x for x in p.get_available_packages() if x.from_code == "en" and x.to_code == "da"]
+          assert packages, "English -> Danish offline model not available"
+          p.install_from_path(packages[0].download())
+          print("DA_LANGUAGE_MODEL_READY", flush=True)
+          PY
+      - name: Verify sitemap, Danish script and editorial mappings
+        shell: bash
+        run: |
+          python -m py_compile _da_translate_full.py
+          python - <<'PY'
+          import json
+          from _da_translate_full import verify_source_sitemap, PAGES, EXACT
+          assert verify_source_sitemap() == len(PAGES) == 11
+          assert len(EXACT) >= 80
+          assert [x for x, y in PAGES[:2]] == ['index.html','best-vps-for-n8n.html']
+          assert not any(name.startswith('da/') for name,_ in PAGES)
+          print("DA_SITEMAP_11_SOURCE_PAGES_VALID", flush=True)
+          PY
+      - name: PAGE 1 translate verify save publish; then PAGE 2
+        shell: bash
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u - <<'PY'
+          import subprocess
+          import time
+          from pathlib import Path
+          from _da_translate_full import PAGES, ROOT, process, validate, verify_source_sitemap
+          assert verify_source_sitemap() == 11
+          def run(*args):
+              subprocess.run(args, check=True)
+          def save_publish(target, index):
+              run('git', 'add', target, '.github/da-translation-cache.json')
+              run('git','commit','-m',f'Danish page {index}/11 translated and verified: {target}')
+              for attempt in range(6):
+                  if subprocess.run(['git','push','origin','HEAD:main']).returncode == 0:
+                      print(f'DA_PAGE_{index}_PUBLISHED {target}', flush=True)
+                      return
+                  run('git','fetch','origin','main')
+                  run('git','rebase','-X','ours','origin/main')
+                  time.sleep(2 + attempt)
+              raise RuntimeError(f'GitHub push failed for {target}')
+          for index in (0, 1):
+              en, dst = PAGES[index]
+              print(f'DA_PAGE_{index+1}_OPEN_EN {en}',flush=True)
+              process(en,dst)
+              validate((ROOT/en).read_text(encoding='utf-8'),
+                       (ROOT/dst).read_text(encoding='utf-8'),en,dst)
+              assert Path(dst).exists()
+              save_publish(dst,index+1)
+          assert len(list((ROOT/'da').glob('*.html'))) == 2
+          print('DA_FIRST_TWO_VERIFIED_AND_PUBLISHED',flush=True)
+          PY
