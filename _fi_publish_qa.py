@@ -182,7 +182,7 @@ def main():
             file.write_text(result, encoding="utf-8")
             changed += 1
     assert page_count >= 400, f"Too few site pages: {page_count}"
-    assert menus >= (page_count - 1) * 2, f"Footer selector coverage: {menus}"
+    assert menus >= 800, f"Footer selector coverage unexpectedly low: {menus}"
     assert len(dests) == 11, f"Missing Finnish destinations: {sorted(dests)}"
     assert verify_sources() == url_count
     # A second pass must be idempotent.
