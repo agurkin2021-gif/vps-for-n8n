@@ -373,7 +373,7 @@ def process(enpath,japath):
     for idx,(start,obj,end) in enumerate(objs):
         patch_json(obj,enpath,japath)
         output=output.replace("<!--JSONLD_"+str(idx)+"-->",start+json.dumps(obj,ensure_ascii=False,separators=(',',':'))+end,1)
-    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1sv\2',output,count=1,flags=re.I)
+    output=re.sub(r'(<html\b[^>]*\blang=["\'])en(["\'])',r'\1da\2',output,count=1,flags=re.I)
     output=re.sub(r'(<div\b[^>]*class=["\'][^"\']*\blang-switch\b[^"\']*["\'][^>]*>\s*<button\b[^>]*>)[^<]*(</button>)',lambda m:m.group(1)+"Dansk ▾"+m.group(2),output,flags=re.I)
     # Keep endonyms in the language menu; make both header and footer link to the same article.
     def fix_language_link(m):
@@ -398,7 +398,7 @@ def process(enpath,japath):
     if menu_count != 2:
         raise AssertionError(f"Expected two Danish selectors, got {menu_count}")
     # Danish alternate must be present even on English source pages missing the tag.
-    if not re.search(r'<link\b[^>]*hreflang=["\']sv["\']',output,re.I):
+    if not re.search(r'<link\b[^>]*hreflang=["\']da["\']',output,re.I):
         output=output.replace("</head>",'<link rel="alternate" hreflang="da" href="'+BASE+japath+'"/></head>',1)
     # Keep sitemap canonical and language alternates at the directory URL for homepage.
     output=output.replace(BASE+"da/index.html",BASE+"da/")
@@ -416,8 +416,8 @@ def validate(src,out,enpath,japath):
         raise AssertionError(f"CSS changed: {enpath}")
     if [m.group(1) for m in JS_TAG.finditer(src)] != [m.group(1) for m in JS_TAG.finditer(out)]:
         raise AssertionError(f"JavaScript changed: {enpath}")
-    if not re.search(r'<html\b[^>]*lang=["\']sv',out,re.I):
-        raise AssertionError("lang sv missing")
+    if not re.search(r'<html\b[^>]*lang=["\']da',out,re.I):
+        raise AssertionError("lang da missing")
     canonical = BASE + ("da/" if japath == "da/index.html" else japath)
     if canonical not in out:raise AssertionError("self canonical missing")
     if len(re.findall(r'<h1(?:\s|>)',src,re.I))!=len(re.findall(r'<h1(?:\s|>)',out,re.I)):
@@ -440,7 +440,7 @@ def validate(src,out,enpath,japath):
 
 if __name__=="__main__":
     if len(sys.argv)!=2 or not sys.argv[1].isdigit():
-        raise SystemExit("Usage: python _sv_translate_full.py PAGE_INDEX (0..10)")
+        raise SystemExit("Usage: python _da_translate_full.py PAGE_INDEX (0..10)")
     i=int(sys.argv[1])
     if not 0 <= i < len(PAGES):raise SystemExit("Page out of range")
     a,b=PAGES[i]
