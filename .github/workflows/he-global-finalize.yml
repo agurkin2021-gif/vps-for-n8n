@@ -1,0 +1,116 @@
+name: Finalize Hebrew across every language selector and publish
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/he-global-finalize.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: hebrew-global-navigation-final-publication
+  cancel-in-progress: false
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm complete English and Hebrew sitemap and scripts
+        shell: bash
+        run: |
+          python -m py_compile _he_publish_qa.py _he_translate_full.py
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          from _he_publish_qa import ROOT,BASE,EN,HE_URLS
+          from _he_translate_full import verify_source_sitemap,PAGES
+          assert verify_source_sitemap()==len(EN)==len(PAGES)==11
+          urls={v.text for v in ET.parse(ROOT/'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')}
+          assert set(HE_URLS.values())<=urls
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==11
+          assert len(list((ROOT/'he').glob('*.html')))==11
+          print('HE_11_OF_11_SOURCE_AND_SITEMAP_CONFIRMED',flush=True)
+          PY
+      - name: Add Hebrew to every header and footer and repair Hebrew cross-page links
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -u _he_publish_qa.py
+          git add -u .
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Hebrew in every language header and footer; repair 11 Hebrew page links"
+            for attempt in 1 2 3 4 5 6 7; do
+              if git push origin HEAD:main; then
+                echo HE_SITEWIDE_NAV_PUBLISHED
+                break
+              fi
+              git fetch origin main
+              git rebase -X ours origin/main
+              python -u _he_publish_qa.py
+              git add -u .
+              if ! git diff --cached --quiet; then
+                git commit -m "Resynchronize Hebrew selectors after concurrent updates"
+              fi
+              if [ "$attempt" -eq 7 ]; then exit 1; fi
+            done
+          fi
+      - name: Validate every Hebrew page and every sitewide selector after publication
+        shell: bash
+        run: |
+          python -u _he_publish_qa.py
+          git diff --exit-code
+          python - <<'PY'
+          import json,re,xml.etree.ElementTree as ET
+          from _he_publish_qa import ROOT,BASE,EN,HE_URLS,core_page,dest,MENU,ANCHOR,attr,LINK
+          from _he_translate_full import PAGES,validate,verify_source_sitemap
+          assert verify_source_sitemap()==11
+          xml=ET.parse(ROOT/'sitemap.xml')
+          urls=[x.text for x in xml.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len(set(urls))==len(urls)
+          assert len([u for u in urls if u.startswith(BASE+'he/')])==11
+          pages=sorted(p for p in ROOT.rglob('*.html') if '.git' not in p.parts and p.name!='404.html')
+          menus_checked=pages_checked=he_pages=0
+          for file in pages:
+              path=file.relative_to(ROOT).as_posix()
+              text=file.read_text(encoding='utf-8')
+              menus=list(MENU.finditer(text))
+              if menus:
+                  pages_checked+=1
+                  assert len(menus)==2, path
+                  target=dest(core_page(path,text))
+                  for menu in menus:
+                      menus_checked+=1
+                      anchors=[v.group() for v in ANCHOR.finditer(menu.group(2))]
+                      he=[a for a in anchors if attr(a,'hreflang')=='he']
+                      assert len(he)==1,(path,'Hebrew count')
+                      assert he[0]==anchors[-1],(path,'Hebrew must be final')
+                      assert attr(he[0],'href')==target,(path,'Hebrew route')
+              if path.startswith('he/'):
+                  he_pages+=1
+                  assert '<html lang="he" dir="rtl">' in text
+                  assert len(re.findall(r'<h1(?:\s|>)',text,re.I))==1
+                  assert not re.search(r'<meta\b[^>]*noindex',text,re.I)
+                  for code in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>',text,re.I|re.S):
+                      json.loads(code)
+          assert he_pages==11 and menus_checked==pages_checked*2
+          for en,he in PAGES:
+              source=(ROOT/en).read_text(encoding='utf-8')
+              target=(ROOT/he).read_text(encoding='utf-8')
+              validate(source,target,en,he)
+              he_canonical=BASE+('he/' if he=='he/index.html' else he)
+              assert he_canonical in urls
+              english_head=source.split('</head>',1)[0]
+              english_alts=[x.group() for x in LINK.finditer(english_head) if attr(x.group(),'hreflang')=='he']
+              assert len(english_alts)==1 and attr(english_alts[0],'href')==he_canonical,en
+              print('HE_FULL_PARITY',he,flush=True)
+          print('HE_GLOBAL_FINAL_PASS translated=11 English=11 pages='+str(pages_checked)+
+                ' menus='+str(menus_checked)+' zero_missing=True',flush=True)
+          PY
+          echo HE_FULL_SITE_NAV_AND_PUBLICATION_PASS
