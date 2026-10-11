@@ -1,0 +1,41 @@
+name: Swedish offline translation model probe
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/sv-offline-probe.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-offline-swedish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install offline translation engine
+        run: pip install --quiet 'argostranslate>=1.9,<2'
+      - name: Download English to Swedish model and test safe translation
+        run: |
+          python -u - <<'PY'
+          import argostranslate.package as packages
+          import argostranslate.translate as trans
+          packages.update_package_index()
+          models=[p for p in packages.get_available_packages() if p.from_code=='en' and p.to_code=='sv']
+          print('SWEDISH_ARGOS_MODELS',len(models), flush=True)
+          if not models:
+              raise RuntimeError('English to Swedish offline language pack is unavailable')
+          pkg=models[0]
+          print('SWEDISH_ARGOS_PACKAGE',pkg,flush=True)
+          packages.install_from_path(pkg.download())
+          for sample in [
+              'Choose your VPS',
+              'Compare CPU, RAM, storage and traffic for reliable self-hosted n8n workflows.',
+              'Start with §0§ vCPU, §1§ GB RAM and §2§ GB SSD.'
+          ]:
+              result=trans.translate(sample,'en','sv')
+              print('SV_MODEL_EXAMPLE',repr(sample),'->',repr(result),flush=True)
+          PY
