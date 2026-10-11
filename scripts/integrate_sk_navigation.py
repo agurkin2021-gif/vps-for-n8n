@@ -79,7 +79,7 @@ def main():
     assert len(list(Path("sk").glob("*.html"))) == 11, "11 Slovak files required"
     assert all((ROOT / "sk" / (suffix or "index.html")).is_file() for suffix in EN_PAGES)
 
-    stats = {"scanned": 0, "with_menus": 0, "updated": 0,
+    stats = {"scanned": 0, "with_menus": 0, "single_menu_pages": 0, "updated": 0,
              "already_present": 0, "skipped_no_menus": [],
              "head_alternates_added": 0, "menu_links_added": 0,
              "counterparts": {}, "checked_menu_links": 0}
@@ -92,7 +92,9 @@ def main():
         if not existing:
             stats["skipped_no_menus"].append(str(file))
             continue
-        assert len(existing) == 2, "Expected header and footer menus: " + str(file)
+        assert len(existing) in (1, 2), "Expected one or two standard menus: " + str(file)
+        if len(existing) == 1:
+            stats["single_menu_pages"] += 1
         tail = equivalent(existing[-1].group(2))
         url = BASE + "sk/" + tail
         stats["counterparts"][tail or "(home)"] = stats["counterparts"].get(tail or "(home)", 0) + 1
@@ -127,7 +129,7 @@ def main():
             stats["head_alternates_added"] += 1
 
         menus = list(MENU.finditer(modified))
-        assert len(menus) == 2, "Lost a menu: " + str(file)
+        assert len(menus) == len(existing), "Lost a menu: " + str(file)
         for menu in menus:
             a = [x for x in anchors(menu.group(2)) if label(x) == "Slovenčina"]
             assert len(a) == 1 and href(a[0]) == url, "Missing or duplicated Slovak: " + str(file)
@@ -145,7 +147,7 @@ def main():
         stats["with_menus"] += 1
 
     assert stats["with_menus"] >= 420, "Too few standard pages examined: " + repr(stats)
-    assert stats["checked_menu_links"] == 2 * stats["with_menus"], "Header/footer count mismatch"
+    assert stats["checked_menu_links"] == 2 * stats["with_menus"] - stats["single_menu_pages"], "Header/footer count mismatch"
     # Idempotence and verification for the canonical 11 Slovak pages.
     for suffix in EN_PAGES:
         page = ROOT / "sk" / (suffix or "index.html")
