@@ -22,6 +22,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install offline Swedish translation engine
+        run: pip install --quiet 'argostranslate>=1.9,<2'
+      - name: Install English to Swedish language pack
+        run: |
+          python - <<'PY'
+          import argostranslate.package as packages
+          packages.update_package_index()
+          models=[p for p in packages.get_available_packages() if p.from_code=='en' and p.to_code=='sv']
+          assert models, "Offline English to Swedish pack is unavailable"
+          packages.install_from_path(models[0].download())
+          print("SV_OFFLINE_LANGUAGE_PACK_READY",flush=True)
+          PY
       - name: Validate source sitemap and both Swedish scripts
         run: |
           python -m py_compile _sv_translate_full.py _sv_publish_qa.py
