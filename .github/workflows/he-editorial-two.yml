@@ -107,3 +107,4 @@ jobs:
           PY
           git diff --exit-code
           echo 'HE_TWO_PAGE_EDITORIAL_PUBLICATION_PASS'
+# Hebrew editorial parity: numerical 1-click specification preserved.
