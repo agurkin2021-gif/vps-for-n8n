@@ -302,7 +302,7 @@
 
 
 
-<article><h3>Linux VPS</h3><p>n8n, PostgreSQL, Docker және reverse proxy үшін ресурсы жеткілікті, қолдауы жалғасып жатқан Linux серверін пайдаланыңыз.</p></article>
+<article><h3>Linux VPS</h3><p>n8n, PostgreSQL, Docker және кері прокси үшін ресурсы жеткілікті, қолдауы жалғасып жатқан Linux серверін пайдаланыңыз.</p></article>
 
 
 
@@ -318,7 +318,7 @@
 
 
 
-<p><strong>VPS-те басқа сайттар жұмыс істеп тұр ма?</strong> CPU, RAM және диск ресурстары жеткілікті болса, n8n-ді өзіңіз басқаратын бар серверге қосуға болады. Бірақ Nginx, Apache, Caddy немесе басқа reverse proxy 80/443 порттарын қолданып тұрса, <strong>болмайды</strong> төмендегі Caddy контейнерін өзгеріссіз іске қоспаңыз: порттар қақтығысады. Оның орнына жаңа n8n субдоменін бар reverse proxy арқылы ішкі желіге дұрыс бағыттаңыз немесе дәл осы Compose мысалы үшін таза VPS пайдаланыңыз. Басқа сайттар мен олардың TLS конфигурациясын сақтаңыз; бұл мысалда 80/443 порттары бос деп есептеледі.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">n8n үшін Linux VPS таңдаңыз</a></div><p id="affiliate-note"><small>Серіктестік сілтеме: сатып алудан комиссия алуымыз мүмкін.</small></p></section>
+<p><strong>VPS-те басқа сайттар жұмыс істеп тұр ма?</strong> CPU, RAM және диск ресурстары жеткілікті болса, n8n-ді өзіңіз басқаратын бар серверге қосуға болады. Бірақ Nginx, Apache, Caddy немесе басқа кері прокси 80/443 порттарын пайдаланып тұрса, төмендегі Caddy контейнерін өзгеріссіз іске қоспаңыз: порттар қақтығысады. Оның орнына жаңа n8n субдоменін қолданыстағы кері прокси арқылы жеке желіге бағыттаңыз немесе дәл осы Compose мысалы үшін таза VPS пайдаланыңыз. Басқа сайттар мен олардың TLS конфигурациясын сақтаңыз; бұл мысалда 80/443 порттары бос деп есептеледі.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">n8n үшін Linux VPS таңдаңыз</a></div><p id="affiliate-note"><small>Серіктестік сілтеме: сатып алудан комиссия алуымыз мүмкін.</small></p></section>
 
 
 
@@ -326,7 +326,7 @@
 
 
 
-<div><b>Reverse proxy</b><span>Сырттан келетін HTTPS трафигін қабылдап, n8n сервисіне жібереді.</span></div>
+<div><b>Кері прокси</b><span>Сырттан келетін HTTPS трафигін қабылдап, n8n сервисіне жібереді.</span></div>
 
 
 
@@ -539,7 +539,7 @@ volumes:
 
 
 
-<p>Мына файлды жасаңыз: <code>Caddyfile</code> (C әрпі бас әріппен, кеңейтімсіз), ол <code>compose.yaml</code>файлының жанында тұруы керек. Мысалдағы хост атауын барлық жерде өз DNS атауыңызбен ауыстырыңыз:</p>
+<p>Мына файлды жасаңыз: <code>Caddyfile</code> (C әрпі бас әріппен, кеңейтімсіз), ол <code>compose.yaml</code> файлының жанында тұруы керек. Мысалдағы хост атауын барлық жерде өз DNS атауыңызбен ауыстырыңыз:</p>
 
 
 
@@ -549,7 +549,7 @@ volumes:
 
 
 
-<p>Домен дұрыс resolve болып, сыртқы трафик 80/443 порттарына жете алса, Caddy ашық TLS сертификаттарын өзі сұратады және жаңартады. DNS-ті <code>localhost</code> мәніне бағыттамаңыз. Caddy орнына басқа reverse proxy қолдансаңыз, бастапқы host, protocol және client address header-лерін өткізіп, нақты сенімді proxy hop санына қарай <code>N8N_PROXY_HOPS</code> мәнін баптаңыз.</p>
+<p>Домен дұрыс resolve болып, сыртқы трафик 80/443 порттарына жете алса, Caddy ашық TLS сертификаттарын өзі сұратады және жаңартады. DNS-ті <code>localhost</code> мәніне бағыттамаңыз. Caddy орнына басқа кері прокси қолдансаңыз, бастапқы host, protocol және client address header-лерін өткізіп, нақты сенімді proxy hop санына қарай <code>N8N_PROXY_HOPS</code> мәнін баптаңыз.</p>
 
 
 
@@ -586,7 +586,7 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
-<li>Жұмыс процесін <strong>Publish</strong> етіңіз, node-ты <strong>Production URL</strong> режиміне ауыстырыңыз, URL-ді көшіріп, <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> командасын қайта орындаңыз. Орындалуды жұмыс процесінің <strong>Executions</strong> қойындысынан тексеріңіз. Production webhook сұраулары жұмыс процесінің published күйде болуын талап етеді және олардың payload-ы редактордың тест көрінісінде көрсетілмейді.</li>
+<li>Жұмыс процесін <strong>Publish</strong> етіңіз, node-ты <strong>Production URL</strong> режиміне ауыстырыңыз, URL-ді көшіріп, <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code> командасын қайта орындаңыз. Орындалуды жұмыс процесінің <strong>Executions</strong> қойындысынан тексеріңіз. Production вебхук сұраулары жұмыс процесінің published күйде болуын талап етеді және олардың payload-ы редактордың тест көрінісінде көрсетілмейді.</li>
 
 
 
@@ -594,7 +594,7 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 
 
 
-<p>Бұл әдейі қарапайым, аутентификациясыз smoke test: оған ешқашан құпия дерек жібермеңіз. Тексеруден кейін workflow-ды unpublish етіңіз немесе өшіріңіз; нақты деректер үшін ашық endpoint қолданбас бұрын Webhook authentication және IP restriction баптаңыз. Ресми Webhook test/production құжаттамасын қараңыз.</p>
+<p>Бұл әдейі қарапайым, аутентификациясыз smoke test: оған ешқашан құпия дерек жібермеңіз. Тексеруден кейін workflow-ды unpublish етіңіз немесе өшіріңіз; нақты деректер үшін ашық endpoint қолданбас бұрын вебхук аутентификациясын және IP restriction баптаңыз. Ресми Webhook test/production құжаттамасын қараңыз.</p>
 
 
 
@@ -645,7 +645,7 @@ docker compose ps</code></pre>
 
 
 
-<article><h3>Webhook URL</h3><p>Орнатыңыз: <code>N8N_WEBHOOK_URL</code> мәнін сырттан қолжетімді HTTPS негізгі URL-іне, ал <code>N8N_PROXY_HOPS=1</code> мәнін бір сенімді reverse proxy болса 1 етіп қойыңыз. <code>WEBHOOK_URL</code> n8n 2.35.0 және кейінгі нұсқаларда ескірген alias болып саналады; оны ескі нұсқаулықтардан көшірмеңіз.</p></article>
+<article><h3>Webhook URL</h3><p>Орнатыңыз: <code>N8N_WEBHOOK_URL</code> мәнін сырттан қолжетімді HTTPS негізгі URL-іне, ал <code>N8N_PROXY_HOPS=1</code> мәнін бір сенімді кері прокси болса 1 етіп қойыңыз. <code>WEBHOOK_URL</code> n8n 2.35.0 және кейінгі нұсқаларда ескірген alias болып саналады; оны ескі нұсқаулықтардан көшірмеңіз.</p></article>
 
 
 
