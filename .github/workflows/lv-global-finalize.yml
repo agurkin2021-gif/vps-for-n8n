@@ -1,0 +1,47 @@
+name: Publish Latvian in every language selector
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/lv-global-finalize.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: latvian-global-navigation
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out current main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify eleven Latvian pages and integrate all selectors
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/integrate_lv_navigation.py
+          python3 -u scripts/integrate_lv_navigation.py --write
+      - name: Commit and publish every changed selector
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Latvian in all site language dropdowns and hreflang"
+            git push origin HEAD:main
+          fi
+      - name: Validate final repository state and idempotence
+        shell: bash
+        run: |
+          python3 -u scripts/integrate_lv_navigation.py
+          git diff --exit-code
+          git log -1 --format='LV_NAV_PUBLISHED_COMMIT %h %s'
+          echo LV_ALL_11_PAGES_SITEWIDE_PASS
