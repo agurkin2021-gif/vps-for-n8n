@@ -48,3 +48,79 @@ jobs:
           git diff --exit-code
           git log -1 --format='LT_PUBLISHED_COMMIT %h %s'
           echo LT_ALL_11_GLOBAL_NAV_PASS
+
+  live_verify:
+    needs: integrate
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify live Lithuanian pages, footer/header language links and HTTP 200
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re, json, time, urllib.request
+          base='https://agurkin2021-gif.github.io/vps-for-n8n/'
+          lt_paths=[
+              'lt/',
+              'lt/geriausias-vps-n8n.html',
+              'lt/apie.html',
+              'lt/n8n-atsargines-kopijos-atkurimas.html',
+              'lt/kontaktai.html',
+              'lt/kaip-idiegti-n8n-vps.html',
+              'lt/n8n-cloud-ar-nuosavas-vps.html',
+              'lt/n8n-vps-reikalavimai.html',
+              'lt/privatumo-politika.html',
+              'lt/n8n-vps-saugumas.html',
+              'lt/n8n-eiliu-rezimas.html'
+          ]
+          additional={
+              '': 'lt/',
+              'ru/': 'lt/',
+              'hy/n8n-queue-mode.html': 'lt/n8n-eiliu-rezimas.html',
+              'de/ueber-uns.html': 'lt/apie.html',
+              'fr/hebergement-n8n-france.html': 'lt/'
+          }
+          def fetch(url):
+              err=None
+              for attempt in range(8):
+                  try:
+                      request=urllib.request.Request(url,headers={'User-Agent':'n8nVPS-Lithuanian-LiveQA/1.0'})
+                      with urllib.request.urlopen(request,timeout=20) as response:
+                          html=response.read().decode('utf-8')
+                          if response.status!=200:
+                              raise RuntimeError('HTTP '+str(response.status))
+                          return html
+                  except Exception as exc:
+                      err=exc
+                      time.sleep(5)
+              raise AssertionError(f'{url}: {err}')
+          def menus(html):
+              return re.findall(r'<div\b[^>]*class="lang-menu"[^>]*>(.*?)</div>',html,re.S|re.I)
+          for rel in lt_paths:
+              url=base+rel
+              html=fetch(url)
+              assert '<html lang="lt">' in html,(rel,'html lang')
+              assert len(re.findall(r'<h1(?:\s|>)',html,re.I))==1,(rel,'H1')
+              found=menus(html)
+              assert len(found)==2,(rel,'two menus',len(found))
+              for menu in found:
+                  links=re.findall(r'<a\b[^>]*>.*?</a>',menu,re.S)
+                  assert links[-1].endswith('>Lietuvių</a>'),(rel,'language last')
+                  assert f'href="{url}"' in links[-1],(rel,'self menu target')
+                  assert 'aria-current="page"' in links[-1],(rel,'current')
+              assert re.search(r'<link\b[^>]*\bhreflang="lt"[^>]*>',html),(rel,'head alternate')
+              assert url in html.split('</head>')[0],(rel,'head URL')
+              for block in re.findall(r'<script\b[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',html,re.S):
+                  json.loads(block)
+              print('LT_LIVE_200',rel,'menus=2',flush=True)
+          for rel,target in additional.items():
+              html=fetch(base+rel)
+              found=menus(html)
+              assert len(found)==2,(rel,'two menus')
+              for menu in found:
+                  links=re.findall(r'<a\b[^>]*>.*?</a>',menu,re.S)
+                  assert links[-1].endswith('>Lietuvių</a>'),rel
+                  assert f'href="{base+target}"' in links[-1],(rel,'destination')
+              print('LT_SWITCH_LIVE_200',rel or 'English homepage',flush=True)
+          print('LT_LIVE_ALL_11_HTTP_200_AND_SWITCHES_PASS',flush=True)
+          PY
