@@ -2,39 +2,77 @@
 
 
 
+
+
+
+
 <html lang="uz"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>n8n zaxira nusxasi va tiklash</title><meta content="VPS-dagi self-hosted n8n-ni zaxiralash va tiklash: PostgreSQL yoki SQLite, ish jarayonlari, tizimga kirish ma’lumotlari, shifrlash kaliti, binar ma’lumotlar, serverdan tashqari nusxalar va restore testi." name="description"/><meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html" rel="canonical"/>
+
+
 
 <link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"/>
 
+
+
 <link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html"/>
 
+
+
 <link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html"/>
 
+
+
 <link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html"/>
+
+
 
 <link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html"/>
 
+
+
 <link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html"/>
+
+
 
 <link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html"/>
 
+
+
 <link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html"/>
+
+
 
 <link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html"/>
 
+
+
 <link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html"/>
+
+
 
 <link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html"/>
 
+
+
 <link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html"/>
+
+
 
 <link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html"/>
 
+
+
 <link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html"/>
+
+
 
 <link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="bg" href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/n8n-backup-and-restore.html"/><meta content="website" property="og:type"/><meta content="n8n zaxira nusxasi va tiklash" property="og:title"/><meta content="Self-hosted n8n-ni zaxiralash va tiklash: database, ish jarayonlari, tizimga kirish ma’lumotlari, shifrlash kaliti, binar ma’lumotlar va restore testi." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="n8n zaxira nusxasi va tiklash" name="twitter:title"/><meta content="Self-hosted n8n-ni zaxiralash va tiklash: database, ish jarayonlari, tizimga kirish ma’lumotlari, shifrlash kaliti, binar ma’lumotlar va restore testi." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Bosh sahifa","item":"https://agurkin2021-gif.github.io/vps-for-n8n/uz/"},{"@type":"ListItem","position":2,"name":"n8n zaxira nusxasi va tiklash","item":"https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html"}]}</script><style id="backup-hero-visual-styles">
 .backup-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);align-items:center;gap:36px;min-height:465px}
@@ -51,117 +89,231 @@
 @media(prefers-reduced-motion:reduce){.backup-hero-art svg{transition:none}}
 </style><link rel="alternate" hreflang="fa" href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/n8n-backup-restore.html"/><link rel="alternate" hreflang="ar" href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="id" href="https://agurkin2021-gif.github.io/vps-for-n8n/id/n8n-backup-restore.html"/><link rel="alternate" hreflang="ro" href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/backup-restaurare-n8n.html"/><link rel="alternate" hreflang="nl" href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-backup-herstel.html"/><link rel="alternate" hreflang="th" href="https://agurkin2021-gif.github.io/vps-for-n8n/th/n8n-backup-restore.html"/><link rel="alternate" hreflang="az" href="https://agurkin2021-gif.github.io/vps-for-n8n/az/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="el" href="https://agurkin2021-gif.github.io/vps-for-n8n/el/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="zh-TW" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/n8n-backup-restore.html"/><link rel="alternate" hreflang="zh-CN" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/n8n-backup-restore.html"/><link rel="alternate" hreflang="ca" href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/n8n-backup-restore.html"/><link rel="alternate" hreflang="hu" href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="cs" href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="sv" href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="sr" href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="he" href="https://agurkin2021-gif.github.io/vps-for-n8n/he/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="fi" href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="da" href="https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="no" href="https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="sk" href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="hr" href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="ka" href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="hy" href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/n8n-backup-and-restore.html"/><link rel="alternate" hreflang="lt" href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/n8n-atsargines-kopijos-atkurimas.html"/><link rel="alternate" hreflang="lv" href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-rezerves-kopijas-un-atjaunosana.html"/><link rel="alternate" hreflang="et" href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-varundamine-ja-taastamine.html"/><link rel="alternate" hreflang="ms" href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/sandaran-pemulihan-n8n.html"/><link rel="alternate" hreflang="uz" href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html"/><link rel="alternate" hreflang="kk" href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html"/></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">O‘zbekcha ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/n8n-backup-restore.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/n8n-backup-and-restore.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/n8n-backup-restore.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/n8n-backup-restore.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/n8n-backup-restore.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/n8n-backup-restore.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/backup-restaurare-n8n.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-backup-herstel.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/n8n-backup-restore.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/n8n-backup-and-restore.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/n8n-backup-and-restore.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/n8n-backup-and-restore.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/n8n-backup-and-restore.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/n8n-backup-and-restore.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/n8n-backup-and-restore.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/n8n-backup-and-restore.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/n8n-backup-and-restore.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/n8n-backup-and-restore.html" hreflang="fi" lang="fi">Suomi</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html" hreflang="da" lang="da">Dansk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-backup-and-restore.html" hreflang="no" lang="no">Norsk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/n8n-backup-and-restore.html" hreflang="sk" lang="sk">Slovenčina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/n8n-backup-and-restore.html" hreflang="hr" lang="hr">Hrvatski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/n8n-backup-and-restore.html" hreflang="ka" lang="ka">ქართული</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/n8n-backup-and-restore.html" hreflang="hy" lang="hy">Հայերեն</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/n8n-atsargines-kopijos-atkurimas.html" hreflang="lt" lang="lt">Lietuvių</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-rezerves-kopijas-un-atjaunosana.html" hreflang="lv" lang="lv">Latviešu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-varundamine-ja-taastamine.html" hreflang="et" lang="et">Eesti</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/sandaran-pemulihan-n8n.html" hreflang="ms" lang="ms">Bahasa Melayu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html" hreflang="uz" lang="uz" aria-current="page">O‘zbekcha</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html" hreflang="kk" lang="kk">Қазақша</a></div></div></header><main>
 
+
+
 <section class="section backup-hero"><div class="backup-hero-copy"><p class="eyebrow">ZAXIRA NUSXA VA TIKLASH</p><h1>n8n zaxira nusxasi va tiklash</h1><p class="lead">Self-hosted n8n-ni zaxiralash va tiklash uchun SQLite ma’lumotlar bazasi yoki izchil PostgreSQL dumpini, doimiy .n8n papkasini va asl shifrlash kalitini, o‘rnatish konfiguratsiyasini hamda barcha tashqi binar yoki mounted-file bog‘liqliklarini himoya qiling. Shifrlangan nusxani VPS-dan tashqarida saqlang va tiklashni alohida instansda sinang. Tanlab tiklash uchun CLI orqali ish jarayonlari va tizimga kirish ma’lumotlarini eksport qiling; faqat JSON eksportlari serverning to‘liq zaxira nusxasi emas.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note">n8n uchun VPS tanlang</a></div><p class="backup-affiliate-note" id="backup-hero-affiliate-note">Hamkorlik havolasi: xariddan komissiya olishimiz mumkin.</p></div><div class="backup-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="backup-hero-affiliate-note" aria-label="Explore VPS hosting options for n8n backup and restore"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 490" fill="none" aria-hidden="true" focusable="false">
+
+
 
 <defs>
 
+
+
 <linearGradient id="br-bg" x1="22" y1="20" x2="476" y2="459" gradientUnits="userSpaceOnUse"><stop stop-color="#29384E"/><stop offset="1" stop-color="#121B29"/></linearGradient>
+
+
 
 <linearGradient id="br-server" x1="183" y1="155" x2="317" y2="351" gradientUnits="userSpaceOnUse"><stop stop-color="#304158"/><stop offset="1" stop-color="#172436"/></linearGradient>
 
+
+
 </defs>
+
+
 
 <rect x="18" y="25" width="464" height="440" rx="34" fill="url(#br-bg)"/>
 
+
+
 <rect x="35" y="42" width="430" height="406" rx="24" stroke="#7890A9" stroke-opacity=".38" stroke-width="1.8"/>
+
+
 
 <circle cx="250" cy="245" r="169" stroke="#516A88" stroke-opacity=".26" stroke-width="2.2" stroke-dasharray="5 11"/>
 
+
+
 <path d="M169 107C204 87 241 79 280 84C358 95 412 159 415 236" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round"/>
+
+
 
 <path d="M394 218L415 241L434 214" stroke="#8CE1CE" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
 
+
+
 <path d="M333 385C296 404 258 412 220 406C141 394 88 329 84 253" stroke="#FF815F" stroke-width="10" stroke-linecap="round"/>
+
+
 
 <path d="M104 270L83 247L65 274" stroke="#FF815F" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
 
+
+
 <g stroke="#718FA4" stroke-width="2.8" stroke-dasharray="5 9" stroke-linecap="round">
+
+
 
 <path d="M250 140V119"/><path d="M170 211L132 183"/><path d="M330 211L371 183"/><path d="M172 313L133 350"/><path d="M328 313L371 350"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(177 150)">
 
+
+
 <rect x="0" y="0" width="146" height="192" rx="22" fill="url(#br-server)" stroke="#8499B3" stroke-width="3"/>
+
+
 
 <rect x="17" y="22" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
 
+
+
 <rect x="17" y="76" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
+
+
 
 <rect x="17" y="130" width="112" height="42" rx="10" fill="#142135" stroke="#526C87" stroke-width="2"/>
 
+
+
 <g stroke="#8EA6C0" stroke-width="6" stroke-linecap="round"><path d="M33 37H77M33 49H66"/><path d="M33 91H77M33 103H66"/><path d="M33 145H77M33 157H66"/></g>
+
+
 
 <g fill="#FF8A66"><circle cx="107" cy="43" r="6"/><circle cx="107" cy="97" r="6"/><circle cx="107" cy="151" r="6"/></g>
 
+
+
 <path d="M73 193V211M46 214H101" stroke="#869CB5" stroke-width="8" stroke-linecap="round"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(197 65)">
 
+
+
 <rect x="0" y="0" width="106" height="83" rx="20" fill="#284247" stroke="#8BE1CA" stroke-width="2.6"/>
+
+
 
 <path d="M34 40V30C34 8 72 8 72 30V40" stroke="#9DE9D3" stroke-width="5" stroke-linecap="round"/>
 
+
+
 <rect x="27" y="38" width="52" height="31" rx="9" stroke="#9DE9D3" stroke-width="4"/>
+
+
 
 <circle cx="53" cy="52" r="4" fill="#9DE9D3"/><path d="M53 55V60" stroke="#9DE9D3" stroke-width="3" stroke-linecap="round"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(39 148)">
 
+
+
 <rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+
 
 <path d="M30 22H68L81 35V74H30Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
 
+
+
 <path d="M68 22V35H81M40 48H70M40 60H64" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(349 148)">
 
+
+
 <rect width="111" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+
 
 <ellipse cx="55" cy="28" rx="27" ry="10" stroke="#FF7959" stroke-width="3.4" fill="#FFE8E0"/>
 
+
+
 <path d="M28 29V66C28 81 82 81 82 66V29M28 47C31 61 80 61 82 47" stroke="#FF7959" stroke-width="3.4"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(38 332)">
 
+
+
 <rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+
 
 <path d="M25 24H86V70H25Z" stroke="#FF7959" stroke-width="3.5"/>
 
+
+
 <path d="M38 51L48 61L73 36" stroke="#FF7959" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round"/>
 
+
+
 </g>
+
+
 
 <g transform="translate(351 332)">
 
+
+
 <rect width="112" height="94" rx="21" fill="#F7F9FC" stroke="#C6D1DF" stroke-width="2.5"/>
+
+
 
 <path d="M34 62C21 62 17 49 25 40C27 26 43 20 55 27C67 18 84 28 85 42C98 48 91 63 81 63H34Z" stroke="#FF7959" stroke-width="3.5" stroke-linejoin="round"/>
 
+
+
 <path d="M50 44V64M42 55L50 65L59 55" stroke="#FF7959" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+
 
 </g>
 
+
+
 <g fill="#FF8764"><circle cx="170" cy="211" r="5"/><circle cx="330" cy="211" r="5"/><circle cx="172" cy="313" r="5"/><circle cx="328" cy="313" r="5"/></g>
+
+
 
 </svg></a></div></section>
 
+
+
 <section class="section dark"><p class="eyebrow">QISQA CHEK-LIST</p><h2>n8n zaxira nusxasi nimalarni himoya qilishi kerak</h2><div class="cards"><article><h3>Ma’lumotlar bazasi</h3><p>Instans foydalanadigan PostgreSQL ma’lumotlar bazasi yoki SQLite database faylining zaxira nusxasini yarating. Ma’lumotlar bazasida ish jarayonlari, tizimga kirish ma’lumotlari va bajarilish ma’lumotlari kabi asosiy n8n holati saqlanadi.</p></article><article class="featured"><h3>Shifrlash kaliti</h3><p>n8n-ning aynan o‘sha shifrlash kalitini alohida va xavfsiz saqlang. Tiklangan shifrlangan tizimga kirish ma’lumotlari shu kalitga bog‘liq.</p></article><article><h3>Doimiy fayllar</h3><p>Doimiy n8n ma’lumotlar papkasi, mounted fayllar, binar ma’lumotlar saqlash joyi va o‘rnatishingiz tayanadigan ish jarayoni resurslarini zaxiraga kiriting.</p></article><article><h3>O‘rnatish konfiguratsiyasi</h3><p>Stekni qayta tiklash uchun kerak bo‘ladigan Compose/konfiguratsiya fayllari va maxfiy bo‘lmagan sozlamalarni saqlang. Maxfiy qiymatlarni tegishli kirish nazorati bilan himoya qiling.</p></article></div></section>
+
+
 
 <section class="section"><p class="eyebrow">ZAXIRALASHNING IKKI DARAJASI</p><h2>Mantiqiy eksport va to‘liq avariya tiklashi</h2><div class="cards"><article><h3>Ish jarayonlari va tizimga kirish ma’lumotlarini eksport qilish</h3><p>n8n CLI eksportlari migratsiya, versiyalangan ish jarayoni nusxalari va tanlab tiklash uchun foydali. Tizimga kirish ma’lumotlarini shifrlangan holda eksport qilib, keyin mos shifrlash kaliti bilan import qilish mumkin. Faqat bitta ish jarayonini tiklash uchun workflow editoridagi uch nuqta menyusidan uning JSON faylini Download qiling, so‘ng yangi tekshiruv ish jarayoniga yoki izolyatsiyalangan instansga Import from File orqali kiriting. Ishlayotgan workflow-ni almashtirishdan oldin credentials, workflow ID-lari va node parametrlarini tekshiring: workflow JSON-ni tiklash butun serverni tiklamaydi.</p></article><article><h3>Entity eksporti</h3><p>CLI qo‘llab-quvvatlanadigan ma’lumotlar bazasi turlari orasida ko‘chirish uchun database entity-larni eksport qila oladi. Bajarilish tarixi jadvallari ixtiyoriy, chunki ular juda katta bo‘lishi mumkin.</p></article><article><h3>To‘liq instansni tiklash</h3><p>Server butunlay ishlamay qolgan holat uchun haqiqiy ma’lumotlar bazasi, shifrlash kaliti, doimiy ma’lumotlar va o‘rnatish bog‘liqliklarini himoya qiling. Workflow JSON eksporti butun instansni qayta yaratadi deb hisoblamang.</p></article><article><h3>Provayder snapshoti</h3><p>VPS snapshot qo‘shimcha tiklash qatlami sifatida foydali, ammo yagona nusxa bo‘lmasligi va mustaqil tekshirilgan ilova/ma’lumotlar bazasi zaxira nusxasini almashtirmasligi kerak.</p></article></div></section>
 
+
+
 <section class="section dark"><p class="eyebrow">MA’LUMOTLAR BAZASI</p><h2>Ma’lumotlar bazasini izchil zaxiralang</h2><div class="cards"><article><h3>PostgreSQL</h3><p>Izchil PostgreSQL zaxiralash usulidan foydalaning va olingan nusxani VPS-dan tashqarida saqlang. Ishdan chiqqan o‘sha diskdagi database nusxasi avariya tiklashi hisoblanmaydi.</p></article><article><h3>SQLite</h3><p>O‘rnatish SQLite ishlatsa, doimiy n8n ma’lumotlar papkasidagi database faylini himoya qiling. Ma’lumotlar bazasi faol o‘zgartirilayotgan paytda xavfsiz bo‘lmagan holatda nusxa olishdan saqlaning.</p></article><article><h3>Bajarilish tarixi</h3><p>Tarixiy bajarilish ma’lumotlari tiklash maqsadingizga kiradimi — aniqlang. U zaxira nusxalarni ancha kattalashtirishi mumkin, shuning uchun tanlovni saqlash muddati va compliance talablari belgilashi kerak.</p></article><article><h3>Ma’lumotlar bazasi versiyasi</h3><p>Tiklash muhitini mos tayyorlash uchun manba o‘rnatishda ishlatilgan database engine va versiyani qayd eting.</p></article></div>
 
+
+
 <p><strong>Docker Compose VPS-dagi PostgreSQL.</strong> Agar PostgreSQL servisi <code>postgres</code> deb atalib, database va user ikkalasi ham <code>n8n</code>bo‘lsa, quyidagi komanda hostda izchil PostgreSQL custom-format dump yaratadi. Uni ishga tushirishdan oldin haqiqiy Compose faylingizni tekshirib, database credentials va servis nomlarini moslang. <code>pg_dump</code> PostgreSQL ishlayotgan paytda mantiqan izchil snapshot yaratishi mumkin, lekin u <strong>emas</strong> alohida <code>.n8n</code> user papkasi yoki tashqi binar ma’lumotlarni zaxiralamaydi.</p>
+
+
 
 <pre><code># In the Docker Compose project; adapt service, DB and user names
 docker compose exec -T postgres pg_dump -U n8n -d n8n -Fc &gt; n8n-postgres.dump
@@ -169,9 +321,15 @@ test -s n8n-postgres.dump
 # Check that the archive has a readable object list
 docker compose exec -T postgres pg_restore --list &lt; n8n-postgres.dump</code></pre>
 
+
+
 <p>Arxiv ro‘yxatini tekshirish aniq format muammolarini topadi, ammo ma’lumotlar tiklanishini isbotlamaydi. Shifrlangan nusxani serverdan tashqarida saqlang va restore-ni amalda sinang. Database-ga xos opsiyalar uchun rasmiy PostgreSQL pg_dump hujjatlaridan foydalaning.</p>
 
+
+
 <p><strong>Docker-dagi SQLite.</strong> Standart SQLite o‘rnatilishida <code>database.sqlite</code> va yaratilgan shifrlash kaliti konfiguratsiyasi doimiy <code>.n8n</code> papkasida joylashadi (odatda <code>/home/node/.n8n</code>). Oddiy live SQLite nusxasini izchil deb hisoblamang. Papkani nusxalashdan oldin n8n va boshqa database writer-larni to‘xtating; to‘xtatish imkonsiz bo‘lsa, SQLite qo‘llaydigan online backup mexanizmidan foydalaning:</p>
+
+
 
 <pre><code># Only for SQLite and the default /home/node/.n8n mount
 # Stop n8n (and any other writers) before copying an SQLite database
@@ -179,7 +337,11 @@ docker compose stop n8n
 docker compose cp n8n:/home/node/.n8n ./n8n-user-folder-backup
 docker compose start n8n</code></pre>
 
+
+
 <p>Bu komandalar ko‘rsatilgan servis va path uchun misol, universal volume layout emas. Nusxalangan papka dastlab o‘sha VPS-da qoladi; uni serverdan tashqariga ko‘chirib, himoya qiling. Queue worker yoki boshqa writer-lar bo‘lsa, ularni ham to‘xtatib, haqiqiy o‘rnatish arxitekturasiga amal qiling. n8n-ning amaldagi full-backup yo‘riqnomasi SQLite izchilligi talabini hujjatlashtiradi.</p><p><strong>Standart SQLite papkasini toza target-ga tiklash:</strong> avval n8n servisi va barcha database writer-larni to‘xtating. Mos n8n servis konteyneri va destination volume yaratilgach, zaxiralangan <code>.n8n</code> tarkibini <em>qayta</em> o‘sha doimiy papkaga ko‘chiring. Bu target fayllarni ustidan yozadi, shuning uchun saqlash kerak bo‘lgan ma’lumotlari bor instansda buni bajarmang:</p>
+
+
 
 <pre><code># Run only on the intended CLEAN recovery instance
 docker compose stop n8n
@@ -189,21 +351,39 @@ docker compose cp ./n8n-user-folder-backup/. n8n:/home/node/.n8n/
 docker compose start n8n
 # Check logs, restored credentials and workflow triggers</code></pre>
 
+
+
 <p>Docker to‘xtatilgan konteynerlarga ham nusxa ko‘chira oladi, ammo destination ownership aslidan farq qilishi mumkin; ishga tushirishdan oldin tiklangan konfiguratsiya va database fayli n8n jarayoni tomonidan o‘qilishi va yozilishi mumkinligini tekshiring. Haqiqiy Compose konfiguratsiyangiz boshqa path yoki bind mount ishlatsa, nusxalashni shunga moslashtiring. Docker Compose copy ma’lumotnomasi. Alohida PostgreSQL database ishlatadigan o‘rnatishlar uchun faqat n8n papkasini tiklash yetarli emas.</p></section>
+
+
 
 <section class="split"><div><p class="eyebrow">MUHIM MAXFIY MA’LUMOT</p><h2>Shifrlash kaliti tiklashning bir qismi</h2><p>n8n saqlangan credentials-ni instans shifrlash kaliti bilan shifrlaydi. Mos kalitsiz database yoki shifrlangan credential eksporti tiklangan ish jarayonlarini saqlangan credentials-dan foydalana olmaydigan holatda qoldirishi mumkin.</p><p>Agar N8N_ENCRYPTION_KEY o‘rnatilgan bo‘lsa, aynan shu secret-ni tiklang. Aks holda yaratilgan kalit doimiy .n8n/config faylida saqlanadi: backup yoki qayta qurishda shu konfiguratsiyani himoya qiling. Tiklash kalitlarini VPS-dan tashqarida xavfsiz saqlang. Queue mode-da barcha main va worker jarayonlari bir xil kalitdan foydalanishi kerak.</p></div><div class="requirements"><div><b>Qiling</b><span>Production muhitida ishlatilayotgan aynan o‘sha kalitning himoyalangan nusxasini saqlang.</span></div><div><b>Qiling</b><span>Credentials-ni tekshirishdan oldin tiklash muhiti shu kalitdan foydalanayotganini tasdiqlang.</span></div><div><b>Qilmang</b><span>Serverni qayta qurgandan keyin yangi yaratilgan kalitga tayanmang.</span></div><div><b>Qilmang</b><span>Kalitni ochiq repozitoriyga commit qilmang yoki himoyalanmagan backup yonida saqlamang.</span></div></div></section>
 
+
+
 <section class="section dark"><p class="eyebrow">FAYLLAR VA BINAR MA’LUMOTLAR</p><h2>Database backup har bir workflow bog‘liqligini qamramasligi mumkin</h2><div class="cards"><article><h3>Doimiy .n8n ma’lumotlari</h3><p>Faqat container image-ni emas, haqiqiy .n8n user papkasini topib saqlang. Odatdagi Docker o‘rnatilishida u /home/node/.n8n ga mount qilinadi; Docker-dan tashqarida standart manzil ~/.n8n. Agar N8N_USER_FOLDER sozlangan bo‘lsa, n8n .n8n papkasini ko‘rsatilgan parent directory ichida yaratadi. Uning config kaliti va o‘rnatishingiz ishlatadigan lokal SQLite, binar yoki filesystem bajarilish ma’lumotlarini ham kiriting.</p></article><article><h3>Mounted workflow fayllari</h3><p>Agar ish jarayonlari host-mounted papkalardan o‘qisa yoki yozsa, u papkalarni alohida zaxiralang. Ularsiz n8n-ni tiklash boshqa tomondan to‘g‘ri ish jarayonlarini ishlamaydigan holga keltirishi mumkin.</p></article><article><h3>Binar ma’lumotlar</h3><p>Saqlash rejimini aniqlang va barcha tashqi bog‘liqliklarni tiklang. Filesystem asosidagi binar yoki bajarilish ma’lumotlari .n8n yoki maxsus papkada bo‘lishi mumkin; S3/Azure Blob yoki boshqa sozlangan tashqi storage uchun alohida tiklanadigan nusxa va access sozlamalari kerak. Faqat database dump bu fayllarni almashtira olmaydi.</p></article><article><h3>Community node-lar</h3><p>Community paketlari va versiyalarini qayd eting, N8N_CUSTOM_EXTENSIONS orqali sozlangan qo‘shimcha custom node papkalarini ham zaxiralang. Bu papkalar .n8n tashqarisida bo‘lishi mumkin; faqat database va user-folder restore custom node ishlatadigan workflow-larni ishlamaydigan holatda qoldirishi mumkin.</p></article></div></section>
+
+
 
 <section class="section"><p class="eyebrow">SERVERDAN TASHQARI ZAXIRALASH STRATEGIYASI</p><h2>O‘sha VPS-dagi backup faqat lokal nusxa</h2><div class="requirements"><div><b>Lokal nusxa</b><span>Tez rollback uchun foydali, ammo server yo‘qolishi, disk nosozligi va buzuvchi xatolarga qarshi himoyasiz.</span></div><div><b>Serverdan tashqari nusxa</b><span>Kamida bitta backup-ni production VPS-dan mustaqil saqlash joyida tuting.</span></div><div><b>Versiyalangan nusxalar</b><span>Buzilish yoki noto‘g‘ri o‘zgarish yagona yaroqli backup ustidan yozib yubormasligi uchun bir nechta tiklash nuqtasini saqlang.</span></div><div><b>Kirish nazorati</b><span>Backup-larda credentials, workflow mantiqi va maxfiy biznes ma’lumotlari bo‘lishi mumkin. Ularni shifrlang va kirishni mos ravishda cheklang.</span></div><div><b>Monitoring</b><span>Rejalashtirilgan backup ishlamay qolsa yoki yangi tiklash nuqtalarini yaratmay qo‘ysa, ogohlantirish yuboring.</span></div></div>
 
+
+
 <p><strong>Jadvalni o‘lchash mumkin bo‘ladigan qiling.</strong> Har bir muvaffaqiyatli backup vaqti, ko‘chirish yakunlangan vaqti, fayl hajmi, source database versiyasi, shifrlash kalitini tiklash joyi va so‘nggi muvaffaqiyatli restore testini qayd eting. Yo‘qolgan, muvaffaqiyatsiz yoki kutilmaganda bo‘sh fayllar haqida ogohlantiring. Backup arxivlarini VPS-dan tashqariga yuborishdan oldin shifrlang va recovery secret-lariga kirishni cheklang. Sana bilan saqlangan bir nechta tiklash nuqtalari buzilish faqat eng yangi nusxa so‘nggi sog‘lom nusxa ustidan yozgandan keyin aniqlanishidan himoya qiladi.</p>
+
+
 
 <p>Masalan, eng ko‘pi bilan olti soatlik o‘zgarishlarni yo‘qotishga chidashingiz mumkin bo‘lsa, muvaffaqiyatli olti soatlik backup jadvali faqat boshlang‘ich nuqta, kafolat emas: muvaffaqiyatsiz vazifalar va kechikkan off-server replikatsiya haqiqiy yo‘qotishni oshirishi mumkin. Universal 7 yoki 30 kunlik siyosatni taxmin qilish o‘rniga retention va restore davriyligini o‘z RPO/RTO hamda ma’lumot talablaringizga moslang.</p></section>
 
+
+
 <section class="section dark"><p class="eyebrow">TIKLASH TARTIBI</p><h2>Nazoratli ketma-ketlikda tiklang</h2><div class="requirements"><div><b>1 · Tayyorlash</b><span>Mos server, ma’lumotlar bazasi va container/runtime muhitini tayyorlang.</span></div><div><b>2 · Maxfiy qiymatlarni tiklash</b><span>Asl n8n shifrlash kaliti va zarur o‘rnatish secret-larini xavfsiz sozlang.</span></div><div><b>3 · Ma’lumotlar bazasini tiklash</b><span>PostgreSQL yoki SQLite-ni tiklang va n8n kutilgan ma’lumotlarga ulana olishini tekshiring.</span></div><div><b>4 · Fayllarni tiklash</b><span>Doimiy papkalar, binar ma’lumotlar va mounted workflow resurslarini tiklang.</span></div><div><b>5 · n8n-ni ishga tushirish</b><span>Ilovani kutilgan hostname, database va environment konfiguratsiyasi bilan ishga tushiring.</span></div><div><b>6 · Tekshirish</b><span>Foydalanuvchilar, workflow-lar va credentials yuklanishini tasdiqlang, keyin namunaviy ish jarayonlari va webhook path-larni bajaring.</span></div></div>
 
-<p><strong>PostgreSQL disaster-recovery example:</strong> on a <em>separate, clean restore target</em> that already has the correct database role and an empty <code>n8n</code> database, start <em>only</em> PostgreSQL. <strong>Wait until it is healthy before importing:</strong>  <code>docker compose up -d</code> alone can return while PostgreSQL is still initializing, so a following <code>pg_restore</code> can fail. The example uses <code>--wait</code> on a modern Compose installation and independently checks <code>pg_isready</code>. Configure an appropriate PostgreSQL healthcheck for reliable waiting, or confirm readiness explicitly before moving on. Do not point this command at a populated production database or start n8n before the database and its matching <code>.n8n</code> key/data are restored.</p>
+
+
+<p><strong>PostgreSQL avariya tiklash misoli:</strong> quyidagi <em>alohida, toza tiklash targetida</em> unda kerakli database role va bo‘sh <code>n8n</code> database mavjud bo‘lsa, faqat <em>faqat</em> PostgreSQL-ni ishga tushiring. <strong>Import qilishdan oldin to‘liq tayyor bo‘lishini kuting:</strong>    <code>docker compose up -d</code> komandasi PostgreSQL hali ishga tushayotgan paytda qaytishi mumkin, shuning uchun keyingi <code>pg_restore</code> ishlamasligi mumkin. Misolda zamonaviy Compose o‘rnatilishidagi <code>--wait</code> ishlatiladi va alohida <code>pg_isready</code>. Ishonchli kutish uchun mos PostgreSQL healthcheck sozlang yoki davom etishdan oldin readiness-ni aniq tekshiring. Bu komandani ma’lumotli production database-ga yo‘naltirmang va database hamda unga mos <code>.n8n</code> kalit/ma’lumotlar tiklanmasdan n8n-ni ishga tushirmang.</p>
+
+
 
 <pre><code># RESTORE ONLY TO A FRESH, EMPTY TARGET DATABASE
 # Adapt Postgres Compose service, database and user names
@@ -211,27 +391,51 @@ docker compose up -d --wait postgres
 docker compose exec -T postgres pg_isready -U n8n -d n8n
 docker compose exec -T postgres pg_restore --exit-on-error --no-owner --no-acl -U n8n -d n8n &lt; n8n-postgres.dump</code></pre>
 
-<p>The destination must have a compatible PostgreSQL version, role privileges, extensions and original n8n configuration. Restore <code>.n8n</code> to its correct persistent volume or bind mount using your backup mechanism, preserving ownership and permissions. Restore external binary files, custom extensions, Compose and secrets configuration, then start n8n at a compatible version and check its logs. Restoring the database alone does not recover the key: a PostgreSQL deployment keeps the key in <code>.n8n/config</code> unless you explicitly configured <code>N8N_ENCRYPTION_KEY</code>. pg_restore reference · n8n full-instance restore sequence.</p>
 
-<div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Choose a recovery VPS if you need a clean server</a></div><p id="affiliate-note"><small>Hamkorlik havolasi: xariddan komissiya olishimiz mumkin.</small></p></section>
 
-<section class="section"><p class="eyebrow">RESTORE TEST</p><h2>A backup is not proven until restoration succeeds</h2><div class="cards"><article><h3>Test on a clean environment</h3><p>A real drill should prove that the backup can rebuild an instance without relying on undeclared files left on the production server.</p></article><article><h3>Check credentials</h3><p>Opening a workflow is not enough. Confirm restored encrypted credentials actually decrypt and authenticate successfully.</p></article><article><h3>Run representative workflows</h3><p>Test workflows that depend on webhooks, external APIs, mounted files and community nodes rather than validating only a trivial automation.</p></article><article><h3>Measure recovery time</h3><p>Record how long the restore takes and what manual steps remain. This converts an assumed backup into an operational recovery procedure.</p></article></div>
+<p>Target muhitda mos PostgreSQL versiyasi, role huquqlari, extension-lar va asl n8n konfiguratsiyasi bo‘lishi kerak. Tiklang: <code>.n8n</code> backup mexanizmi orqali to‘g‘ri persistent volume yoki bind mount-ga, ownership va permission-larni saqlagan holda. Tashqi binar fayllar, custom extension-lar, Compose va secret konfiguratsiyasini tiklang, keyin n8n-ni mos versiyada ishga tushirib loglarini tekshiring. Faqat database-ni tiklash kalitni tiklamaydi: PostgreSQL o‘rnatilishi kalitni <code>.n8n/config</code> ichida saqlaydi, agar alohida <code>N8N_ENCRYPTION_KEY</code>sozlanmagan bo‘lsa. pg_restore ma’lumotnomasi · n8n to‘liq instans tiklash ketma-ketligi.</p>
 
-<h3>Verified restore drill: SQLite and PostgreSQL</h3>
 
-<p><strong>Test environment:</strong> n8n <code>2.42.5</code> in isolated Docker containers on a disposable GitHub Actions runner, using a synthetic two-node workflow. These checks ran on <time datetime="2026-10-08">8 October 2026</time>, not on a customer's or production n8n server.</p>
 
-<div class="requirements"><div><b>SQLite: PASS</b><span>Imported a test workflow, exported it, stopped all writers, archived the SQLite-backed persistent <code>.n8n</code> folder and its generated encryption key, restored into a clean volume, started n8n, then re-exported and executed the recovered workflow.</span></div><div><b>PostgreSQL: PASS</b><span>Imported the same test workflow, created and inspected a custom-format <code>pg_dump</code>, restored it using <code>pg_restore</code> into a new empty PostgreSQL database, restored the separate <code>.n8n</code> folder, then re-exported and executed the recovered workflow.</span></div><div><b>What PASS establishes</b><span>The tested backup paths preserved this workflow, its two nodes and their connections and allowed execution after recovery. These are reproducible functional smoke tests, not workload benchmarks.</span></div><div><b>What was not tested</b><span>Decryption and authentication of real credentials, production webhooks, queue-mode workers and Redis, S3/Azure binary storage, custom nodes, user/project access or the recovery of a live production instance. Run a separate drill for each dependency you actually use.</span></div></div>
+<div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Toza server kerak bo‘lsa tiklash uchun VPS tanlang</a></div><p id="affiliate-note"><small>Hamkorlik havolasi: xariddan komissiya olishimiz mumkin.</small></p></section>
 
-<p><strong>How to reproduce:</strong> use a disposable n8n installation, create a harmless two-node workflow, perform the applicable database plus persistent-folder backup, restore to a clean volume or database, then verify the restored workflow's nodes, connections and actual execution. On the production system also check encrypted credentials, webhooks and external files before declaring disaster recovery proven.</p>
 
-<p><strong>Restore drill acceptance checklist:</strong> use an isolated domain/environment; check that users and workflows are present, one existing encrypted credential authenticates without re-entry, a production webhook invokes the intended restored workflow, mounted files and binary attachments remain readable, and integrations with required community nodes load. Confirm backup age, measured downtime and off-server accessibility. If any essential check fails, mark that recovery point <em>unverified</em> rather than reporting the backup as complete.</p></section>
 
-<section class="section dark"><p class="eyebrow">CLI BACKUP LIMITS</p><h2>Know exactly what workflow and credential exports do not restore</h2><div class="cards"><article><h3>CLI exports are not a full instance backup</h3><p>Workflow and credential backup exports do not include users and roles, execution history and logs, variables, or instance settings such as the encryption key.</p></article><article><h3>Fresh-instance restore needs an owner</h3><p>On a clean instance, complete owner setup before importing credentials. Multi-user or project restores may also need the correct user or project assignment.</p></article><article><h3>Imported IDs can overwrite existing items</h3><p>Workflow and credential exports preserve their original IDs. Importing into an instance that already contains the same IDs can replace those existing items.</p></article><article><h3>Publish imported workflows deliberately</h3><p>CLI imports normally leave workflows inactive. On n8n 2.x, check each imported workflow's published state and publish only the workflows you intend to run; the self-hosted Server CLI also supports n8n publish:workflow --id=YOUR_WORKFLOW_ID. When n8n is running, Server CLI publish/unpublish state changes take effect only after restarting n8n. Restart before verifying scheduled triggers and production webhooks or switching traffic.</p></article></div>
+<section class="section"><p class="eyebrow">TIKLASH TESTI</p><h2>Tiklash muvaffaqiyatli bo‘lmaguncha backup isbotlangan emas</h2><div class="cards"><article><h3>Toza muhitda sinang</h3><p>Haqiqiy test backup production serverda qolgan e’lon qilinmagan fayllarga tayanmasdan instansni qayta qura olishini isbotlashi kerak.</p></article><article><h3>Tizimga kirish ma’lumotlarini tekshiring</h3><p>Workflow ochilishi yetarli emas. Tiklangan shifrlangan credentials haqiqatan decrypt bo‘lib, muvaffaqiyatli autentifikatsiya qilinishini tekshiring.</p></article><article><h3>Namunaviy ish jarayonlarini ishga tushiring</h3><p>Faqat oddiy avtomatlashtirishni emas, webhooklar, tashqi API-lar, mounted fayllar va community node-larga bog‘liq workflow-larni ham sinang.</p></article><article><h3>Tiklash vaqtini o‘lchang</h3><p>Restore qancha vaqt olishi va qaysi qo‘lda bajariladigan qadamlar qolishini qayd eting. Bu taxminiy backup-ni haqiqiy operatsion tiklash jarayoniga aylantiradi.</p></article></div>
 
-<p><strong>Bulk export example for Docker Compose:</strong> if your n8n service is named <code>n8n</code>, you can run the official CLI backups below. The output path is deliberately inside its mounted persistent <code>.n8n</code> directory, because arbitrary directories inside a container may disappear when it is recreated. Confirm the directory is writable by the n8n container user. Keep workflow and credential JSON in <strong>separate directories</strong>—n8n documents an import problem when both kinds share a directory.</p>
 
-<p><strong>n8n 2.x draft versus published backup:</strong> a normal <code>--backup</code> workflow export captures current drafts; these can differ from the versions published in production. To preserve the actual published version of a particular workflow, export it separately using <code>docker compose exec -T n8n n8n export:workflow --id=WORKFLOW_ID --published --output=/home/node/.n8n/backups/published-workflow.json</code>, after ensuring that output folder exists and is writable. The CLI can also export a historical version using <code>--version=VERSION_ID</code>. Keep these captures off-server alongside the full backup; do not assume draft JSON records the live published state.</p>
+
+<h3>Tekshirilgan restore testi: SQLite va PostgreSQL</h3>
+
+
+
+<p><strong>Test muhiti:</strong> n8n <code>2.42.5</code> izolyatsiyalangan Docker konteynerlarida, vaqtinchalik GitHub Actions runner-da, sun’iy ikki node-li workflow bilan. Bu tekshiruvlar <time datetime="2026-10-08">2026-yil 8-oktabrda</time>, mijoz yoki production n8n serverida emas, bajarilgan.</p>
+
+
+
+<div class="requirements"><div><b>SQLite: PASS</b><span>Test workflow import qilindi, eksport qilindi, barcha writer-lar to‘xtatildi, SQLite asosidagi doimiy <code>.n8n</code> papka va uning yaratilgan shifrlash kaliti arxivlandi, toza volume-ga tiklandi, n8n ishga tushirildi, so‘ng tiklangan workflow qayta eksport qilinib bajarildi.</span></div><div><b>PostgreSQL: PASS</b><span>Xuddi shu test workflow import qilindi, custom-format <code>pg_dump</code>yaratilib tekshirildi, keyin <code>pg_restore</code> yordamida yangi bo‘sh PostgreSQL database-ga tiklandi, alohida <code>.n8n</code> papka tiklandi, so‘ng tiklangan workflow qayta eksport qilinib bajarildi.</span></div><div><b>PASS nimani tasdiqlaydi</b><span>Sinovdan o‘tgan backup yo‘llari ushbu workflow, uning ikki node-i va ular orasidagi connection-larni saqlab qoldi hamda tiklashdan keyin bajarishga imkon berdi. Bu qayta bajarish mumkin bo‘lgan funksional smoke testlar, yuklama benchmarklari emas.</span></div><div><b>Nimalar sinovdan o‘tkazilmadi</b><span>Haqiqiy credentials-ni decrypt va authenticate qilish, production webhooklar, queue-mode worker-lar va Redis, S3/Azure binary storage, custom node-lar, user/project access yoki live production instansni tiklash sinovdan o‘tkazilmadi. Haqiqatan foydalanadigan har bir bog‘liqlik uchun alohida test o‘tkazing.</span></div></div>
+
+
+
+<p><strong>Qanday takrorlash mumkin:</strong> Vaqtinchalik n8n o‘rnatilishidan foydalaning, xavfsiz ikki node-li workflow yarating, mos database va persistent-folder backup-ni oling, uni toza volume yoki database-ga tiklang, keyin tiklangan workflow node-lari, connection-lari va haqiqiy bajarilishini tekshiring. Production tizimda disaster recovery isbotlangan deb hisoblashdan oldin shifrlangan credentials, webhooklar va tashqi fayllarni ham tekshiring.</p>
+
+
+
+<p><strong>Restore testi qabul qilish chek-listi:</strong> izolyatsiyalangan domen/muhitdan foydalaning; foydalanuvchilar va workflow-lar mavjudligini, mavjud shifrlangan credential qayta kiritmasdan autentifikatsiya qilishini, production webhook kerakli tiklangan workflow-ni chaqirishini, mounted fayllar va binar attachment-lar o‘qilishini hamda kerakli community node integratsiyalari yuklanishini tekshiring. Backup yoshi, o‘lchangan downtime va off-server accessibility-ni tasdiqlang. Muhim tekshiruvlardan biri ishlamasa, tiklash nuqtasini <em>tekshirilmagan</em> deb belgilang; backup-ni to‘liq deb ko‘rsatmang.</p></section>
+
+
+
+<section class="section dark"><p class="eyebrow">CLI BACKUP CHEKLOVLARI</p><h2>Workflow va credential eksportlari nimalarni tiklamasligini aniq biling</h2><div class="cards"><article><h3>CLI eksportlari to‘liq instans backup emas</h3><p>Workflow va credential backup eksportlariga foydalanuvchilar va rollar, bajarilish tarixi va loglar, variable-lar yoki shifrlash kaliti kabi instans sozlamalari kirmaydi.</p></article><article><h3>Yangi instansni tiklashda owner kerak</h3><p>Toza instansda credentials import qilishdan oldin owner setup-ni yakunlang. Multi-user yoki project restore uchun to‘g‘ri user yoki project assignment ham kerak bo‘lishi mumkin.</p></article><article><h3>Import qilingan ID-lar mavjud elementlar ustidan yozishi mumkin</h3><p>Workflow va credential eksportlari asl ID-larini saqlaydi. Xuddi shu ID-lar mavjud bo‘lgan instansga import qilish mavjud elementlarni almashtirishi mumkin.</p></article><article><h3>Import qilingan workflow-larni ataylab publish qiling</h3><p>CLI importlari odatda workflow-larni inactive holatda qoldiradi. n8n 2.x da har bir import qilingan workflow-ning published holatini tekshirib, faqat ishga tushirmoqchi bo‘lgan workflow-larni publish qiling; self-hosted Server CLI n8n publish:workflow --id=YOUR_WORKFLOW_ID-ni ham qo‘llaydi. n8n ishlayotgan paytda Server CLI publish/unpublish holati o‘zgarishlari faqat n8n qayta ishga tushirilgandan keyin kuchga kiradi. Scheduled trigger va production webhooklarni tekshirish yoki trafikni almashtirishdan oldin restart qiling.</p></article></div>
+
+
+
+<p><strong>Docker Compose uchun bulk export misoli:</strong> agar n8n servisingiz <code>n8n</code>deb atalgan bo‘lsa, quyidagi rasmiy CLI backup komandalarini ishga tushirishingiz mumkin. Output path ataylab uning mounted persistent <code>.n8n</code> papkasining ichida, chunki konteyner ichidagi ixtiyoriy papkalar qayta yaratilganda yo‘qolishi mumkin. Papkaga n8n konteyner user-i yoza olishini tekshiring. Workflow va credential JSON-ni <strong>alohida papkalarda</strong>saqlang — n8n ikkala tur bitta papkada bo‘lganda import muammosini hujjatlashtirgan.</p>
+
+
+
+<p><strong>n8n 2.x draft va published backup:</strong> oddiy <code>--backup</code> workflow export joriy draft-larni saqlaydi; ular production-da published qilingan versiyalardan farq qilishi mumkin. Muayyan workflow-ning haqiqiy published versiyasini saqlash uchun uni alohida quyidagi komanda bilan eksport qiling: <code>docker compose exec -T n8n n8n export:workflow --id=WORKFLOW_ID --published --output=/home/node/.n8n/backups/published-workflow.json</code>, output papkasi mavjud va yozish mumkinligiga ishonch hosil qilgandan keyin. CLI tarixiy versiyani ham quyidagi parametr bilan eksport qila oladi: <code>--version=VERSION_ID</code>Bu nusxalarni to‘liq backup bilan birga serverdan tashqarida saqlang; draft JSON live published holatni qayd etadi deb hisoblamang.</p>
+
+
 
 <pre><code># Execute from your Docker Compose project; the n8n service must exist
 # Keep workflow and credential backups in DIFFERENT folders
@@ -241,23 +445,39 @@ docker compose exec -T n8n n8n export:credentials --backup --output=/home/node/.
 mkdir -p ~/n8n-recovery
 docker compose cp n8n:/home/node/.n8n/backups ~/n8n-recovery/cli</code></pre>
 
-<p>The copied <code>~/n8n-recovery/cli</code> directory is still on the VPS until you move it to a secured, independent backup location. Credential export is encrypted by default and needs the matching encryption key on import. Avoid using <code>--decrypted</code> except for a strictly controlled migration: it writes secrets in plaintext. Never commit exports containing sensitive workflow logic or credentials to a public GitHub repository. Some third-party GitHub credential-backup templates deliberately export decrypted secrets; a private repository is an access restriction, not encryption. Inspect every template's actual export settings and storage permissions, encrypt secrets before off-server transfer, and rotate any credentials exposed through an unintended plaintext upload.</p>
 
-<p><strong>Bulk import example:</strong> on a clean target, finish owner setup, provide the original encryption key and ensure the saved backup files are available on that recovery VPS. The following creates the destination folder and copies the <code>workflows/</code> and <code>credentials/</code> subfolders from the host into the n8n container; adapt paths if your Docker volume layout differs:</p>
+
+<p>Nusxalangan <code>~/n8n-recovery/cli</code> papka uni xavfsiz, mustaqil backup joyiga ko‘chirmaguningizcha VPS-da qoladi. Credential export default bo‘yicha shifrlangan va import vaqtida mos shifrlash kalitini talab qiladi. Quyidagi parametrdan foydalanmang: <code>--decrypted</code> faqat qat’iy nazorat qilinadigan migratsiya bundan mustasno: u secret-larni plaintext ko‘rinishda yozadi. Maxfiy workflow mantiqi yoki credentials bo‘lgan eksportlarni ochiq GitHub repozitoriyiga hech qachon commit qilmang. Ba’zi uchinchi tomon GitHub credential-backup shablonlari ataylab decrypted secret-larni eksport qiladi; private repository faqat access restriction, encryption emas. Har bir shablonning haqiqiy export sozlamalari va storage permission-larini tekshiring, secret-larni off-server transferdan oldin shifrlang va noto‘g‘ri plaintext upload orqali oshkor bo‘lgan credentials-ni almashtiring.</p>
+
+
+
+<p><strong>Bulk import misoli:</strong> toza target-da owner setup-ni yakunlang, asl shifrlash kalitini bering va saqlangan backup fayllari recovery VPS-da mavjudligini tekshiring. Quyidagi komanda destination papkani yaratib, <code>workflows/</code> va <code>credentials/</code> subfolder-larini hostdan n8n konteyneriga nusxalaydi; Docker volume layout boshqacha bo‘lsa path-larni moslang:</p>
+
+
 
 <pre><code># Run only on the intended CLEAN recovery instance
 docker compose exec -T n8n mkdir -p /home/node/.n8n/backups
 docker compose cp ~/n8n-recovery/cli/. n8n:/home/node/.n8n/backups/</code></pre>
 
-<p>Check file ownership and access for the n8n container user. Do not import over a populated production instance without a verified rollback: workflow and credential IDs can overwrite existing entries. Then run:</p>
+
+
+<p>n8n konteyner user-i uchun file ownership va access-ni tekshiring. Tekshirilgan rollback bo‘lmasa, ma’lumotli production instans ustiga import qilmang: workflow va credential ID-lari mavjud yozuvlar ustidan yozishi mumkin. Keyin ishga tushiring:</p>
+
+
 
 <pre><code># After fresh-instance owner setup AND providing the correct key
 # Copy saved cli/ contents back under the target n8n service's .n8n/backups/
 docker compose exec -T n8n n8n import:workflow --separate --input=/home/node/.n8n/backups/workflows/
 docker compose exec -T n8n n8n import:credentials --separate --input=/home/node/.n8n/backups/credentials/</code></pre>
 
-<p>Imported IDs can replace existing workflows or credentials; use an isolated test instance for dry runs and check credentials and activation/publishing states afterwards. In n8n 2.x, restoring the JSON draft does not by itself prove a workflow has been published and can run scheduled triggers. <strong>Import safety:</strong> on a non-multi-main n8n instance, previously active cron triggers can continue running after CLI import until the instance restarts. Stop or isolate production triggers and restart n8n before enabling restored jobs; verify there is no duplicate execution. CLI exports do <em>emas</em> contain original users, execution logs, instance variables or the encryption key. <code>--backup</code> sets <code>--all --pretty --separate</code>, not 'full instance'. Sources: current official n8n backup/restore guide and n8n CLI command reference.</p>
 
-<p><strong>Bulk restore from GitHub or Google Drive templates:</strong> this is an alternative for workflow JSON only, not for the instance database, users, encrypted credential values or encryption key. Before running an API-based template, verify its n8n API and storage permissions, the selected backup version and target instance, whether it updates matching IDs and recreates deleted workflows, and what it does with workflow publishing. Not all templates recreate an ID missing from the target; test that scenario in isolation before relying on automatic restore.</p></section><section class="section dark"><p class="eyebrow">FAQ</p><h2>n8n backup and restore: common questions</h2><div class="faq"><details><summary>Is exporting workflows enough to back up n8n?</summary><p>No. Workflow exports are useful logical copies, but complete recovery can also require credentials, the matching encryption key, database state, persistent files and binary-data storage.</p></details><details><summary>Do I need the n8n encryption key if I have the database?</summary><p>Yes if you need the encrypted credentials stored in that database to remain usable. Preserve the original key securely.</p></details><details><summary>Should I back up PostgreSQL or export workflows and credentials?</summary><p>For disaster recovery, protect the database and the encryption key. Logical exports are valuable as an additional migration and selective-recovery layer rather than a substitute for every part of the instance.</p></details><details><summary>Can a VPS snapshot be my only backup?</summary><p>It is better treated as one recovery layer. Keep an independent off-server backup so a provider, account, server or snapshot failure does not remove every recovery point at once.</p></details><details><summary>How do I know my backup works?</summary><p>Restore it into a clean test environment, verify credentials decrypt, and run representative workflows. A successful backup job alone does not prove recoverability.</p></details><details><summary>Do GitHub or Google Drive workflow backups include saved credential secrets?</summary><p>Workflow-only JSON backups do not include the secret values managed by n8n's credential store or the instance encryption key. However, exported JSON can expose credential names and IDs and secrets typed directly into node parameters, such as authentication headers. Inspect and protect exported JSON before uploading or sharing it. For full recovery, back up the database and original key, or use supported encrypted credential CLI exports with a tested restore. A workflow-only GitHub or Google Drive template is not full disaster recovery.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">View VPS Options</a></div><p><a href="secure-n8n-on-a-vps.html">Production security</a> · <a href="install-n8n-on-a-vps.html">Docker installation</a> · <a href="n8n-vps-requirements.html">VPS requirements</a> · <a href="n8n-queue-mode.html">Queue mode &amp; workers</a> · <a href="index.html">Main n8n VPS guide</a></p></section>
 
-<section class="section"><p class="eyebrow">RECOVERY OBJECTIVES</p><h2>Define RPO and RTO before an incident</h2><p><strong>RPO</strong> is the maximum tolerable loss of recent changes. Measure it from the newest usable, independently stored recovery point; a scheduled six-hour job does not establish a six-hour RPO if exports or transfers failed. <strong>RTO</strong> is the maximum tolerable outage. Measure it in a clean restore drill, including retrieving secrets, restoring external files, rechecking credentials and publishing recovered workflows—not just starting a container.</p></section><section class="section"><p class="eyebrow">RECOVERY KEY</p><h2>Find the original encryption key before rebuilding</h2><p>If production set <code>N8N_ENCRYPTION_KEY</code>, preserve that exact environment secret. If it did not, preserve the generated key in the original persistent .n8n/config. Check which source the recovered instance actually uses before importing encrypted credentials; a fresh generated key cannot decrypt credentials from the old database.</p></section><section class="section" data-best-vps-link="1"><h2>Comparing providers?</h2><p>For provider choice, one-click setup, support boundaries, backups, migration, region and scaling, use the <a href="best-vps-for-n8n.html">Best VPS for n8n comparison</a>. For resource sizing, return to the <a href="index.html">main VPS for n8n guide</a>.</p></section></main><footer><b>n8nVPS</b><span>Independent infrastructure guide for self-hosted n8n.</span><p><a href="about.html">About</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy</a></p><p><a href="/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html">Español</a> · <a href="/vps-for-n8n/de/n8n-backup-wiederherstellung.html">Deutsch</a> · <a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">O‘zbekcha ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/n8n-backup-restore.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/n8n-backup-and-restore.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/n8n-backup-restore.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/n8n-backup-restore.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/n8n-backup-restore.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/n8n-backup-restore.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/backup-restaurare-n8n.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-backup-herstel.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/n8n-backup-restore.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/n8n-backup-and-restore.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/n8n-backup-and-restore.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/n8n-backup-and-restore.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/n8n-backup-and-restore.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/n8n-backup-and-restore.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/n8n-backup-and-restore.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/n8n-backup-and-restore.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/n8n-backup-and-restore.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/n8n-backup-and-restore.html" hreflang="fi" lang="fi">Suomi</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html" hreflang="da" lang="da">Dansk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-backup-and-restore.html" hreflang="no" lang="no">Norsk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/n8n-backup-and-restore.html" hreflang="sk" lang="sk">Slovenčina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/n8n-backup-and-restore.html" hreflang="hr" lang="hr">Hrvatski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/n8n-backup-and-restore.html" hreflang="ka" lang="ka">ქართული</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/n8n-backup-and-restore.html" hreflang="hy" lang="hy">Հայերեն</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/n8n-atsargines-kopijos-atkurimas.html" hreflang="lt" lang="lt">Lietuvių</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-rezerves-kopijas-un-atjaunosana.html" hreflang="lv" lang="lv">Latviešu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-varundamine-ja-taastamine.html" hreflang="et" lang="et">Eesti</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/sandaran-pemulihan-n8n.html" hreflang="ms" lang="ms">Bahasa Melayu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html" hreflang="uz" lang="uz" aria-current="page">O‘zbekcha</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html" hreflang="kk" lang="kk">Қазақша</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
+<p>Import qilingan ID-lar mavjud workflow yoki credentials-ni almashtirishi mumkin; dry run uchun izolyatsiyalangan test instansdan foydalaning va keyin credentials hamda activation/publishing holatlarini tekshiring. n8n 2.x da JSON draft-ni tiklashning o‘zi workflow published qilinganini va scheduled triggerlarni ishga tushira olishini isbotlamaydi. <strong>Import xavfsizligi:</strong> non-multi-main n8n instansida oldindan active cron triggerlar CLI importdan keyin instans restart bo‘lguncha ishlashda davom etishi mumkin. Tiklangan job-larni yoqishdan oldin production triggerlarni to‘xtating yoki izolyatsiya qiling va n8n-ni restart qiling; duplicate execution yo‘qligini tekshiring. CLI eksportlari <em>emas</em> asl foydalanuvchilar, execution loglari, instans variable-lari yoki shifrlash kalitini o‘z ichiga olmaydi. <code>--backup</code> quyidagilarni o‘rnatadi: <code>--all --pretty --separate</code>, bu 'full instance' emas. Manbalar: amaldagi rasmiy n8n backup/restore qo‘llanmasi va n8n CLI command reference.</p>
+
+
+
+<p><strong>GitHub yoki Google Drive shablonlaridan bulk restore:</strong> Bu faqat workflow JSON uchun alternativ, instans database, foydalanuvchilar, shifrlangan credential qiymatlari yoki encryption key uchun emas. API asosidagi shablonni ishga tushirishdan oldin uning n8n API va storage permission-lari, tanlangan backup versiyasi va target instans, matching ID-larni update qilishi va deleted workflow-larni qayta yaratishi, shuningdek workflow publishing bilan nima qilishini tekshiring. Barcha shablonlar target-da yo‘q ID-ni qayta yaratmaydi; automatic restore-ga tayanishdan oldin bu holatni izolyatsiyada sinang.</p></section><section class="section dark"><p class="eyebrow">FAQ</p><h2>n8n backup va restore: ko‘p beriladigan savollar</h2><div class="faq"><details><summary>n8n-ni zaxiralash uchun workflow eksporti yetarlimi?</summary><p>Yo‘q. Workflow eksportlari foydali mantiqiy nusxalar, ammo to‘liq tiklash uchun credentials, mos encryption key, database holati, persistent fayllar va binary-data storage ham kerak bo‘lishi mumkin.</p></details><details><summary>Database bo‘lsa ham n8n encryption key kerakmi?</summary><p>Ha, agar database ichidagi shifrlangan credentials ishlashda davom etishi kerak bo‘lsa. Asl kalitni xavfsiz saqlang.</p></details><details><summary>PostgreSQL backup qilish kerakmi yoki workflow va credentials eksport qilinsinmi?</summary><p>Disaster recovery uchun database va encryption key-ni himoya qiling. Mantiqiy eksportlar instansning barcha qismini almashtirish emas, balki qo‘shimcha migratsiya va selective-recovery qatlami sifatida foydali.</p></details><details><summary>VPS snapshot yagona backup bo‘lishi mumkinmi?</summary><p>Uni bitta recovery qatlami sifatida ko‘rish yaxshiroq. Provayder, account, server yoki snapshot nosozligi barcha recovery point-larni bir vaqtda yo‘q qilmasligi uchun mustaqil off-server backup saqlang.</p></details><details><summary>Backup ishlashini qanday bilaman?</summary><p>Uni toza test muhitiga restore qiling, credentials decrypt bo‘lishini tekshiring va namunaviy workflow-larni ishga tushiring. Faqat backup job muvaffaqiyatli tugashi recoverability-ni isbotlamaydi.</p></details><details><summary>GitHub yoki Google Drive workflow backup-lari saqlangan credential secret-larini o‘z ichiga oladimi?</summary><p>Faqat workflow JSON backup-lari n8n credential store boshqaradigan secret qiymatlarini yoki instans encryption key-ni o‘z ichiga olmaydi. Ammo eksport qilingan JSON credential nomlari va ID-larini hamda node parametrlariga bevosita yozilgan secret-larni, masalan authentication header-larni, oshkor qilishi mumkin. JSON-ni upload yoki ulashishdan oldin tekshirib, himoya qiling. To‘liq recovery uchun database va asl kalitni backup qiling yoki tested restore bilan qo‘llab-quvvatlanadigan encrypted credential CLI export-laridan foydalaning. Faqat workflow uchun GitHub yoki Google Drive shabloni to‘liq disaster recovery emas.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS variantlarini ko‘ring</a></div><p><a href="secure-n8n-on-a-vps.html">Production xavfsizligi</a> · <a href="install-n8n-on-a-vps.html">Docker o‘rnatish</a> · <a href="n8n-vps-requirements.html">VPS talablari</a> · <a href="n8n-queue-mode.html">Queue mode va worker-lar</a> · <a href="index.html">Asosiy n8n VPS qo‘llanmasi</a></p></section>
+
+
+
+<section class="section"><p class="eyebrow">TIKLASH MAQSADLARI</p><h2>Incidentdan oldin RPO va RTO-ni belgilang</h2><p><strong>RPO</strong> — so‘nggi o‘zgarishlarning chidash mumkin bo‘lgan maksimal yo‘qotilishi. Uni eng yangi yaroqli, mustaqil saqlangan recovery point-dan o‘lchang; eksport yoki transfer ishlamagan bo‘lsa, har olti soatda rejalashtirilgan job olti soatlik RPO-ni kafolatlamaydi. <strong>RTO</strong> — chidash mumkin bo‘lgan maksimal downtime. Uni toza restore testida o‘lchang: secret-larni olish, tashqi fayllarni tiklash, credentials-ni qayta tekshirish va tiklangan workflow-larni publish qilishni ham kiriting; faqat konteynerni ishga tushirishni emas.</p></section><section class="section"><p class="eyebrow">TIKLASH KALITI</p><h2>Qayta qurishdan oldin asl encryption key-ni toping</h2><p>Agar production muhitida <code>N8N_ENCRYPTION_KEY</code>o‘rnatilgan bo‘lsa, aynan shu environment secret-ni saqlang. Aks holda asl persistent .n8n/config ichidagi generated key-ni saqlang. Encrypted credentials-ni import qilishdan oldin tiklangan instans qaysi manbadan foydalanayotganini tekshiring; yangi generated key eski database-dagi credentials-ni decrypt qila olmaydi.</p></section><section class="section" data-best-vps-link="1"><h2>Provayderlarni taqqoslayapsizmi?</h2><p>Provayder tanlash, bir klikli setup, support chegaralari, backup, migratsiya, mintaqa va scaling uchun <a href="n8n-uchun-eng-yaxshi-vps.html">n8n uchun eng yaxshi VPS taqqoslanishidan foydalaning</a>. Resurs hajmini tanlash uchun <a href="index.html">n8n uchun asosiy VPS qo‘llanmasiga qayting</a>.</p></section></main><footer><b>n8nVPS</b><span>Self-hosted n8n infratuzilmasi bo‘yicha mustaqil qo‘llanma.</span><p><a href="loyiha-haqida.html">Loyiha haqida</a> · <a href="contact.html">Aloqa</a> · <a href="privacy.html">Maxfiylik</a></p><p><a href="/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html">Español</a> · <a href="/vps-for-n8n/de/n8n-backup-wiederherstellung.html">Deutsch</a> · <a href="/vps-for-n8n/pl/backup-n8n-przywracanie.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">O‘zbekcha ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/n8n-backup-and-restore.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/copias-seguridad-restauracion-n8n.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/rezervnoe-kopirovanie-n8n.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/backup-restauracao-n8n.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-backup-wiederherstellung.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/n8n-backup-restore.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/n8n-backup-restore.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/n8n-backup-restore.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/n8n-backup-restore.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/n8n-backup-restore.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/n8n-backup-restore.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/n8n-backup-restore.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-yedekleme-geri-yukleme.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/sao-luu-khoi-phuc-n8n.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/n8n-backup-restore.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/sauvegarde-restauration-n8n.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/n8n-backup-restore.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/backup-n8n-przywracanie.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/n8n-backup-and-restore.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/n8n-backup-restore.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/n8n-backup-restore.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/n8n-backup-restore.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/n8n-backup-restore.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/backup-restaurare-n8n.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-backup-herstel.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/n8n-backup-restore.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/n8n-backup-and-restore.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/n8n-backup-and-restore.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/n8n-backup-and-restore.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/n8n-backup-and-restore.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/n8n-backup-and-restore.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/n8n-backup-and-restore.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/n8n-backup-and-restore.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/n8n-backup-and-restore.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/n8n-backup-and-restore.html" hreflang="fi" lang="fi">Suomi</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/da/n8n-backup-and-restore.html" hreflang="da" lang="da">Dansk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/no/n8n-backup-and-restore.html" hreflang="no" lang="no">Norsk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/n8n-backup-and-restore.html" hreflang="sk" lang="sk">Slovenčina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/n8n-backup-and-restore.html" hreflang="hr" lang="hr">Hrvatski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/n8n-backup-and-restore.html" hreflang="ka" lang="ka">ქართული</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/n8n-backup-and-restore.html" hreflang="hy" lang="hy">Հայերեն</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/n8n-atsargines-kopijos-atkurimas.html" hreflang="lt" lang="lt">Lietuvių</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-rezerves-kopijas-un-atjaunosana.html" hreflang="lv" lang="lv">Latviešu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-varundamine-ja-taastamine.html" hreflang="et" lang="et">Eesti</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/sandaran-pemulihan-n8n.html" hreflang="ms" lang="ms">Bahasa Melayu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-zaxira-nusxa-va-tiklash.html" hreflang="uz" lang="uz" aria-current="page">O‘zbekcha</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html" hreflang="kk" lang="kk">Қазақша</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
