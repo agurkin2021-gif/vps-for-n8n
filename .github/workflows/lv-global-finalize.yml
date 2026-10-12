@@ -45,3 +45,68 @@ jobs:
           git diff --exit-code
           git log -1 --format='LV_NAV_PUBLISHED_COMMIT %h %s'
           echo LV_ALL_11_PAGES_SITEWIDE_PASS
+
+  live_verify:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify all 11 public Latvian URLs return HTTP 200 and both selectors work
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re, time, urllib.request
+          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          latvian = [
+              "lv/",
+              "lv/labakais-vps-n8n.html",
+              "lv/par-projektu.html",
+              "lv/n8n-rezerves-kopijas-un-atjaunosana.html",
+              "lv/kontakti.html",
+              "lv/n8n-instalesana-vps.html",
+              "lv/n8n-cloud-vai-pasmitinasana.html",
+              "lv/n8n-vps-prasibas.html",
+              "lv/privatuma-politika.html",
+              "lv/n8n-drosiba-vps.html",
+              "lv/n8n-rindas-rezims.html",
+          ]
+          def fetch(url):
+              last = None
+              for attempt in range(6):
+                  try:
+                      req = urllib.request.Request(url, headers={"User-Agent": "n8nVPS-Latvian-QA/1.0", "Cache-Control": "no-cache"})
+                      with urllib.request.urlopen(req, timeout=18) as res:
+                          body = res.read().decode("utf-8")
+                          assert res.status == 200, (url, res.status)
+                          return body
+                  except Exception as exc:
+                      last = exc
+                      time.sleep(5)
+              raise AssertionError(f"{url}: {last}")
+          menu_pattern = re.compile(r'<div\b[^>]*\bclass=["\'][^"\']*\blang-menu\b[^"\']*["\'][^>]*>(.*?)</div>', re.I | re.S)
+          for relative in latvian:
+              url = base + relative
+              html = fetch(url)
+              assert re.search(r'<html\b[^>]*lang=["\']lv["\']', html, re.I), relative
+              assert len(re.findall(r'<h1(?:\s|>)', html, re.I)) == 1, (relative, "H1")
+              menus = menu_pattern.findall(html)
+              assert len(menus) == 2, (relative, len(menus))
+              for menu in menus:
+                  anchors = re.findall(r'<a\b[^>]*>.*?</a>', menu, re.I | re.S)
+                  assert len(anchors) > 2
+                  last = anchors[-1]
+                  assert '>Latviešu</a>' in last
+                  assert f'href="{url}"' in last
+                  assert 'aria-current="page"' in last
+              print("LV_HTTP_200", relative, "menus=2", flush=True)
+          for relative in ["", "es/", "de/", "ru/", "sl/", "lt/"]:
+              html = fetch(base + relative)
+              menus = menu_pattern.findall(html)
+              assert len(menus) == 2, relative
+              for menu in menus:
+                  anchors = re.findall(r'<a\b[^>]*>.*?</a>', menu, re.I | re.S)
+                  assert anchors[-1].endswith('>Latviešu</a>'), relative
+                  assert f'href="{base}lv/"' in anchors[-1], relative
+              print("LV_SWITCH_HTTP_200", relative or "english-home", flush=True)
+          print("LV_LIVE_ALL_11_HTTP_200_AND_HEADER_FOOTER_SWITCHES_PASS", flush=True)
+          PY
