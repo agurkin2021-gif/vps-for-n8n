@@ -1,0 +1,50 @@
+name: Publish Lithuanian sitewide navigation
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/lt-global-finalize.yml"
+      - "scripts/integrate_lt_navigation.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lithuanian-global-nav
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate all 11 Lithuanian pages and integrate navigation
+        shell: bash
+        run: |
+          python -m py_compile scripts/integrate_lt_navigation.py
+          python -u scripts/integrate_lt_navigation.py --write
+      - name: Commit and publish updated selectors and hreflang
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Lithuanian in all language dropdowns and reciprocal hreflang"
+            git push origin HEAD:main
+          fi
+      - name: Verify 11 of 11 and all site language selectors
+        shell: bash
+        run: |
+          python -u scripts/integrate_lt_navigation.py
+          git diff --exit-code
+          git log -1 --format='LT_PUBLISHED_COMMIT %h %s'
+          echo LT_ALL_11_GLOBAL_NAV_PASS
