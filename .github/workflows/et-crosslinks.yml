@@ -1,0 +1,43 @@
+name: Publish Estonian internal cross-links
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/et-crosslinks.yml"
+      - "scripts/sync_et_links.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: estonian-crosslinks
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Verify and connect all published Estonian pages
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/sync_et_links.py
+          python3 -u scripts/sync_et_links.py --write
+      - name: Commit and publish changed local links
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- 'et/*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Connect Estonian Cloud and VPS requirements links across published pages"
+            git push origin HEAD:main
+          fi
+      - name: Verify committed pages and idempotence
+        shell: bash
+        run: |
+          python3 -u scripts/sync_et_links.py
+          git diff --exit-code
+          echo ET_LOCAL_NAV_PUBLISHED
