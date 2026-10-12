@@ -1,0 +1,123 @@
+name: Publish Estonian in all language selectors
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/et-global-finalize.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: estonian-global-navigation
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out current main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Validate all eleven Estonian pages and integrate every selector
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/integrate_et_navigation.py
+          python3 -u scripts/integrate_et_navigation.py --write
+      - name: Commit all site-wide Estonian language changes
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.html'
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Eesti in all language menus and hreflang tags"
+            git push origin HEAD:main
+          fi
+      - name: Verify final navigation and idempotence
+        shell: bash
+        run: |
+          python3 -u scripts/integrate_et_navigation.py
+          git diff --exit-code
+          git log -1 --format='ET_NAV_PUBLISHED_COMMIT %h %s'
+          echo ET_ALL_11_SITEWIDE_NAVIGATION_PASS
+
+  live_verify:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - name: Check all Estonian pages and selected other languages on public site
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          import time
+          import urllib.request
+
+          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          estonian = [
+              "et/",
+              "et/parim-vps-n8n-ile.html",
+              "et/projektist.html",
+              "et/n8n-varundamine-ja-taastamine.html",
+              "et/kontakt.html",
+              "et/n8n-paigaldamine-vps-i.html",
+              "et/n8n-cloud-voi-ise-majutamine.html",
+              "et/n8n-vps-nouded.html",
+              "et/privaatsuspoliitika.html",
+              "et/n8n-turvamine-vps-is.html",
+              "et/n8n-jarjekorrareziim.html",
+          ]
+          samples = ["", "es/", "de/", "ru/", "sl/", "lt/", "lv/"]
+          menu_re = re.compile(r'<div\b[^>]*class=["\'][^"\']*\blang-menu\b[^"\']*["\'][^>]*>(.*?)</div>', re.I | re.S)
+          anchor_re = re.compile(r'<a\b[^>]*>.*?</a>', re.I | re.S)
+          def check_page(url, is_estonian, expected_target):
+              last_error = None
+              for attempt in range(24):
+                  try:
+                      req = urllib.request.Request(url, headers={
+                          "User-Agent": "n8nVPS-Eesti-LiveQA/1.0",
+                          "Cache-Control": "no-cache"
+                      })
+                      with urllib.request.urlopen(req, timeout=22) as response:
+                          assert response.status == 200, (url, response.status)
+                          html = response.read().decode("utf-8")
+                      if is_estonian:
+                          assert re.search(r'<html\b[^>]*lang=["\']et["\']', html, re.I), url
+                          assert len(re.findall(r'<h1(?:\s|>)', html, re.I)) == 1, url
+                          head = html.split("</head>", 1)[0]
+                          assert 'hreflang="et"' in head and expected_target in head
+                          assert 'rel="canonical"' in head
+                          for value in re.findall(r'<script\b[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', html, re.I | re.S):
+                              json.loads(value)
+                      menus = menu_re.findall(html)
+                      assert len(menus) == 2, (url, len(menus))
+                      for menu in menus:
+                          links = anchor_re.findall(menu)
+                          assert len(links) > 2, url
+                          last = links[-1]
+                          assert last.endswith('>Eesti</a>'), url
+                          assert f'href="{expected_target}"' in last, url
+                          assert 'hreflang="et" lang="et"' in last, url
+                          assert ('aria-current="page"' in last) == is_estonian, url
+                          assert len(re.findall(r'hreflang="et"', menu)) == 1, url
+                      print("ET_LIVE_HTTP_200", url, "menus=2", flush=True)
+                      return
+                  except Exception as exc:
+                      last_error = exc
+                      time.sleep(6)
+              raise AssertionError(f"Published page failed verification: {url}: {last_error}")
+
+          for relative in estonian:
+              url = base + relative
+              check_page(url, True, url)
+          for relative in samples:
+              check_page(base + relative, False, base + "et/")
+          print("ET_ALL_11_LIVE_AND_SITEWIDE_MENU_PASS", flush=True)
+          PY
