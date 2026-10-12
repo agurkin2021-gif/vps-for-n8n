@@ -113,7 +113,12 @@ def target_header(path: Path, document: str, old_header: str, locale: str) -> st
     prefix = home_prefix(path, home)
     brand_match = BRAND.search(old_header)
     if not brand_match:
-        raise AssertionError(f"Missing logo in header: {path}")
+        # Legacy pages occasionally translated part of the CSS class name.
+        # Use the original n8nVPS logo from the homepage in the same language.
+        source_header = HDR.search(home.read_text(encoding="utf-8"))
+        brand_match = BRAND.search(source_header.group()) if source_header else None
+    if not brand_match:
+        raise AssertionError(f"Missing logo on page and locale homepage: {path}")
     brand = brand_match.group()
     logo_href = "#" if path == home else prefix
     new_brand, changes = A_HREF.subn(f'href="{logo_href}"', brand, count=1)
