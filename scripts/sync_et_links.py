@@ -8,13 +8,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ET = ROOT / "et"
 LINKS = {
+    "../index.html": "index.html",
+    "../best-vps-for-n8n.html": "parim-vps-n8n-ile.html",
+    "../about.html": "projektist.html",
+    "../n8n-backup-and-restore.html": "n8n-varundamine-ja-taastamine.html",
+    "../contact.html": "kontakt.html",
+    "../install-n8n-on-a-vps.html": "n8n-paigaldamine-vps-i.html",
     "../n8n-cloud-vs-self-hosted.html": "n8n-cloud-voi-ise-majutamine.html",
     "../n8n-vps-requirements.html": "n8n-vps-nouded.html",
+    "../privacy.html": "privaatsuspoliitika.html",
+    "../secure-n8n-on-a-vps.html": "n8n-turvamine-vps-is.html",
+    "../n8n-queue-mode.html": "n8n-jarjekorrareziim.html",
 }
 
 def run(write: bool) -> None:
     pages = sorted(ET.glob("*.html"))
-    assert len(pages) == 8, len(pages)
+    assert len(pages) == 11, len(pages)
     changed = 0
     total = 0
     for file in pages:
