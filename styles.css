@@ -39,7 +39,3 @@ pre>code{white-space:pre}
 /* Avoid min-content expansion of translated long words in grid cards. */
 .cards>article{min-width:0;overflow-wrap:anywhere}
 
-/* Keep Croatian as the last language, visible at the bottom of scrollable menus.
-   The link retains its final position in the original language order. */
-.lang-menu a[hreflang="hr"]{position:sticky;bottom:0;z-index:2;background:#fff;border-top:1px solid #e1e4e9}
-.lang-menu a[hreflang="hr"]:hover,.lang-menu a[hreflang="hr"]:focus-visible{background:#f1f3f6}
