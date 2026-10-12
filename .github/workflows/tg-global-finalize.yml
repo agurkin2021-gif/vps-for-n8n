@@ -1,0 +1,150 @@
+name: Publish Tajik sitewide navigation and validate release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/tg-global-finalize.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tajik-sitewide-finalize
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Add Tajik to every header and footer selector, hreflang and sitemap
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/integrate_tg_navigation.py
+          python3 -u scripts/integrate_tg_navigation.py --write
+
+      - name: Commit and publish the sitewide integration
+        shell: bash
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pushed=0
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git add -u -- '*.html' sitemap.xml
+            if git diff --cached --quiet; then
+              echo "All tracked pages already finalized."
+              pushed=1
+              break
+            fi
+            git commit -m "Publish Tajik throughout all language selectors and sitemap [tg-finalize]"
+            if git push origin HEAD:main; then
+              echo "TAJIK_GLOBAL_PUSH_SUCCESS"
+              pushed=1
+              break
+            fi
+            echo "Concurrent update detected; refreshing main and recalculating changes (attempt $attempt)."
+            git fetch origin main
+            git reset --hard origin/main
+            python3 -u scripts/integrate_tg_navigation.py --write
+          done
+          test "$pushed" -eq 1
+
+      - name: Verify idempotent sitewide navigation and all 11 Tajik files
+        shell: bash
+        run: |
+          python3 -u scripts/integrate_tg_navigation.py --check
+          git diff --exit-code
+          git log -1 --format='TAJIK_FINAL_COMMIT %h %s'
+          echo "TG_11_OF_11_AND_ALL_LANGUAGE_MENUS_PASS"
+
+  live_verify:
+    needs: integrate
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - name: Check GitHub Pages deployment and header/footer language switching
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          import time
+          import urllib.request
+
+          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          pages = [
+              "tg/",
+              "tg/behtarin-vps-baroi-n8n.html",
+              "tg/dar-borai-mo.html",
+              "tg/nuskhai-ehtiyotii-n8n-va-barqarorsozi.html",
+              "tg/tamos.html",
+              "tg/nasbi-n8n-dar-vps.html",
+              "tg/n8n-cloud-yo-hostingi-mustaqil.html",
+              "tg/talabot-vps-baroi-n8n.html",
+              "tg/maxfiyat.html",
+              "tg/amniyati-n8n-dar-vps.html",
+              "tg/rejimi-navbat-n8n.html",
+          ]
+          samples = {
+              "": BASE + "tg/",
+              "es/": BASE + "tg/",
+              "ru/": BASE + "tg/",
+              "de/": BASE + "tg/",
+              "uz/": BASE + "tg/",
+              "kk/": BASE + "tg/",
+              "best-vps-for-n8n.html": BASE + "tg/behtarin-vps-baroi-n8n.html",
+              "es/mejor-vps-para-n8n.html": BASE + "tg/behtarin-vps-baroi-n8n.html",
+          }
+          menu_re = re.compile(r'<div\b[^>]*class=["\'][^"\']*\blang-menu\b[^"\']*["\'][^>]*>(.*?)</div>', re.I|re.S)
+          def read(url):
+              req = urllib.request.Request(url, headers={"User-Agent":"Tajik-Integration-QA/1.0", "Cache-Control":"no-cache"})
+              with urllib.request.urlopen(req, timeout=18) as response:
+                  assert response.status == 200, (url,response.status)
+                  return response.read().decode("utf-8")
+          def check(relative, target, tajik):
+              html = read(BASE+relative)
+              menus = menu_re.findall(html)
+              assert len(menus)==2,(relative,"menu count",len(menus))
+              for menu in menus:
+                  anchors = re.findall(r'<a\b[^>]*>.*?</a>',menu,re.I|re.S)
+                  matches = [v for v in anchors if re.search(r'hreflang=["\']tg["\']',v,re.I)]
+                  assert len(matches)==1,(relative,"tg count",len(matches))
+                  assert anchors[-1]==matches[0],(relative,"Tajik not last")
+                  assert f'href="{target}"' in matches[0],(relative,"wrong target")
+                  assert ('aria-current="page"' in matches[0])==tajik,relative
+              head=html.split("</head>",1)[0]
+              assert f'href="{target}"' in head and 'hreflang="tg"' in head,relative
+              if tajik:
+                  assert re.search(r'<html\b[^>]*lang="tg"',html,re.I),relative
+                  assert len(re.findall(r'<h1(?:\s|>)',html,re.I))==1,relative
+                  assert 'rel="canonical"' in head,relative
+              return True
+          targets = [(p,BASE+p,True) for p in pages] + [(p,t,False) for p,t in samples.items()]
+          remaining = list(targets)
+          for attempt in range(35):
+              next_pending=[]
+              for path,target,is_tg in remaining:
+                  try:
+                      check(path,target,is_tg)
+                      print("TG_LIVE_HTTP_200",path,"header+footer=OK",flush=True)
+                  except Exception as e:
+                      next_pending.append((path,target,is_tg))
+                      print("TG_RETRY",path,type(e).__name__,str(e)[:180],flush=True)
+              remaining=next_pending
+              if not remaining:break
+              time.sleep(6)
+          if remaining:
+              raise AssertionError("Pages not yet verified: "+repr(remaining))
+          sitemap=read(BASE+"sitemap.xml")
+          for p in pages:
+              assert f"<loc>{BASE+p}</loc>" in sitemap,p
+          print("TG_ALL_11_LIVE_AND_CROSS_LANGUAGE_MENUS_PASS",flush=True)
+          PY
