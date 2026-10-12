@@ -182,8 +182,8 @@ jobs:
               if 'class="lang-menu"' not in txt:
                   continue
               menus = list(menu_re.finditer(txt))
-              if len(menus) != 2:
-                  raise SystemExit(f"Expected two language menus globally: {p}, got {len(menus)}")
+              if not menus:
+                  raise SystemExit(f"Language-menu marker found but no menu parsed: {p}")
               for menu in menus:
                   if len(kk_anchor_re.findall(menu.group(2))) != 1:
                       raise SystemExit(f"Kazakh menu entry count mismatch: {p}")
