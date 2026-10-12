@@ -68,7 +68,8 @@ def intent_for(html, path):
                 rel = "" if rel == "index.html" else rel
                 if rel in MAP:
                     return rel
-    if path.parent == ROOT and path.name in MAP:
+    # Legacy localized pages sometimes omit the English alternate but retain its filename.
+    if path.name in MAP:
         return path.name
     if path.relative_to(ROOT).as_posix() == "pt-br/n8n-hospedagem-brasil.html":
         return ""
