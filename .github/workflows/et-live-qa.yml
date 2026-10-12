@@ -94,6 +94,7 @@ jobs:
               "n8n-vps-requirements.html": "et/n8n-vps-nouded.html",
               "privacy.html": "et/privaatsuspoliitika.html",
               "secure-n8n-on-a-vps.html": "et/n8n-turvamine-vps-is.html",
+              "n8n-queue-mode.html": "et/n8n-jarjekorrareziim.html",
           }
           for english_rel, estonian_rel in counterparts.items():
               url = base + english_rel
