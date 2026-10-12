@@ -120,9 +120,13 @@ jobs:
 
               def normalize_menu(match):
                   attrs, inner = match.group(1), match.group(2)
-                  inner = kk_anchor_re.sub("", inner)
+                  existing = kk_anchor_re.search(inner)
                   current = ' aria-current="page"' if is_kk else ""
                   anchor = f'<a href="{target}" hreflang="kk" lang="kk"{current}>Қазақша</a>'
+                  if existing:
+                      # Replace in place so newer languages appended later keep their order.
+                      inner = kk_anchor_re.sub(anchor, inner, count=1)
+                      return f'<div class="lang-menu"{attrs}>{inner}</div>'
                   return f'<div class="lang-menu"{attrs}>{inner}{anchor}</div>'
 
               out = menu_re.sub(normalize_menu, out)
