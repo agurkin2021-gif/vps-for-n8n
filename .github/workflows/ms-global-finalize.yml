@@ -1,0 +1,127 @@
+name: Malay global finalize
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ !contains(github.event.head_commit.message || '', '[ms-finalize]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add Malay to core-page language selectors and sitemap
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          MAP = {
+              "": "ms/",
+              "best-vps-for-n8n.html": "ms/vps-terbaik-untuk-n8n.html",
+              "about.html": "ms/tentang.html",
+              "n8n-backup-and-restore.html": "ms/sandaran-pemulihan-n8n.html",
+              "contact.html": "ms/hubungi.html",
+              "install-n8n-on-a-vps.html": "ms/install-n8n-vps-docker.html",
+              "n8n-cloud-vs-self-hosted.html": "ms/n8n-cloud-vs-dihos-sendiri.html",
+              "n8n-vps-requirements.html": "ms/keperluan-vps-n8n.html",
+              "privacy.html": "ms/privasi.html",
+              "secure-n8n-on-a-vps.html": "ms/keselamatan-n8n-vps.html",
+              "n8n-queue-mode.html": "ms/n8n-queue-mode.html",
+          }
+
+          def href_from_tag(tag):
+              m = re.search(r'href=["\']([^"\']+)["\']', tag, re.I)
+              return m.group(1) if m else None
+
+          def core_intent(html):
+              # Prefer the language-menu English anchor; it is page-specific.
+              for tag_type in ("a", "link"):
+                  for m in re.finditer(rf'<{tag_type}\b[^>]*>', html, re.I):
+                      tag = m.group(0)
+                      if not re.search(r'hreflang=["\']en["\']', tag, re.I):
+                          continue
+                      href = href_from_tag(tag)
+                      if not href or not href.startswith(BASE):
+                          continue
+                      rel = href[len(BASE):].split("#",1)[0].split("?",1)[0]
+                      if rel == "index.html":
+                          rel = ""
+                      if rel in MAP:
+                          return rel
+              return None
+
+          menu_re = re.compile(r'<div class="lang-menu"([^>]*)>([\s\S]*?)</div>', re.I)
+          changed = 0
+          matched = 0
+
+          for p in Path(".").rglob("*.html"):
+              if ".git" in p.parts:
+                  continue
+              html = p.read_text(encoding="utf-8")
+              intent = core_intent(html)
+              if intent is None:
+                  continue
+              matched += 1
+              target = BASE + MAP[intent]
+              out = html
+
+              if not re.search(r'<link\b[^>]*hreflang=["\']ms["\'][^>]*>', out, re.I):
+                  out = re.sub(r'</head>', f'<link rel="alternate" hreflang="ms" href="{target}"/></head>', out, count=1, flags=re.I)
+
+              def add_ms(match):
+                  attrs, inner = match.group(1), match.group(2)
+                  if re.search(r'hreflang=["\']ms["\']', inner, re.I):
+                      return match.group(0)
+                  return f'<div class="lang-menu"{attrs}>{inner}<a href="{target}" hreflang="ms" lang="ms">Bahasa Melayu</a></div>'
+
+              out = menu_re.sub(add_ms, out)
+
+              if out != html:
+                  p.write_text(out, encoding="utf-8")
+                  changed += 1
+
+          sitemap = Path("sitemap.xml")
+          sm = sitemap.read_text(encoding="utf-8")
+          for rel in MAP.values():
+              u = BASE + rel
+              if f"<loc>{u}</loc>" not in sm:
+                  sm = re.sub(r'</urlset>\s*$', f'  <url><loc>{u}</loc></url>\n</urlset>', sm, count=1, flags=re.I)
+          sitemap.write_text(sm, encoding="utf-8")
+
+          ms_pages = sorted(Path("ms").glob("*.html"))
+          if len(ms_pages) != 11:
+              raise SystemExit(f"Expected 11 Malay HTML pages, found {len(ms_pages)}: {[p.name for p in ms_pages]}")
+          for p in ms_pages:
+              txt = p.read_text(encoding="utf-8")
+              if txt.count('hreflang="ms" lang="ms" aria-current="page"') != 2:
+                  raise SystemExit(f"Malay current-language menu mismatch: {p}")
+              if txt.count('class="lang-menu"') != 2:
+                  raise SystemExit(f"Expected two language menus: {p}")
+
+          print(f"Matched core pages: {matched}")
+          print(f"HTML files changed: {changed}")
+          print("Malay pages:", ", ".join(p.name for p in ms_pages))
+          PY
+
+      - name: Commit finalized Malay integration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No Malay finalization changes needed."
+          else
+            git commit -m "Finalize Malay localization [ms-finalize]"
+            git push origin HEAD:main
+          fi
