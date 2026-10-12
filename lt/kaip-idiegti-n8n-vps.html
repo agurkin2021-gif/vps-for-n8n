@@ -218,7 +218,7 @@ volumes:
   caddy_config:</code></pre>
 <p>Keturios paslaugos atlieka skirtingas užduotis: „PostgreSQL“ saugo duomenų bazės būseną, n8n vykdo darbo eigas, <code>n8n-runner</code> vykdo atskiras užduotis, naudodamas tą pačią versiją ir bendrą autentifikavimo žetoną, o „Caddy“ apdoroja viešą HTTPS. Išorinis <em>užduočių vykdytojas</em> nėra „Redis“ eilių režimas. Tik „Caddy“ publikuoja pagrindinio serverio prievadus. Šiame paprastame pavyzdyje naudojamas vienas duomenų bazės vaidmuo, kad diegimas būtų lengvesnis; norėdami geriau atskirti „PostgreSQL“ teises, peržiūrėkite oficialų n8n diegimo su „PostgreSQL“ pavyzdį.</p>
 <h3>4. Sukurkite HTTPS Caddyfile</h3>
-<p>Greta <code>Caddyfile</code> sukurkite failą pavadinimu „Caddyfile“ (didžiąja C, be plėtinio). Visur pavyzdinį serverio vardą pakeiskite savo DNS vardu: <code>compose.yaml</code>. Visur pavyzdinį serverio vardą pakeiskite savo DNS vardu:</p>
+<p>Sukurkite failą <code>Caddyfile</code> (didžioji C, be plėtinio) šalia <code>compose.yaml</code>. Visur pavyzdinį serverio vardą pakeiskite tikruoju DNS vardu:</p>
 <pre><code>n8n.example.com {
     reverse_proxy n8n:5678
 }</code></pre>
