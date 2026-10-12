@@ -78,3 +78,75 @@
   .secondary-rhythm .breadcrumbs + .section{padding-top:28px}
 }
 
+
+
+/* Universal site header contract: same geometry on home and every inner page.
+   Locale text and selected page change; header dimensions and slot positions do not. */
+html body > header.site-header{
+  box-sizing:border-box;
+  display:grid;
+  grid-template-columns:240px minmax(0,1fr) 180px;
+  column-gap:44px;
+  align-items:center;
+  width:100%;
+  max-width:1180px;
+  height:76px;
+  min-height:76px;
+  margin:0 auto;
+  padding:0 28px;
+  direction:ltr;
+}
+html body > header.site-header .brand{
+  justify-self:start;
+  white-space:nowrap;
+  min-width:0;
+}
+html body > header.site-header nav.main-nav{
+  display:flex;
+  flex-direction:row;
+  justify-content:flex-end;
+  align-items:center;
+  gap:32px;
+  min-width:0;
+  margin:0;
+}
+html body > header.site-header nav.main-nav a{
+  flex:0 1 auto;
+  min-width:0;
+  text-align:center;
+}
+html body > header.site-header .lang-switch{
+  justify-self:end;
+  max-width:100%;
+  min-width:0;
+  margin:0;
+}
+html body > header.site-header .lang-switch > button{
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media(max-width:1050px) and (min-width:851px){
+  html body > header.site-header{
+    grid-template-columns:160px minmax(0,1fr) 140px;
+    column-gap:20px;
+  }
+  html body > header.site-header nav.main-nav{gap:10px}
+  html body > header.site-header nav.main-nav a{
+    font-size:12px;
+    line-height:1.25;
+    overflow-wrap:anywhere;
+  }
+}
+@media(max-width:850px){
+  html body > header.site-header{
+    grid-template-columns:minmax(0,1fr) auto;
+    column-gap:18px;
+  }
+  html body > header.site-header nav.main-nav{display:none}
+}
+@media(max-width:560px){
+  html body > header.site-header{padding:0 18px}
+  html body > header.site-header .lang-switch{max-width:min(48vw,180px)}
+}
