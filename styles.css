@@ -38,3 +38,8 @@ pre{max-width:100%;min-width:0;box-sizing:border-box;overflow-x:auto;overflow-y:
 pre>code{white-space:pre}
 /* Avoid min-content expansion of translated long words in grid cards. */
 .cards>article{min-width:0;overflow-wrap:anywhere}
+
+/* Keep English and Croatian immediately visible in the scrollable language menus.
+   The same shared stylesheet is used by every localized page. */
+.lang-menu a[hreflang="en"]{order:-2}
+.lang-menu a[hreflang="hr"]{order:-1}
