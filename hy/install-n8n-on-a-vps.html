@@ -100,14 +100,14 @@
 <p><strong>Փոխարենը ուզո՞ւմ եք ամենաարագ նոր տեղադրումը։</strong> n8n-ը նաև տրամադրում է պաշտոնական մեկ տողով Docker setup։ Դրա script-ը կարող եք ներբեռնել և ուսումնասիրել՝ <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> մինչև գործարկելը՝ <code>sh get-n8n.sh</code>։ Այդ տարբերակը տեղային URL-ում գործարկում է նախնական instance SQLite-ով և ներառում է n8n Assistant sandbox ծառայությունները․ այն <strong>նույնը չէ</strong> ինչ այս public-HTTPS, PostgreSQL-ի վրա հիմնված VPS տեղակայումը։ Պաշտոնական ամբողջական sandbox stack-ը պահանջում է ավելի շատ RAM և CPU, քան թեթև n8n տեղադրումը (դրա Compose ուղեցույցը նշում է առնվազն 4 GB RAM / 2 vCPU)։ Internet-facing production VPS-ի համար շարունակեք ստորև բերված ձեռքով կարգավորվող stack-ով։</p>
 <h3>1. Պատրաստեք Docker-ը, DNS-ը և հասանելիությունը</h3>
 <p>Միացեք SSH-ով՝ sudo հասանելիությամբ, և DNS A record-ը <code>n8n.example.com</code> ուղղեք ձեր VPS-ի IPv4 հասցեին։ <strong>Նոր Ubuntu 22.04, 24.04 կամ 26.04</strong> VPS-ում հետևյալ հրամանները տեղադրում են Docker Engine-ը և ժամանակակից <code>docker compose</code> plugin-ը Docker-ի պաշտոնական ստորագրված <code>apt</code> repository-ից՝</p>
-<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+<pre><code># Նոր պաշտոնական Ubuntu 22.04 / 24.04 / 26.04 տեղադրում
 sudo apt update
 sudo apt install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-# Register Docker's signed apt repository
+# Գրանցեք Docker-ի ստորագրված apt repository-ն
 sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
@@ -133,8 +133,8 @@ mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 openssl rand -hex 32
 openssl rand -hex 32</code></pre>
 <p>Ստեղծեք ֆայլ՝ <code>.env</code> օգտագործելով ստորև բերված template-ը․ յուրաքանչյուր <code>REPLACE_WITH_RANDOM_HEX</code> փոխարինեք տարբեր գեներացված արժեքով և փոխեք hostname-ն ու timezone-ը։ Նշված <code>2.42.5</code> tag-ը <strong>2026 թվականի հոկտեմբերի 8-ին նշված stable release-ն է</strong>, որը այստեղ օգտագործվում է որպես ամսաթվով կոնֆիգուրացիայի օրինակ, <strong>ոչ live-tested տեղակայման կամ ապագա անվտանգության երաշխիք</strong>։ Տեղադրումից առաջ ստուգեք n8n-ի ընթացիկ պաշտոնական release-ները, ապա n8n-ն ու դրա task-runner image-ը պահեք նույն ստուգված տարբերակի վրա։</p>
-<pre><code># .env — replace the three example secrets
-# Pin a maintained n8n release; keep n8n and runner equal.
+<pre><code># .env — փոխարինեք երեք օրինակային secret-ները
+# Ֆիքսեք աջակցվող n8n release-ը․ n8n-ի և runner-ի տարբերակները պահեք նույնը։
 N8N_VERSION=2.42.5
 N8N_HOST=n8n.example.com
 GENERIC_TIMEZONE=Etc/UTC
@@ -240,11 +240,11 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 <p>Սա դիտավորյալ պարզ, առանց authentication-ի smoke test է․ երբեք դրա միջոցով secret-ներ մի ուղարկեք։ Փորձարկումից հետո unpublish/delete արեք այն կամ իրական տվյալների համար հանրային endpoint օգտագործելուց առաջ կարգավորեք Webhook authentication/IP սահմանափակումներ։ Տեսեք Webhook-ի պաշտոնական test/production փաստաթղթերը։</p>
 <h3>6. Backup արեք մինչև pinned տարբերակները փոխելը</h3>
 <p>Պահպանեք վերականգնելի PostgreSQL dump <em>և</em> n8n-ի մշտական data volume-ը, <code>.env</code>/գաղտնագրման բանալին և անհրաժեշտ արտաքին ֆայլերը՝ այս սերվերից դուրս storage-ում։ Restore-ը ստուգեք <a href="n8n-backup-and-restore.html">backup-ի և վերականգնման ուղեցույցով</a> մինչև production-ը թարմացնելը։ Հրամանների օրինակներ․</p>
-<pre><code># Back up the database, encryption key, instance data,
-# and files before changing the pinned versions.
+<pre><code># Backup արեք տվյալների բազան, գաղտնագրման բանալին և instance-ի տվյալները,
+# ինչպես նաև ֆայլերը՝ մինչև pinned տարբերակները փոխելը։
 docker compose exec -T postgres \
   pg_dump -U n8n -d n8n &gt; n8n-db.sql
-# After securing the backup outside this VPS:
+# Backup-ը այս VPS-ից դուրս անվտանգ պահելուց հետո՝
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
