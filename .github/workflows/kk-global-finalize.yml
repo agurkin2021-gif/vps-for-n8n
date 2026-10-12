@@ -1,0 +1,205 @@
+name: Kazakh global finalize
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: ${{ !contains(github.event.head_commit.message || '', '[kk-finalize]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Add Kazakh to all core-page language selectors and sitemap
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          MAP = {
+              "": "kk/",
+              "best-vps-for-n8n.html": "kk/n8n-ushin-en-zhaqsy-vps.html",
+              "about.html": "kk/zhoba-turaly.html",
+              "n8n-backup-and-restore.html": "kk/n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html",
+              "contact.html": "kk/bailanys.html",
+              "install-n8n-on-a-vps.html": "kk/n8n-vps-ornatu.html",
+              "n8n-cloud-vs-self-hosted.html": "kk/n8n-cloud-vs-self-hosted.html",
+              "n8n-vps-requirements.html": "kk/n8n-vps-talaptary.html",
+              "privacy.html": "kk/qupiyalyk.html",
+              "secure-n8n-on-a-vps.html": "kk/n8n-vps-kauipsizdigi.html",
+              "n8n-queue-mode.html": "kk/n8n-queue-mode.html",
+          }
+
+          KK_LOCAL_LINKS = {
+              "best-vps-for-n8n.html": "n8n-ushin-en-zhaqsy-vps.html",
+              "about.html": "zhoba-turaly.html",
+              "n8n-backup-and-restore.html": "n8n-rezervtik-koshiru-zhane-kalpyna-keltiru.html",
+              "contact.html": "bailanys.html",
+              "install-n8n-on-a-vps.html": "n8n-vps-ornatu.html",
+              "n8n-vps-requirements.html": "n8n-vps-talaptary.html",
+              "privacy.html": "qupiyalyk.html",
+              "secure-n8n-on-a-vps.html": "n8n-vps-kauipsizdigi.html",
+          }
+
+          def href_from_tag(tag):
+              m = re.search(r'href=["\']([^"\']+)["\']', tag, re.I)
+              return m.group(1) if m else None
+
+          def core_intent(html):
+              for tag_type in ("a", "link"):
+                  for m in re.finditer(rf'<{tag_type}\b[^>]*>', html, re.I):
+                      tag = m.group(0)
+                      if not re.search(r'hreflang=["\']en["\']', tag, re.I):
+                          continue
+                      href = href_from_tag(tag)
+                      if not href or not href.startswith(BASE):
+                          continue
+                      rel = href[len(BASE):].split("#",1)[0].split("?",1)[0]
+                      if rel == "index.html":
+                          rel = ""
+                      if rel in MAP:
+                          return rel
+              return None
+
+          menu_re = re.compile(r'<div class="lang-menu"([^>]*)>([\s\S]*?)</div>', re.I)
+          kk_anchor_re = re.compile(r'<a\b[^>]*hreflang=["\']kk["\'][^>]*>[\s\S]*?</a>', re.I)
+          kk_alt_re = re.compile(r'<link\b[^>]*hreflang=["\']kk["\'][^>]*?/?>', re.I)
+
+          # Normalize internal links across all Kazakh pages now that all 11 exist.
+          for p in Path("kk").glob("*.html"):
+              html = p.read_text(encoding="utf-8")
+              out = html
+              for src, dst in KK_LOCAL_LINKS.items():
+                  out = re.sub(rf'href=(["\']){re.escape(src)}\1', lambda m, d=dst: f'href={m.group(1)}{d}{m.group(1)}', out)
+              if out != html:
+                  p.write_text(out, encoding="utf-8")
+
+          changed = 0
+          matched = 0
+          menu_files = 0
+          failures = []
+
+          for p in Path(".").rglob("*.html"):
+              if ".git" in p.parts:
+                  continue
+              html = p.read_text(encoding="utf-8")
+              has_menu = 'class="lang-menu"' in html
+              if has_menu:
+                  menu_files += 1
+              intent = core_intent(html)
+              if intent is None:
+                  if has_menu:
+                      failures.append(f"Cannot determine English core intent: {p}")
+                  continue
+
+              matched += 1
+              target = BASE + MAP[intent]
+              out = html
+
+              # Ensure one Kazakh alternate link in head, with the intent-matched target.
+              out = kk_alt_re.sub("", out)
+              out = re.sub(r'</head>', f'<link rel="alternate" hreflang="kk" href="{target}"/></head>', out, count=1, flags=re.I)
+
+              is_kk = p.parts and p.parts[0] == "kk"
+
+              def normalize_menu(match):
+                  attrs, inner = match.group(1), match.group(2)
+                  inner = kk_anchor_re.sub("", inner)
+                  current = ' aria-current="page"' if is_kk else ""
+                  anchor = f'<a href="{target}" hreflang="kk" lang="kk"{current}>Қазақша</a>'
+                  return f'<div class="lang-menu"{attrs}>{inner}{anchor}</div>'
+
+              out = menu_re.sub(normalize_menu, out)
+
+              if out != html:
+                  p.write_text(out, encoding="utf-8")
+                  changed += 1
+
+          if failures:
+              raise SystemExit("\n".join(failures))
+          if matched != menu_files:
+              raise SystemExit(f"Matched {matched} core HTML pages but found {menu_files} files with language menus")
+
+          sitemap = Path("sitemap.xml")
+          sm = sitemap.read_text(encoding="utf-8")
+          for rel in MAP.values():
+              u = BASE + rel
+              if f"<loc>{u}</loc>" not in sm:
+                  sm = re.sub(r'</urlset>\s*$', f'  <url><loc>{u}</loc></url>\n</urlset>', sm, count=1, flags=re.I)
+          sitemap.write_text(sm, encoding="utf-8")
+
+          kk_pages = sorted(Path("kk").glob("*.html"))
+          if len(kk_pages) != 11:
+              raise SystemExit(f"Expected 11 Kazakh HTML pages, found {len(kk_pages)}: {[p.name for p in kk_pages]}")
+
+          forbidden_local = [
+              'href="best-vps-for-n8n.html"',
+              'href="about.html"',
+              'href="n8n-backup-and-restore.html"',
+              'href="contact.html"',
+              'href="install-n8n-on-a-vps.html"',
+              'href="n8n-vps-requirements.html"',
+              'href="privacy.html"',
+              'href="secure-n8n-on-a-vps.html"',
+          ]
+
+          for p in kk_pages:
+              txt = p.read_text(encoding="utf-8")
+              if not re.search(r'<html\b[^>]*lang=["\']kk["\']', txt, re.I):
+                  raise SystemExit(f"Missing lang=kk: {p}")
+              can = re.search(r'<link\b[^>]*rel=["\']canonical["\'][^>]*>', txt, re.I)
+              if not can or "/kk/" not in can.group(0):
+                  raise SystemExit(f"Bad Kazakh canonical: {p}")
+              if txt.count('hreflang="kk" lang="kk" aria-current="page"') != 2:
+                  raise SystemExit(f"Kazakh current-language menu mismatch: {p}")
+              if txt.count('class="lang-menu"') != 2:
+                  raise SystemExit(f"Expected two language menus: {p}")
+              for bad in forbidden_local:
+                  if bad in txt:
+                      raise SystemExit(f"Unlocalized internal link {bad} in {p}")
+
+          # Validate every language menu on every core page contains exactly one Kazakh entry.
+          for p in Path(".").rglob("*.html"):
+              if ".git" in p.parts:
+                  continue
+              txt = p.read_text(encoding="utf-8")
+              if 'class="lang-menu"' not in txt:
+                  continue
+              menus = list(menu_re.finditer(txt))
+              if len(menus) != 2:
+                  raise SystemExit(f"Expected two language menus globally: {p}, got {len(menus)}")
+              for menu in menus:
+                  if len(kk_anchor_re.findall(menu.group(2))) != 1:
+                      raise SystemExit(f"Kazakh menu entry count mismatch: {p}")
+
+          for rel in MAP.values():
+              u = BASE + rel
+              if sm.count(f"<loc>{u}</loc>") != 1:
+                  raise SystemExit(f"Sitemap Kazakh URL count mismatch for {u}")
+
+          print(f"Core HTML pages matched: {matched}")
+          print(f"HTML files changed: {changed}")
+          print("Kazakh pages:", ", ".join(p.name for p in kk_pages))
+          PY
+
+      - name: Commit finalized Kazakh integration
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No Kazakh finalization changes needed."
+          else
+            git commit -m "Finalize Kazakh localization [kk-finalize]"
+            git push origin HEAD:main
+          fi
