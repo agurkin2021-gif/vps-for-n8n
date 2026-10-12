@@ -253,9 +253,9 @@ docker compose ps</code></pre>
 </section>
 <section class="section dark"><p class="eyebrow">ԿՈՆՖԻԳՈՒՐԱՑԻԱ</p><h2>Secret-ներն ու հանրային URL-ները կարգավորեք գիտակցված</h2><div class="cards">
 <article><h3>Գաղտնագրման բանալի</h3><p>Production credential-ներ պահպանելուց առաջ սահմանեք և պահպանեք ուժեղ n8n գաղտնագրման բանալի։ Վերականգնումից հետո պահանջվում է նույն բանալին։</p></article>
-<article><h3>PostgreSQL credentials</h3><p>Օգտագործեք տվյալների բազայի առանձին credentials և գաղտնաբառերը պահեք հանրային source control-ից դուրս։</p></article>
+<article><h3>PostgreSQL-ի մուտքային տվյալներ</h3><p>Օգտագործեք տվյալների բազայի առանձին credentials և գաղտնաբառերը պահեք հանրային source control-ից դուրս։</p></article>
 <article><h3>Հանրային hostname</h3><p>Կարգավորեք իրական արտաքին hostname-ը և HTTPS origin-ը, ոչ թե container-ի ներքին հասցեն։</p></article>
-<article><h3>Webhook URL</h3><p>Սահմանեք <code>N8N_WEBHOOK_URL</code> որպես հանրայնորեն հասանելի HTTPS base URL և սահմանեք <code>N8N_PROXY_HOPS=1</code> երբ կա մեկ վստահելի reverse proxy։ <code>WEBHOOK_URL</code> n8n 2.35.0-ից սկսած հնացած alias է․ մի պատճենեք այն հին tutorial-ներից։</p></article>
+<article><h3>Webhook-ի URL</h3><p>Սահմանեք <code>N8N_WEBHOOK_URL</code> որպես հանրայնորեն հասանելի HTTPS base URL և սահմանեք <code>N8N_PROXY_HOPS=1</code> երբ կա մեկ վստահելի reverse proxy։ <code>WEBHOOK_URL</code> n8n 2.35.0-ից սկսած հնացած alias է․ մի պատճենեք այն հին tutorial-ներից։</p></article>
 </div></section>
 <section class="section"><p class="eyebrow">ՄՇՏԱԿԱՆ ՊԱՀՊԱՆՈՒՄ</p><h2>n8n-ի և PostgreSQL-ի տվյալները պահեք առանձին</h2><div class="cards">
 <article><h3>n8n տվյալներ</h3><p>n8n data directory-ի համար mount արեք persistent storage, որպեսզի instance-ի կարևոր վիճակը պահպանվի container-ի վերաստեղծումից հետո։</p></article>
