@@ -129,12 +129,12 @@ mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
 <p>Firewall-ის ჩართვამდე თქვენი რეალური SSH ადმინისტრირების პორტი ხელმისაწვდომად დატოვეთ. სერტიფიკატის გაცემისა და რედაქტორისთვის დაუშვით შემომავალი HTTP (80) და HTTPS (443). Docker-ის მიერ გამოქვეყნებულ კონტეინერის პორტებს ზოგი UFW წესი შეიძლება გვერდი აუაროს, ამიტომ გადახედეთ Docker-ის firewall ინსტრუქციას და გამოაქვეყნეთ მხოლოდ განკუთვნილი Caddy პორტები. ეს Compose მაგალითი განზრახ არ <strong>არ</strong> აქვეყნებს PostgreSQL (5432), n8n (5678) ან task-runner broker (5679) პორტებს საჯარო ინტერნეტში.</p>
 <h3>2. შექმენით გარემოს მნიშვნელობები და შეინახეთ გასაღები</h3>
 <p>პროექტის დირექტორიიდან შექმენით სამი <strong>განსხვავებული</strong> შემთხვევითი თექვსმეტობითი მნიშვნელობა ბრძანებით:</p>
-<pre><code>openssl rდა -hex 32
-openssl rდა -hex 32
-openssl rდა -hex 32</code></pre>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
 <p>Create a file named <code>.env</code> ქვემოთ მოცემული შაბლონით, ყველა <code>REPLACE_WITH_RANDOM_HEX</code> ჩაანაცვლეთ სხვადასხვა გენერირებული მნიშვნელობით და შეცვალეთ hostname და timezone. ნაჩვენები <code>2.42.5</code> tag არის <strong>სტაბილური რელიზი, რომელიც 2026 წლის 8 ოქტომბერს იყო მითითებული</strong>, used here as a dated configuration example, <strong>და არა ცოცხალ გარემოში გამოცდილი განთავსების ან მომავალი უსაფრთხოების გარანტია</strong>. დაყენებამდე გადაამოწმეთ n8n-ის მიმდინარე ოფიციალური რელიზი და n8n-ისა და task-runner image-ის ერთი და იგივე შემოწმებული ვერსია გამოიყენეთ.</p>
 <pre><code># .env — replace the three example secrets
-# Pin a maintained n8n release; keep n8n და runner equal.
+# Pin a maintained n8n release; keep n8n and runner equal.
 N8N_VERSION=2.42.5
 N8N_HOST=n8n.example.com
 GENERIC_TIMEZONE=Etc/UTC
@@ -241,14 +241,14 @@ curl -fsS https://n8n.example.com/healthz</code></pre>
 <h3>6. pinned ვერსიების შეცვლამდე შექმენით სარეზერვო ასლი</h3>
 <p>Save a recoverable PostgreSQL dump <em>და</em> მუდმივი n8n data volume, <code>.env</code>/დაშიფვრის გასაღები და საჭირო გარე ფაილები ამ სერვერის გარეთ საცავში. აღდგენა გადაამოწმეთ <a href="n8n-backup-და-restore.html">სარეზერვო და აღდგენის გზამკვლევით</a> პროდუქტიული გარემოს განახლებამდე. ბრძანებების მაგალითი:</p>
 <pre><code># Back up the database, encryption key, instance data,
-# და files before changing the pinned versions.
+# and files before changing the pinned versions.
 docker compose exec -T postgres \
   pg_dump -U n8n -d n8n &gt; n8n-db.sql
 # After securing the backup outside this VPS:
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
-<p>შეცვალეთ pinned <code>N8N_VERSION</code> only after reading release notes; both n8n და runner images must advance together. <strong>Do not run <code>docker compose down -v</code></strong> რუტინული მოვლისას, რადგან ეს სახელდებულ data volume-ებს წაშლის. PostgreSQL-ის მთავარი ვერსიის ცვლილება საჭიროებს მონაცემთა ბაზის განახლების ან dump/restore გეგმას; Postgres 18 image-ის სხვა მთავარი ვერსიის tag-ით ჩანაცვლება ავტომატური მიგრაცია არ არის.</p>
+<p>შეცვალეთ pinned <code>N8N_VERSION</code> only after reading release notes; both n8n და runner images must advance together. <strong>Do not run <code>docker compose down -v</code></strong> რუტინული მოვლისას, რადგან ეს სახელდებულ მონაცემთა volume-ებს წაშლის. PostgreSQL-ის მთავარი ვერსიის ცვლილება საჭიროებს მონაცემთა ბაზის განახლების ან dump/restore გეგმას; Postgres 18 image-ის სხვა მთავარი ვერსიის tag-ით ჩანაცვლება ავტომატური მიგრაცია არ არის.</p>
 <p>ავტორიტეტული წყაროები: n8n Docker Compose გზამკვლევი, n8n უკუ-პროქსი/webhook კონფიგურაცია და PostgreSQL-ის ოფიციალური განთავსების შენიშვნები. ინფრასტრუქტურული წარმადობის შედარებითი ტესტი ან კონკრეტული პროვაიდერის წინასწარ დაყენებული ფუნქცია ნაგულისხმევი არ არის.</p>
 </section>
 <section class="section dark"><p class="eyebrow">კონფიგურაცია</p><h2>საიდუმლოებები და საჯარო URL-ები გააზრებულად დააყენეთ</h2><div class="cards">
