@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/tg-global-finalize.yml"
+      - "scripts/integrate_tg_navigation.py"
   workflow_dispatch:
 
 permissions:
