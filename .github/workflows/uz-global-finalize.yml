@@ -120,9 +120,13 @@ jobs:
 
               def normalize_menu(match):
                   attrs, inner = match.group(1), match.group(2)
-                  inner = uz_anchor_re.sub("", inner)
+                  existing = uz_anchor_re.search(inner)
                   current = ' aria-current="page"' if is_uz else ""
                   anchor = f'<a href="{target}" hreflang="uz" lang="uz"{current}>O‘zbekcha</a>'
+                  if existing:
+                      # Keep the existing chronological language position.
+                      inner = uz_anchor_re.sub(anchor, inner, count=1)
+                      return f'<div class="lang-menu"{attrs}>{inner}</div>'
                   return f'<div class="lang-menu"{attrs}>{inner}{anchor}</div>'
 
               out = menu_re.sub(normalize_menu, out)
