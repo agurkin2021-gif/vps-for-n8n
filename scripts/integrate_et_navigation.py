@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-ROOT = Path(__file__).resoete().parents[1]
+ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
 MATCHES = {
     "": "et/",
