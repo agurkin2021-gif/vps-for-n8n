@@ -248,7 +248,7 @@ docker compose exec -T postgres \
 docker compose pull
 docker compose up -d
 docker compose ps</code></pre>
-<p>დააფიქსირებული <code>N8N_VERSION</code> შეცვალეთ მხოლოდ release notes-ის წაკითხვის შემდეგ; n8n-ისა და runner-ის images ერთად უნდა განახლდეს. <strong>არ გაუშვათ <code>docker compose down -v</code></strong> რუტინული მოვლისას, რადგან ეს სახელდებულ მონაცემთა volume-ებს წაშლის. PostgreSQL-ის მთავარი ვერსიის ცვლილება საჭიროებს მონაცემთა ბაზის განახლების ან dump/restore გეგმას; Postgres 18 image-ის სხვა მთავარი ვერსიის tag-ით ჩანაცვლება ავტომატური მიგრაცია არ არის.</p>
+<p>დააფიქსირებული <code>N8N_VERSION</code> შეცვალეთ მხოლოდ release notes-ის წაკითხვის შემდეგ; n8n-ისა და runner-ის images ერთად უნდა განახლდეს. <strong>არ გაუშვათ <code>docker compose down -v</code></strong> რუტინული მოვლისას, რადგან ეს სახელდებულ მონაცემთა ტომებს წაშლის. PostgreSQL-ის მთავარი ვერსიის ცვლილება საჭიროებს მონაცემთა ბაზის განახლების ან dump/restore გეგმას; Postgres 18 image-ის სხვა მთავარი ვერსიის tag-ით ჩანაცვლება ავტომატური მიგრაცია არ არის.</p>
 <p>ავტორიტეტული წყაროები: n8n Docker Compose გზამკვლევი, n8n უკუ-პროქსი/webhook კონფიგურაცია და PostgreSQL-ის ოფიციალური განთავსების შენიშვნები. ინფრასტრუქტურული წარმადობის შედარებითი ტესტი ან კონკრეტული პროვაიდერის წინასწარ დაყენებული ფუნქცია ნაგულისხმევი არ არის.</p>
 </section>
 <section class="section dark"><p class="eyebrow">კონფიგურაცია</p><h2>საიდუმლოებები და საჯარო URL-ები გააზრებულად დააყენეთ</h2><div class="cards">
