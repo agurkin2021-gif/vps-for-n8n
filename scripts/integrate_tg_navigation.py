@@ -99,8 +99,9 @@ def normalize(html, path, intent):
         return opener + inner + item + closer
 
     out, menu_count = menu_re.subn(replace_menu, out)
-    if menu_count != 2:
-        raise ValueError(f"{path}: expected header and footer menus, got {menu_count}")
+    expected_menus = 1 if path.name == "404.html" else 2
+    if menu_count != expected_menus:
+        raise ValueError(f"{path}: expected {expected_menus} language menus, got {menu_count}")
 
     # Keep exactly one correct hreflang alternate in the head of each page.
     parts = re.split(r'</head>', out, maxsplit=1, flags=re.I)
@@ -121,7 +122,8 @@ def validate_page(path, html, intent):
     assert len(alternates) == 1, (path, "tg alternates", len(alternates))
     assert f'href="{target}"' in alternates[0], (path, "tg hreflang", target)
     menus = menu_re.findall(html)
-    assert len(menus) == 2, (path, "menus", len(menus))
+    expected_menus = 1 if path.name == "404.html" else 2
+    assert len(menus) == expected_menus, (path, "menus", len(menus))
     for _opener, inner, _closer in menus:
         links = re.findall(r'<a\b[^>]*>.*?</a>', inner, re.I | re.S)
         tglinks = [x for x in links if re.search(r'hreflang=["\']tg["\']', x, re.I)]
