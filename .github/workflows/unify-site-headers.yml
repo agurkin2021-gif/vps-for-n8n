@@ -1,0 +1,131 @@
+name: Unify site header across every language and inner page
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/unify-site-headers.yml"
+      - "scripts/unify_site_headers.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: universal-site-headers
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Replace inconsistent page headers with locale home template
+        run: |
+          set -e
+          python3 -m py_compile scripts/unify_site_headers.py
+          python3 -u scripts/unify_site_headers.py --write
+
+      - name: Commit changed HTML across all languages
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          published=0
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            git add -u -- '*.html'
+            if git diff --cached --quiet; then
+              echo "All site headers already unified."
+              published=1
+              break
+            fi
+            git commit -m "Unify all site headers to each language's homepage template [header-global]"
+            if git push origin HEAD:main; then
+              echo "SITEWIDE_HEADER_PUSH_SUCCESS"
+              published=1
+              break
+            fi
+            git fetch origin main
+            git reset --hard origin/main
+            python3 -u scripts/unify_site_headers.py --write
+          done
+          test "$published" -eq 1
+
+      - name: Verify every header and exact idempotence
+        run: |
+          set -e
+          python3 -u scripts/unify_site_headers.py --check
+          git diff --exit-code
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in (Path('styles.css'), Path('it/styles.css')):
+              c=p.read_text(encoding='utf-8')
+              assert 'Universal site header contract:' in c, p
+              assert 'height:76px' in c, p
+              assert 'max-width:1180px' in c, p
+          print("HEADER_GEOMETRY_SHARED_CSS_PASS")
+          PY
+          git log -1 --format='HEADER_UNIFIED_COMMIT %h %s'
+
+  live_verify:
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Check live header structure on home and content pages in several languages
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re, time, urllib.request
+          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          PAGES=[
+            "", "about.html", "best-vps-for-n8n.html",
+            "install-n8n-on-a-vps.html", "n8n-queue-mode.html", "404.html",
+            "tg/", "tg/dar-borai-mo.html", "tg/rejimi-navbat-n8n.html",
+            "ru/", "ru/o-proekte.html", "es/", "es/mejor-vps-para-n8n.html",
+            "de/", "pt-br/", "uz/", "kk/", "ar/", "he/",
+            "it/vps-n8n/", "it/miglior-vps-per-n8n.html",
+          ]
+          expected=["workloads","requirements","architecture","faq"]
+          def check(relative):
+              u=BASE+relative
+              req=urllib.request.Request(u,headers={"User-Agent":"n8nVPS-Header-Consistency-QA/1.0","Cache-Control":"no-cache"})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  assert r.status==200,(relative,r.status)
+                  html=r.read().decode('utf-8')
+              header=re.search(r'<header\b[^>]*>.*?</header>',html,re.I|re.S)
+              assert header,(relative,"missing header")
+              h=header.group(0)
+              assert re.search(r'<header\b[^>]*\bsite-header\b',h,re.I),(relative,"not unified")
+              assert '<a class="brand"' in h,(relative,"logo missing")
+              nav=re.search(r'<nav\b[^>]*class="main-nav"[^>]*>(.*?)</nav>',h,re.I|re.S)
+              assert nav,(relative,"4-link nav missing")
+              links=re.findall(r'<a\b[^>]*href="([^"]+)"[^>]*>([^<]*)</a>',nav.group(1),re.I)
+              assert len(links)==4,(relative,"wrong link count",links)
+              assert [v.split('#')[-1] for v,_ in links]==expected,(relative,"wrong anchors",links)
+              menu=re.search(r'<div\b[^>]*class="lang-switch"[^>]*>.*?</div>\s*</div>',h,re.I|re.S)
+              assert menu,(relative,"language selector missing")
+              assert '<button' in menu.group(),(relative,"language button missing")
+              # Every nav link is either an anchor on its own homepage or goes to
+              # a relative URL ending with the matching home-section fragment.
+              print("HEADER_LIVE_HTTP_200",relative or "(English home)",[label for _,label in links],flush=True)
+          pending=list(PAGES)
+          for attempt in range(36):
+              next_pending=[]
+              for rel in pending:
+                  try:check(rel)
+                  except Exception as e:
+                      next_pending.append(rel)
+                      print("RETRY_HEADER",rel,str(e)[:160],flush=True)
+              pending=next_pending
+              if not pending:break
+              time.sleep(5)
+          assert not pending,("Live headers not verified",pending)
+          print("SITEWIDE_HEADER_LIVE_QA_PASS",len(PAGES),flush=True)
+          PY
