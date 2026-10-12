@@ -73,7 +73,7 @@ jobs:
               before = text
 
               def add_ka_to_menu(mm):
-                  nonlocal menus_added
+                  global menus_added
                   body = mm.group(2)
                   if re.search(r'hreflang="ka"', body):
                       return mm.group(0)
