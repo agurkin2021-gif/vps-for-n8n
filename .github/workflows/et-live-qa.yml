@@ -86,6 +86,14 @@ jobs:
           counterparts = {
               "": "et/",
               "best-vps-for-n8n.html": "et/parim-vps-n8n-ile.html",
+              "about.html": "et/projektist.html",
+              "n8n-backup-and-restore.html": "et/n8n-varundamine-ja-taastamine.html",
+              "contact.html": "et/kontakt.html",
+              "install-n8n-on-a-vps.html": "et/n8n-paigaldamine-vps-i.html",
+              "n8n-cloud-vs-self-hosted.html": "et/n8n-cloud-voi-ise-majutamine.html",
+              "n8n-vps-requirements.html": "et/n8n-vps-nouded.html",
+              "privacy.html": "et/privaatsuspoliitika.html",
+              "secure-n8n-on-a-vps.html": "et/n8n-turvamine-vps-is.html",
           }
           for english_rel, estonian_rel in counterparts.items():
               url = base + english_rel
