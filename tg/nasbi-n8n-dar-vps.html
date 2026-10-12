@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="tg"><head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Насби n8n дар VPS</title>
+<meta content="Насби n8n дар VPS with Docker Compose, PostgreSQL, persistent storage, HTTPS, reverse proxy and correct webhook configuration." name="description"/>
+<meta content="index,follow" name="robots"/><link href="https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html" rel="canonical"/>
+<link rel="alternate" hreflang="en" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/>
+<link rel="alternate" hreflang="es" href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ru" href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pt-BR" href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="de" href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html"/>
+<link rel="alternate" hreflang="hi" href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="bn" href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ja" href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="pa" href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="mr" href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="te" href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="ta" href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="tr" href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html"/>
+<link rel="alternate" hreflang="vi" href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html"/>
+<link rel="alternate" hreflang="ko" href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html"/>
+<link rel="alternate" hreflang="fr" href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html"/>
+<link href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" rel="alternate"/><link rel="alternate" hreflang="x-default" href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html"/><meta content="website" property="og:type"/><meta content="Насби n8n дар VPS" property="og:title"/><meta content="n8n-ро бо Docker Compose, PostgreSQL, захираи доимӣ, HTTPS, проксии баръакс ва вебҳукҳои дуруст танзимшуда насб кунед." property="og:description"/><meta content="https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html" property="og:url"/><meta content="summary" name="twitter:card"/><meta content="Насби n8n дар VPS" name="twitter:title"/><meta content="n8n-ро бо Docker Compose, PostgreSQL, захираи доимӣ, HTTPS, проксии баръакс ва вебҳукҳои дуруст танзимшуда насб кунед." name="twitter:description"/><link href="../favicon.svg" rel="icon" type="image/svg+xml"/><link href="../styles.css" rel="stylesheet"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Саҳифаи асосӣ","item":"https://agurkin2021-gif.github.io/vps-for-n8n/tg/"},{"@type":"ListItem","position":2,"name":"Насби n8n дар VPS","item":"https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html"}]}</script><style id="install-n8n-hero-illustration-css">
+.install-n8n-hero{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(300px,.88fr);gap:40px;align-items:center;min-height:470px}
+.install-n8n-hero-copy{min-width:0}
+.install-n8n-hero-art{display:flex;align-items:center;justify-content:center;min-width:0}
+.install-n8n-hero-art a{display:block;width:100%;max-width:490px;border-radius:30px;cursor:pointer;outline-offset:5px}
+.install-n8n-hero-art svg{width:100%;height:auto;display:block;filter:drop-shadow(0 20px 29px rgba(23,36,61,.13));transition:transform .18s ease}
+.install-n8n-hero-art a:hover svg,.install-n8n-hero-art a:focus-visible svg{transform:translateY(-3px)}
+.install-n8n-hero-art a:focus-visible{outline:3px solid #ff6847}
+.install-n8n-hero .actions{margin:28px 0 10px}
+.install-n8n-hero .hero-affiliate-disclosure{font-size:13px;color:#636e80;line-height:1.55;margin:0}
+@media(max-width:790px){.install-n8n-hero{grid-template-columns:1fr;min-height:0;gap:20px}.install-n8n-hero-art a{max-width:410px}}
+@media(max-width:480px){.install-n8n-hero-art a{max-width:330px}.install-n8n-hero{gap:10px}}
+</style><link rel="alternate" hreflang="fa" href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ar" href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="id" href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ro" href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html"/><link rel="alternate" hreflang="nl" href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html"/><link rel="alternate" hreflang="th" href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="az" href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="el" href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="zh-TW" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="zh-CN" href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="ca" href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="hu" href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="cs" href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="bg" href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="sv" href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="sr" href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="he" href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="fi" href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="da" href="https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="no" href="https://agurkin2021-gif.github.io/vps-for-n8n/no/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="sk" href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="hr" href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="ka" href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="hy" href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/install-n8n-on-a-vps.html"/><link rel="alternate" hreflang="lt" href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/kaip-idiegti-n8n-vps.html"/><link rel="alternate" hreflang="sl" href="https://agurkin2021-gif.github.io/vps-for-n8n/sl/namestitev-n8n-na-vps.html"/><link rel="alternate" hreflang="lv" href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-instalesana-vps.html"/><link rel="alternate" hreflang="et" href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-paigaldamine-vps-i.html"/><link rel="alternate" hreflang="ms" href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/install-n8n-vps-docker.html"/><link rel="alternate" hreflang="kk" href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-vps-ornatu.html"/><link rel="alternate" hreflang="uz" href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-vps-ornatish.html"/><link rel="alternate" hreflang="tg" href="https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html"/></head><body>
+<header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">Тоҷикӣ ▾</button><div class="lang-menu"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" hreflang="fi" lang="fi">Suomi</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html" hreflang="da" lang="da">Dansk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/no/install-n8n-on-a-vps.html" hreflang="no" lang="no">Norsk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/install-n8n-on-a-vps.html" hreflang="sk" lang="sk">Slovenčina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/install-n8n-on-a-vps.html" hreflang="hr" lang="hr">Hrvatski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/install-n8n-on-a-vps.html" hreflang="ka" lang="ka">ქართული</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/install-n8n-on-a-vps.html" hreflang="hy" lang="hy">Հայերեն</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/kaip-idiegti-n8n-vps.html" hreflang="lt" lang="lt">Lietuvių</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sl/namestitev-n8n-na-vps.html" hreflang="sl" lang="sl">Slovenščina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-instalesana-vps.html" hreflang="lv" lang="lv">Latviešu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-paigaldamine-vps-i.html" hreflang="et" lang="et">Eesti</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/install-n8n-vps-docker.html" hreflang="ms" lang="ms">Bahasa Melayu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-vps-ornatu.html" hreflang="kk" lang="kk">Қазақша</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-vps-ornatish.html" hreflang="uz" lang="uz">O‘zbekcha</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html" hreflang="tg" lang="tg" aria-current="page">Тоҷикӣ</a></div></div></header><main>
+<section class="section install-n8n-hero"><div class="install-n8n-hero-copy"><p class="eyebrow">НАСБ БО DOCKER</p><h1>Насби n8n дар VPS</h1><p class="lead">n8n-ро дар VPS бо истифода аз Docker Compose ва PostgreSQL насб кунед. Барои муҳити истеҳсолӣ инчунин нигоҳдории доимии додаҳои барнома ва пойгоҳи додаҳо, калиди устувори <code>N8N_ENCRYPTION_KEY</code>, номи хости оммавӣ, HTTPS ва танзими дурусти вебҳукҳо лозиманд. Пеш аз фаъол кардани ҷараёнҳои кории истеҳсолӣ ҳамаи ин қисмҳоро санҷед.</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note">Барои n8n VPS интихоб кунед</a></div><p class="hero-affiliate-disclosure" id="install-hero-affiliate-note">Пайванди шарикӣ: мо метавонем аз харидҳо комиссия гирем.</p></div><div class="install-n8n-hero-art"><a href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow" aria-describedby="install-hero-affiliate-note" aria-label="Интихоби VPS барои насби n8n"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 465" fill="none" role="img" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="di-bg" x1="32" y1="40" x2="468" y2="436" gradientUnits="userSpaceOnUse"><stop stop-color="#27364e"/><stop offset="1" stop-color="#111925"/></linearGradient>
+<linearGradient id="di-panel" x1="190" y1="115" x2="310" y2="332" gradientUnits="userSpaceOnUse"><stop stop-color="#34465e"/><stop offset="1" stop-color="#182437"/></linearGradient>
+<linearGradient id="di-orange" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb28f"/><stop offset="1" stop-color="#ff6847"/></linearGradient>
+</defs>
+<rect x="18" y="20" width="464" height="421" rx="34" fill="url(#di-bg)"/>
+<rect x="35" y="37" width="430" height="387" rx="25" stroke="#71859d" stroke-opacity=".27" stroke-width="2"/>
+<g opacity=".18" stroke="#a7bbd4" stroke-width="1.4"><path d="M65 84H155M345 84H435M65 376H155M345 376H435"/><path d="M248 48V72M248 389V413"/></g>
+<g stroke="#7496a9" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"><path d="M248 114V91"/><path d="M163 202H112"/><path d="M338 202H391"/><path d="M160 287L112 338"/><path d="M339 290L393 337"/></g>
+<g transform="translate(193 62)">
+<rect width="111" height="67" rx="21" fill="#284b4d" stroke="#7fdac1" stroke-width="2.5"/>
+<rect x="44" y="27" width="24" height="22" rx="5" stroke="#a5f0d7" stroke-width="3"/>
+<path d="M50 26V20C50 7 65 7 65 20V26" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+<path d="M56 37V43" stroke="#a5f0d7" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g transform="translate(158 133)">
+<rect width="182" height="221" rx="24" fill="url(#di-panel)" stroke="#8194a9" stroke-width="3"/>
+<rect x="19" y="21" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="84" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<rect x="19" y="147" width="144" height="51" rx="11" fill="#162336" stroke="#536e86" stroke-width="2"/>
+<g fill="#ff8462"><circle cx="46" cy="47" r="7"/><circle cx="46" cy="110" r="7"/><circle cx="46" cy="173" r="7"/></g>
+<g stroke="#92a8bf" stroke-width="6" stroke-linecap="round"><path d="M67 38H139M67 51H117"/><path d="M67 101H139M67 114H115"/><path d="M67 164H139M67 177H113"/></g>
+<g stroke="#ff8767" stroke-width="2.5" stroke-linecap="round"><path d="M20 47H35M20 110H35M20 173H35"/></g>
+<path d="M91 221V234" stroke="#91a4ba" stroke-width="8" stroke-linecap="round"/>
+</g>
+<g transform="translate(50 167)">
+<rect width="100" height="85" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff7755" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="27" y="23" width="46" height="36" rx="7"/><path d="M20 41H27M73 41H81M42 59V67M58 59V67"/>
+<path d="M38 35L47 43L61 30"/>
+</g></g>
+<g transform="translate(354 170)">
+<rect width="99" height="86" rx="21" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<path d="M21 28L38 19L53 28L70 19L79 24V52L63 62L48 52L30 61L21 56V28Z" stroke="#ff795b" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 19V47M53 28V52M70 19V45" stroke="#ff795b" stroke-width="3"/>
+</g>
+<g transform="translate(44 309)">
+<rect width="108" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="47" r="7"/><circle cx="77" cy="28" r="7"/><circle cx="77" cy="67" r="7"/><path d="M39 44L71 30M39 50L70 65"/></g>
+</g>
+<g transform="translate(346 309)">
+<rect width="110" height="89" rx="22" fill="#f5f8fb" stroke="#bfcddd" stroke-width="2.5"/>
+<g stroke="#ff795b" stroke-width="3"><ellipse cx="55" cy="27" rx="26" ry="9" fill="#ffe8df"/><path d="M29 27V62C29 76 81 76 81 62V27"/><path d="M29 45C31 58 80 58 81 45"/></g>
+</g>
+<g fill="#ff8263"><circle cx="163" cy="202" r="6"/><circle cx="339" cy="202" r="6"/><circle cx="161" cy="289" r="6"/><circle cx="340" cy="290" r="6"/></g>
+</svg></a></div></section>
+<section class="section dark"><p class="eyebrow">ШАРТҲОИ ПЕШАКӢ</p><h2>Пеш аз оғози n8n сервери VPS-ро омода кунед</h2><div class="cards">
+<article><h3>VPS бо Linux</h3><p>Аз сервери Linux истифода баред, ки навсозиҳои он дастгирӣ мешаванд ва барои n8n, PostgreSQL, Docker ва проксии баръакс захираҳои кофӣ дорад.</p></article>
+<article><h3>DNS</h3><p>Пеш аз гирифтани сертификатҳои TLS ва нашри URL-ҳои вебҳук домен ё зердоменро ба VPS равона кунед.</p></article>
+<article><h3>Docker Compose</h3><p>Docker Engine ва плагини Compose-ро бо бастаҳои барои системаи амалиётӣ дастгиришаванда насб кунед.</p></article>
+<article><h3>Файрвол</h3><p>Танҳо портҳои зарурии идоракунӣ ва вебро боз кунед. PostgreSQL ва хидматҳои дохилии барномаро дар шабакаи хусусӣ нигоҳ доред.</p></article></div>
+<p><strong>n8n-ро дар VPS-е насб мекунед, ки аллакай сайтҳо дорад?</strong> Шумо метавонед n8n-ро ба сервери таҳти идораи худ илова кунед, агар CPU, RAM ва фазои диск кофӣ бошанд. Аммо агар Nginx, Apache, Caddy ё проксии баръакси дигар аллакай портҳои 80/443-ро ишғол карда бошад, <strong>набояд</strong> контейнери намунавии Caddy-и поёнро бе тағйир оғоз кунед: портҳо ба ҳам бармехӯранд. Ба ҷойи ин зердомени нави n8n-ро тавассути проксии баръакси мавҷуда ва шабакаи хусусии мувофиқ равона кунед ё барои ҳамин намунаи Compose аз VPS-и тоза истифода баред. Сайтҳои дигар ва танзимоти TLS-и онҳоро нигоҳ доред; намуна озод будани портҳои 80/443-ро пешбинӣ мекунад.</p><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS бо Linux барои n8n интихоб кунед</a></div><p id="affiliate-note"><small>Пайванди шарикӣ: мо метавонем аз харидҳо комиссия гирем.</small></p></section>
+<section class="section"><p class="eyebrow">МАҶМӮИ ХИДМАТҲОИ ҶОЙГИРКУНӢ</p><h2>Ҷузъҳое, ки бояд танзим шаванд</h2><div class="requirements">
+<div><b>Проксии баръакс</b><span>Трафики оммавии HTTPS-ро қабул карда, ба n8n равона мекунад.</span></div>
+<div><b>n8n</b><span>Муҳаррир, триггерҳо ва ҷараёнҳои кориро бо додаҳои доимии барнома иҷро мекунад.</span></div>
+<div><b>PostgreSQL</b><span>Ҳолати ҷараёнҳо, маълумоти дастрасӣ ва иҷроишҳоро дар муҳити истеҳсолӣ нигоҳ медорад.</span></div>
+<div><b>Захираи доимии додаҳо</b><span>Ҳолати барнома ва пойгоҳи додаҳоро берун аз контейнерҳои муваққатӣ нигоҳ медорад.</span></div>
+<div><b>DNS-и оммавӣ</b><span>Номи хостеро, ки муҳаррир ва провайдерҳои вебҳук истифода мебаранд, ба VPS мепайвандад.</span></div>
+</div></section>
+<section class="section" id="vps-n8n-install-walkthrough"><p class="eyebrow">НАСБИ НАМУНАВӢ БО МУТОБИҚСОЗӢ</p><h2>n8n-ро дар VPS-и худ бо Docker Compose насб кунед</h2>
+<p>Бо ин намуна n8n-ро дар <strong>VPS-и Linux бо идоракунии мустақил</strong> ҷойгир кунед. n8n-ро худатон насб ва нигоҳдорӣ мекунед; интихоби сервер тавассути шарики мо маънои онро надорад, ки n8n пешакӣ насб шудааст. Намуна n8n, PostgreSQL, иҷрокунандаи вазифаҳои берунӣ ва HTTPS-и Caddy-ро дар шабакаи хусусии Compose муттаҳид мекунад. Ин қолаби танзимот аст, <strong>на иддао дар бораи ҷойгиркунии амалан санҷидашуда</strong>.</p>
+<p><strong>Ба насби нави ҳарчи зудтар ниёз доред?</strong> n8n инчунин насби расмии яксатрӣ бо Docker дорад. Метавонед скрипти онро бо фармони <code>curl -fsSL https://get.n8n.io -o get-n8n.sh</code> боргирӣ ва пеш аз иҷрои <code>sh get-n8n.sh</code> дида бароед. Он як нусхаи ибтидоиро бо SQLite дар URL-и маҳаллӣ ва хидматҳои муҳити ҷудогонаи n8n Assistant оғоз мекунад; ин <strong>ҳамон роҳ нест,</strong> ки дар ин ҷо бо HTTPS-и оммавӣ ва PostgreSQL барои VPS тавсиф шудааст. Маҷмӯи пурраи муҳити ҷудогонаи расмӣ нисбат ба насби сабуки n8n RAM ва CPU-и бештар талаб мекунад (дар дастури Compose ҳадди ақал 4 GB RAM / 2 vCPUs нишон дода шудааст). Барои VPS-и истеҳсолии ба интернет пайваст танзими дастии поёнро идома диҳед.</p>
+<h3>1. Docker, DNS ва дастрасиро омода кунед</h3>
+<p>Тавассути SSH бо ҳуқуқи sudo пайваст шавед ва сабти DNS-и навъи A-ро барои <code>n8n.example.com</code> ба суроғаи IPv4-и VPS-и худ равона кунед. Дар <strong>VPS-и тоза бо Ubuntu 22.04, 24.04 ё 26.04</strong> фармонҳои зерин Docker Engine ва плагини муосири <code>docker compose</code> ро аз репозитории расмии имзошудаи <code>apt</code> Docker насб мекунанд:</p>
+<pre><code># Fresh official Ubuntu 22.04 / 24.04 / 26.04 installation
+sudo apt update
+sudo apt install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Register Docker's signed apt repository
+sudo tee /etc/apt/sources.list.d/docker.sources &lt;&lt;EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release &amp;&amp; echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</code></pre>
+<p>Ин усули насб аз репозитории расмӣ барои муҳити истеҳсолӣ дар дастури расмии Docker барои Ubuntu оварда шудааст. <strong>Дар VPS-е, ки аллакай контейнерҳо ё сайтҳои дигар дорад, Docker-ро бе санҷиш аз нав насб ё ҳазф накунед</strong>; аввал насби мавҷуда ва эҳтимоли ихтилофи бастаҳоро санҷед. Барои Debian ё дистрибутиви дигар ба ҷойи фармонҳои Ubuntu аз дастурҳои расмии махсуси ҳамон система истифода баред.</p>
+<p>Акнун худи Docker, плагини Compose, DNS ва ҷузвдони кориро санҷед:</p>
+<pre><code>sudo docker --version
+sudo docker compose version
+sudo docker run --rm hello-world
+getent hosts n8n.example.com
+mkdir -p ~/n8n &amp;&amp; cd ~/n8n</code></pre>
+<p>Агар <code>getent hosts</code> суроға наёбад ё суроғаи нодуруст баргардонад, пеш аз оғози Caddy DNS-ро ислоҳ кунед; дар тамоми дастур <code>n8n.example.com</code> ро бо номи воқеии хости худ иваз намоед. Docker одатан ҳуқуқи root талаб мекунад: агар корбари SSH-и шумо фармонҳои баъдии <code>docker compose</code> ро бевосита иҷро карда натавонад, пеш аз онҳо <code>sudo</code> гузоред. Илова кардани корбар ба гурӯҳи <code>docker</code> ба ӯ дастрасии баробар ба root медиҳад; ин корро дар сервери муштарак беандеша анҷом надиҳед.</p>
+<p>Пеш аз фаъол кардани файрвол дастрасӣ ба порти воқеии идоракунии SSH-ро нигоҳ доред. Барои гирифтани сертификат ва кори муҳаррир HTTP (80) ва HTTPS (443)-и воридшавандаро иҷозат диҳед. Портҳои нашркардаи контейнерҳои Docker метавонанд баъзе қоидаҳои UFW-ро давр зананд, бинобар ин дастури файрволи Docker-ро санҷед ва танҳо портҳои пешбинишудаи Caddy-ро нашр кунед. Ин намунаи Compose қасдан портҳои зеринро ба интернети оммавӣ <strong>намекушояд:</strong> PostgreSQL (5432), n8n (5678) ва брокери иҷрокунандаи вазифаҳо (5679).</p>
+<h3>2. Арзишҳои муҳитро эҷод ва калидро ҳифз кунед</h3>
+<p>Аз ҷузвдони лоиҳа се арзиши шонздаҳии тасодуфии <strong>гуногунро</strong> бо фармони зерин созед:</p>
+<pre><code>openssl rand -hex 32
+openssl rand -hex 32
+openssl rand -hex 32</code></pre>
+<p>Файле бо номи <code>.env</code> бо истифода аз қолаби поён эҷод кунед, ҳар <code>REPLACE_WITH_RANDOM_HEX</code>-ро бо арзиши тасодуфии алоҳидаи тавлидшуда иваз намоед ва номи хост ва минтақаи вақтро тағйир диҳед. Барчаспи <code>2.42.5</code> версияи <strong>устуворест, ки 8 октябри 2026 нишон дода шуда буд</strong> ва дар ин ҷо танҳо ҳамчун намунаи санаи муайян оварда мешавад, <strong>на кафолати он ки ҷойгиркунӣ амалан санҷида шудааст ё дар оянда бехатар мемонад</strong>. Пеш аз насб нашрҳои ҷории расмии n8n-ро санҷед ва тасвирҳои n8n ва иҷрокунандаи вазифаҳоро дар як версияи тасдиқшуда нигоҳ доред.</p>
+<pre><code># .env — replace the three example secrets
+# Pin a maintained n8n release; keep n8n and runner equal.
+N8N_VERSION=2.42.5
+N8N_HOST=n8n.example.com
+GENERIC_TIMEZONE=Etc/UTC
+POSTGRES_PASSWORD=REPLACE_WITH_RANDOM_HEX
+N8N_ENCRYPTION_KEY=REPLACE_WITH_RANDOM_HEX
+RUNNERS_AUTH_TOKEN=REPLACE_WITH_RANDOM_HEX</code></pre>
+<p>Ҳеҷ гоҳ файли <code>.env</code>-ро ба репозитории оммавӣ нафиристед. Калиди рамзгузорӣ ва дастури барқарорсозиро берун аз VPS боэътимод нигоҳ доред. Пас аз аз нав сохтани контейнер ё интиқоли он калид бояд бетағйир монад.</p>
+<h3>3. Барои насби тоза файли compose.yaml-ро нависед</h3>
+<p>Дар ҳамон ҷузвдон файли <code>compose.yaml</code> эҷод кунед. Намуна аз қоидаҳои расмии тағйирёбандаҳои муҳити n8n ва роҳи нигоҳдории PostgreSQL 18 бо номи <code>PGDATA</code>, ки дар лоиҳаи хостинги n8n ҳуҷҷатгузорӣ шудааст, истифода мебарад:</p>
+<pre><code>services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: n8n
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: "5432"
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: n8n
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_HOST: ${N8N_HOST}
+      N8N_PROTOCOL: https
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+      N8N_WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_PROXY_HOPS: "1"
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE}
+      TZ: ${GENERIC_TIMEZONE}
+      N8N_RUNNERS_MODE: external
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_BROKER_LISTEN_ADDRESS: 0.0.0.0
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  n8n-runner:
+    image: n8nio/runners:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      N8N_RUNNERS_AUTH_TOKEN: ${RUNNERS_AUTH_TOKEN}
+      N8N_RUNNERS_TASK_BROKER_URI: http://n8n:5679
+    depends_on:
+      - n8n
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+
+volumes:
+  postgres_data:
+  n8n_data:
+  caddy_data:
+  caddy_config:</code></pre>
+<p>Ин чор хидмат вазифаҳои гуногун доранд: PostgreSQL ҳолати пойгоҳи додаҳоро нигоҳ медорад, n8n ҷараёнҳои кориро иҷро мекунад, <code>n8n-runner</code> вазифаҳои иҷрокунандаро бо версияи мувофиқ ва токени муштараки тасдиқи ҳувият иҷро мекунад, Caddy бошад HTTPS-и оммавиро таъмин мекунад. Иҷрокунандаи берунии <em>вазифаҳо</em> режими навбати Redis нест. Танҳо Caddy портҳоро дар хост нашр мекунад. Дар ин намунаи сабук барои соддагии насб аз як нақши пойгоҳи додаҳо истифода шудааст; барои ҷудо кардани ҳуқуқҳои PostgreSQL ба намунаи расмии ҷойгиркунии PostgreSQL дар n8n муроҷиат кунед.</p>
+<h3>4. Файли Caddyfile барои HTTPS созед</h3>
+<p>Файли <code>Caddyfile</code>-ро (бо ҳарфи калони C ва бе пасванд) дар паҳлуи <code>compose.yaml</code> эҷод кунед. Дар ҳамаи ҷойҳо номи хости намунавиро бо номи DNS-и худ иваз намоед:</p>
+<pre><code>n8n.example.com {
+    reverse_proxy n8n:5678
+}</code></pre>
+<p>Вақте домен дуруст ба сервер ишора мекунад ва трафики беруна ба портҳои 80/443 мерасад, Caddy сертификатҳои оммавии TLS-ро дархост ва тамдид мекунад. DNS-ро ба <code>localhost</code> равона накунед. Агар Caddy-ро бо проксии баръакси дигар иваз кунед, сарлавҳаҳои аслии хост, протокол ва суроғаи муштариро гузаронед ва <code>N8N_PROXY_HOPS</code>-ро мувофиқи шумораи воқеии гузаришҳо аз проксиҳои боэътимод танзим намоед.</p>
+<h3>5. Контейнерҳоро оғоз кунед ва аз берун бисанҷед</h3>
+<p>Баъди нигоҳ доштани <code>.env</code>, <code>compose.yaml</code> ва <code>Caddyfile</code> фармонҳои зеринро аз ҷузвдони лоиҳа иҷро кунед:</p>
+<pre><code>chmod 600 .env
+docker compose config --quiet
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100 n8n n8n-runner postgres caddy
+curl -fsS https://n8n.example.com/healthz</code></pre>
+<p>Фармони охирин нуқтаи санҷиши саломатиро тавассути <strong>HTTPS-и оммавӣ</strong> месанҷад. Агар гирифтани сертификат ҳанӯз анҷом наёфта бошад, пеш аз он ки n8n-ро вайрон ҳисобед, логҳои Caddy ва DNS/портҳоро санҷед. Суроғаи <code>https://n8n.example.com</code>-ро кушоед, дарҳол ҳисоби соҳиби аввалро созед ва муҳофизати мувофиқи воридшавиро фаъол намоед. Тасдиқ кунед, ки муҳит воқеан ҷараёни кориро иҷро мекунад, на танҳо муҳаррирро мекушояд:</p>
+<ol>
+<li>Дар муҳаррир ҷараёни корие бо триггери <strong>Webhook</strong> эҷод кунед. Параметри <strong>HTTP Method</strong>-ро ба <code>GET</code> танзим кунед. Барои параметри <strong>Path</strong> <code>vps-check</code>-ро интихоб кунед ва параметри <strong>Respond</strong>-ро ба <strong>Immediately</strong> танзим намоед. Ҷараёни кориро захира кунед.</li>
+<li>Тугмаи <strong>Listen for Test Event</strong>-ро пахш карда, суроғаи пурраи <strong>Test URL</strong>-ро аз n8n нусхабардорӣ кунед ва аз дастгоҳи дигар фармони <code>curl -i 'PASTE_TEST_URL_HERE'</code>-ро бо URL-и нусхабардоришуда иҷро кунед. Ҷавоби муваффақи HTTP ва пайдо шудани рӯйдоди воридшударо дар муҳаррири n8n интизор шавед. URL-ҳои санҷишӣ танҳо дар вақти интизори рӯйдод будани n8n кор мекунанд.</li>
+<li><strong>Publish</strong>-ро барои нашри ҷараёни корӣ пахш кунед; сипас гиреҳро ба <strong>Production URL</strong> гузаронед, URL-ро нусхабардорӣ кунед ва фармони <code>curl -i 'PASTE_PRODUCTION_URL_HERE'</code>-ро дубора иҷро намоед. Иҷроишро дар ҷадвали <strong>Executions</strong> ҷараёни корӣ санҷед. Дархостҳои вебҳуки истеҳсолӣ танҳо ҳангоми нашр шудани ҷараён кор мекунанд ва додаҳояшон дар намоиши санҷишии муҳаррир нишон дода намешаванд.</li>
+</ol>
+<p>Ин танҳо санҷиши одӣ ва бидуни тасдиқи ҳувият аст: ба он ҳеҷ гоҳ маълумоти махфӣ нафиристед. Пас аз санҷиш онро аз нашр бароред ё ҳазф кунед, ё пеш аз истифода барои додаҳои воқеӣ тасдиқи ҳувият ва маҳдудиятҳои IP-и Webhook-ро танзим намоед. Ба ҳуҷҷатҳои расмии Webhook барои URL-ҳои санҷишӣ ва истеҳсолӣ муроҷиат кунед.</p>
+<h3>6. Пеш аз тағйири версияҳои собитшуда нусхаи эҳтиётӣ гиред</h3>
+<p>Нусхаи барқароршавандаи PostgreSQL-ро <em>ва</em> volume-и доимии додаҳои n8n, <code>.env</code>, калиди рамзгузорӣ ва файлҳои зарурии берунаро дар захираи берун аз ин сервер нигоҳ доред. Пеш аз навсозии муҳити истеҳсолӣ барқарорсозиро бо <a href="nuskhai-ehtiyotii-n8n-va-barqarorsozi.html">дастури нусхабардорӣ ва барқарорсозӣ</a> санҷед. Намунаи фармонҳо:</p>
+<pre><code># Back up the database, encryption key, instance data,
+# and files before changing the pinned versions.
+docker compose exec -T postgres \
+  pg_dump -U n8n -d n8n &gt; n8n-db.sql
+# After securing the backup outside this VPS:
+docker compose pull
+docker compose up -d
+docker compose ps</code></pre>
+<p>Версияи собитшудаи <code>N8N_VERSION</code> ро танҳо баъди хондани ёддоштҳои нашр тағйир диҳед; версияи образҳои n8n ва иҷрокунандаи вазифаҳо бояд якҷоя нав карда шавад. <strong>Ҳангоми нигоҳдории муқаррарӣ фармони <code>docker compose down -v</code></strong> ро иҷро накунед, зеро он volume-ҳои номдори додаҳоро ҳазф мекунад. Тағйири версияи асосии PostgreSQL нақшаи навсозии пойгоҳи додаҳо ё содирот/барқарорсозиро талаб мекунад; иваз кардани образи Postgres 18 ба версияи асосии дигар интиқоли худкор нест.</p>
+<p>Манбаъҳои аслӣ: дастури n8n оид ба Docker Compose, танзими проксии баръакс ва вебҳукҳои n8n ва ёддоштҳои расмии ҷойгиркунии PostgreSQL. Ҳеҷ натиҷаи санҷиши сарбории инфрасохтор ё имкони пешакӣ насбшудаи хоси провайдер иддао намешавад.</p>
+</section>
+<section class="section dark"><p class="eyebrow">ТАНЗИМОТ</p><h2>Маълумоти махфӣ ва URL-ҳои оммавиро бодиққат танзим кунед</h2><div class="cards">
+<article><h3>Калиди рамзгузорӣ</h3><p>Пеш аз захира кардани маълумоти дастрасии истеҳсолӣ калиди қавии рамзгузории n8n-ро таъин ва ҳифз кунед. Барои барқарорсозӣ айнан ҳамон калид лозим мешавад.</p></article>
+<article><h3>Маълумоти дастрасии PostgreSQL</h3><p>Барои пойгоҳи додаҳо маълумоти дастрасии махсус истифода баред ва рамзҳоро берун аз коди сарчашмаи оммавӣ нигоҳ доред.</p></article>
+<article><h3>Номи хости оммавӣ</h3><p>Ба ҷойи суроғаи дохилии контейнер номи хости воқеии беруна ва суроғаи HTTPS-ро танзим кунед.</p></article>
+<article><h3>URL-и вебҳук</h3><p>Арзиши <code>N8N_WEBHOOK_URL</code>-ро ба URL-и асосии HTTPS, ки аз интернет дастрас аст, танзим кунед ва параметри <code>N8N_PROXY_HOPS=1</code> ро ҳангоми мавҷуд будани як проксии баръакси боэътимод таъин намоед. <code>WEBHOOK_URL</code> дар n8n 2.35.0 ва версияҳои баъдӣ номи кӯҳнашудаи алтернативӣ аст; онро аз дастурҳои кӯҳна нусхабардорӣ накунед.</p></article>
+</div></section>
+<section class="section"><p class="eyebrow">НИГОҲДОРИИ ДОИМӢ</p><h2>Додаҳои n8n ва PostgreSQL-ро алоҳида нигоҳ доред</h2><div class="cards">
+<article><h3>Додаҳои n8n</h3><p>Барои ҷузвдони додаҳои n8n захираи доимӣ васл кунед, то ҳолати муҳими барнома баъди аз нав сохтани контейнер боқӣ монад.</p></article>
+<article><h3>Додаҳои PostgreSQL</h3><p>Ҷузвдони пойгоҳи додаҳоро мустақил аз контейнери PostgreSQL нигоҳ доред.</p></article>
+<article><h3>Ҳуқуқҳои файлҳо</h3><p>Боварӣ ҳосил кунед, ки корбари зарурии контейнер метавонад ба роҳҳои васлшуда нависад, вале фазои диски хост бе зарурат дастраси ҳамагон набошад.</p></article>
+<article><h3>Файлҳои ҷараёнҳои корӣ</h3><p>Файлҳои васлшуда ва захираи додаҳои бинариро, ки ҷараёнҳои истеҳсолӣ ба онҳо вобастаанд, доимӣ нигоҳ доред.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">POSTGRESQL</p><h2>n8n-ро ба хидмати хусусии пойгоҳи додаҳо пайваст кунед</h2><div class="requirements">
+<div><b>Навъи пойгоҳи додаҳо</b><span>n8n-ро барои PostgreSQL танзим намоед, то тасодуфан ба SQLite нагузарад.</span></div>
+<div><b>Хост</b><span>Номи хидмати PostgreSQL-ро дар шабакаи хусусии Docker истифода баред.</span></div>
+<div><b>Маълумоти дастрасӣ</b><span>Номи пойгоҳи додаҳо, корбари барнома ва рамзи лозимиро мувофиқ кунед.</span></div>
+<div><b>Омодагӣ</b><span>Пеш аз интизори оғози муваффақи n8n ба PostgreSQL имкони пурра омода шудан диҳед.</span></div>
+<div><b>Шабака</b><span>Барои пайвастшавии пойгоҳи додаҳо байни контейнерҳо кушодани порти оммавии PostgreSQL лозим нест.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">HTTPS ВА ПРОКСИ</p><h2>URL-и оммавии n8n-ро тавассути HTTPS таъмин кунед</h2><div class="cards">
+<article><h3>Проксии баръакс</h3><p>Nginx, Caddy ё Traefik-ро ҳамчун нуқтаи даромади оммавӣ истифода баред ва трафикро ба хидмати хусусии n8n равона созед.</p></article>
+<article><h3>TLS</h3><p>Барои номи хости оммавӣ сертификати эътиборнок гиред ва трафики HTTP-ро ба HTTPS равона кунед.</p></article>
+<article><h3>Сарлавҳаҳои интиқолёфта</h3><p>Маълумоти хост, протокол ва муштарии лозимии n8n-ро гузаронед ва шумораи дурусти гузаришҳои проксиро танзим намоед.</p></article>
+<article><h3>Санҷиши вебҳук</h3><p>Вебҳукро аз берун аз VPS фаъол карда, мутмаин шавед, ки n8n URL-и оммавии дастрас бо HTTPS месозад.</p></article></div>
+<p><a href="amniyati-n8n-dar-vps.html">Рӯйхати пурраи санҷиши амнияти истеҳсолӣ</a></p></section>
+<section class="section dark"><p class="eyebrow">ОҒОЗИ АВВАЛ</p><h2>Пеш аз истифодаи истеҳсолӣ нигоҳдории доимии додаҳоро санҷед</h2><div class="requirements">
+<div><b>Контейнерҳо</b><span>Тасдиқ кунед, ки n8n, PostgreSQL ва прокси баъди оғози кор ва бозоғозӣ солим мемонанд.</span></div>
+<div><b>Муҳаррир</b><span>Номи хости оммавии HTTPS-ро кушода, дуруст кор кардани тасдиқи ҳувиятро санҷед.</span></div>
+<div><b>Пойгоҳи додаҳо</b><span>Маълумоти озмоишӣ эҷод кунед, контейнерҳоро аз нав созед ва боқӣ мондани маълумотро тасдиқ намоед.</span></div>
+<div><b>Вебҳук</b><span>Вебҳуки берунаро санҷед, то DNS, TLS, кори прокси ва URL-и оммавии бозгаштро тасдиқ кунед.</span></div>
+<div><b>Маълумоти дастрасӣ</b><span>Санҷед, ки маълумоти дастрасии рамзгузоришуда пас аз бозоғозии n8n ҳам кор мекунад.</span></div>
+</div></section>
+<section class="section"><p class="eyebrow">НАВСОЗИҲО</p><h2>Ҷойгиркунии Docker-ро бидуни иштибоҳ гирифтани контейнерҳо бо нусхаҳои эҳтиётӣ навсозӣ кунед</h2><div class="cards">
+<article><h3>Ёддоштҳои нашрро хонед</h3><p>Пеш аз навсозӣ тағйироти муҳими n8n-ро омӯзед, хусусан агар аз чанд версия мегузаред.</p></article>
+<article><h3>Аввал нусхаи эҳтиётӣ гиред</h3><p>Пеш аз иваз кардани образи истеҳсолӣ нусхаи барқароршавандаи пойгоҳи додаҳо ва муҳитро созед.</p></article>
+<article><h3>Бехатар аз нав эҷод кунед</h3><p>Образи интихобшударо боргирӣ кунед ва контейнерҳои барномаро бе аз даст додани volume-ҳои доимӣ аз нав созед.</p></article>
+<article><h3>Пас аз навсозӣ санҷед</h3><p>Пеш аз солим ҳисобидани ҷойгиркунӣ логҳо, дастрасии муҳаррир, маълумоти дастрасӣ ва ҷараёнҳои намунавиро санҷед.</p></article></div>
+<p><a href="nuskhai-ehtiyotii-n8n-va-barqarorsozi.html">Дастури нусхабардорӣ ва барқарорсозӣ</a></p></section>
+<section class="section dark"><p class="eyebrow">ХАТОҲОИ МАЪМУЛ</p><h2>Чаро насби n8n бо Docker дар муҳити маҳаллӣ кор мекунад, аммо дар истеҳсолӣ не</h2><div class="cards">
+<article><h3>URL-и нодурусти вебҳук</h3><p>Дархостҳои бозгашт ба ҷойи суроғаи оммавии HTTPS ба localhost, HTTP ё номи хости дохилӣ равона мешаванд.</p></article>
+<article><h3>Нигоҳдории доимӣ нест</h3><p>Ҳолати барнома ё пойгоҳи додаҳо ҳангоми аз нав сохтани контейнер нопадид мешавад.</p></article>
+<article><h3>Калиди рамзгузорӣ гум шудааст</h3><p>Маълумоти дастрасии захирашуда баъд аз аз нав сохтани муҳит кор намекунад, зеро нусхаи нав калиди дигарро истифода мебарад.</p></article>
+<article><h3>Порти оммавии пойгоҳи додаҳо</h3><p>PostgreSQL бе зарурат ба интернет кушода шудааст, ҳол он ки танҳо n8n бояд ба он пайваст шавад.</p></article></div></section>
+<section class="section dark"><p class="eyebrow">САНҶИШИ БАЪД АЗ ҶОЙГИРКУНӢ</p><h2>Пеш аз пайваст кардани ҷараёнҳои воқеӣ кори системаро санҷед</h2><div class="cards"><article><h3>Ҳолати контейнерҳоро санҷед</h3><p>Фармони <code>docker compose ps</code> ро иҷро карда, пеш аз солим ҳисобидани ҷойгиркунӣ кори муқаррарии барнома ва пойгоҳи додаҳоро тасдиқ кунед.</p></article><article><h3>Нуқтаи санҷиши саломатии n8n-ро тафтиш кунед</h3><p>Дар намунаи Compose-и боло порти 5678 дар хост нашр нашудааст. Нуқтаи оммавиро бо фармони <code>curl -fsS https://n8n.example.com/healthz</code> пас аз иваз кардани номи хост санҷед ва, агар HTTPS ё пойгоҳи додаҳо ҳанӯз омода набошад, аз фармони <code>docker compose ps</code> ва логҳои хидматҳо истифода баред.</p></article><article><h3>Версияҳои барномаро собит кунед</h3><p>Навсозии образи шинокунандаро бе баррасӣ стратегияи нигоҳдорӣ ҳисоб накунед. Версияи n8n-и истифодашавандаро сабт кунед, ёддоштҳои нашрро хонед ва пеш аз тағйири версия нусхаи эҳтиётӣ гиред.</p></article><article><h3>Версияҳои асосии PostgreSQL-ро дар ҳамон ҷояшон иваз накунед</h3><p>Танҳо тағйир додани барчаспи версияи асосии образи Postgres метавонад ҷузвдони мавҷудаи додаҳоро номувофиқ созад. Ба ҷойи гумон кардани он ки аз нав сохтани контейнер интиқоли версияи асосиро анҷом медиҳад, аввал нусха гиред ва тартиби навсозии пойгоҳи додаҳоро иҷро намоед.</p></article></div><p>Дастури расмии ҷории Docker Compose</p></section><section class="section"><p class="eyebrow">САВОЛҲОИ МАЪМУЛ</p><h2>Насби n8n бо Docker: саволҳои маъмул</h2><div class="faq">
+<details><summary>Оё ҳангоми истифодаи Docker ба n8n PostgreSQL лозим аст?</summary><p>Docker истифодаи PostgreSQL-ро ҳатмӣ намекунад ва насбҳои хурд метавонанд SQLite-ро истифода баранд. Барои VPS-и ба муҳити истеҳсолӣ нигаронидашуда PostgreSQL асоси устувортари пойгоҳи додаҳоро таъмин мекунад ва миқёспазирии минбаъдаро бо режими навбат дастгирӣ менамояд.</p></details>
+<details><summary>Чаро ҳангоми нигоҳдории додаҳо дар PostgreSQL барои n8n volume-и доимӣ ҳам лозим аст?</summary><p>Ҷузвдони доимии n8n метавонад ҳолат ва танзимоти муҳими барномаро дар бар гирад. Онро мувофиқи сохтори ҷойгиркунӣ ҳифз кунед, на ин ки пойгоҳи додаҳоро ягона манбаи барқарорсозӣ ҳисобед.</p></details>
+<details><summary>Чаро вебҳуки ман localhost-ро нишон медиҳад?</summary><p>Суроғаи дохилии контейнер аз суроғаи оммавӣ фарқ дорад. Номи хости беруна, протокол ва URL-и вебҳукро танзим кунед ва мутмаин шавед, ки проксии баръакс сарлавҳаҳои заруриро мегузаронад.</p></details>
+<details><summary>Оё порти 5678 бояд ба интернет кушода бошад?</summary><p>Барои ҷойгиркунии муқаррарии истеҳсолӣ паси проксии баръакс HTTPS-ро дар прокси кушода, порти барномаи n8n-ро дохилӣ нигоҳ доред, магар он ки сабаби мушаххаси техникӣ дигарро талаб кунад.</p></details>
+<details><summary>Оё Redis лозим аст?</summary><p>Барои насби маъмулии Docker бо як нусха — не. Redis вақте зарур мешавад, ки шумо қасдан ба режими навбат ва коргарҳо мегузаред.</p></details>
+<details><summary>Оё иҷрокунандагони берунии вазифаҳои n8n бо коргарҳои режими навбат як чизанд?</summary><p>Не. Иҷрокунандагони берунии вазифаҳо коди дастгиришавандаро ҷудо аз раванди асосии n8n иҷро мекунанд ва токени муштараки тасдиқи ҳувият доранд. Режими навбати Redis иҷроишҳои ҷараёнҳои кориро тақсим мекунад ва талаботи инфрасохтории хоси худро дорад. Ин намуна иҷрокунандаи берунии вазифаҳоро нишон медиҳад, на режими навбати Redis-ро. Версияи образи иҷрокунандаи вазифаҳоро бо версияи n8n мувофиқ нигоҳ доред.</p></details></div><div class="actions"><a aria-describedby="affiliate-note" class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">Пешниҳодҳои VPS-ро бинед</a></div>
+<p><a href="talabot-vps-baroi-n8n.html">Талаботи VPS</a> · <a href="amniyati-n8n-dar-vps.html">Амнияти муҳити истеҳсолӣ</a> · <a href="nuskhai-ehtiyotii-n8n-va-barqarorsozi.html">Нусхабардорӣ ва барқарорсозӣ</a> · <a href="rejimi-navbat-n8n.html">Режими навбат ва коргарҳо</a> · <a href="index.html">Дастури асосии VPS барои n8n</a></p></section>
+<section class="section" data-best-vps-link="1"><h2>Провайдерҳоро муқоиса мекунед?</h2><p>Барои интихоби провайдер, насби яккликӣ, доираи дастгирӣ, нусхабардорӣ, интиқол, минтақа ва миқёспазирӣ аз <a href="behtarin-vps-baroi-n8n.html">муқоисаи беҳтарин VPS барои n8n</a> истифода баред. Барои интихоби захираҳои сервер ба <a href="index.html">дастури асосии VPS барои n8n</a>.</p></section></main><footer><b>n8nVPS</b><span>Дастури мустақили инфрасохтор барои n8n бо хостинги мустақил.</span><p><a href="dar-borai-mo.html">Дар бораи мо</a> · <a href="tamos.html">Тамос</a> · <a href="maxfiyat.html">Махфият</a></p><p><a href="/vps-for-n8n/es/instalar-n8n-vps-docker.html">Español</a> · <a href="/vps-for-n8n/de/n8n-vps-docker-installieren.html">Deutsch</a> · <a href="/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html">Polski</a></p><div class="lang-switch footer-lang-switch"><button type="button">Тоҷикӣ ▾</button><div class="lang-menu" style="top:auto;bottom:100%"><a href="https://agurkin2021-gif.github.io/vps-for-n8n/install-n8n-on-a-vps.html" hreflang="en" lang="en">English</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/es/instalar-n8n-vps-docker.html" hreflang="es" lang="es">Español</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ru/ustanovka-n8n-vps-docker.html" hreflang="ru" lang="ru">Русский</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pt-br/instalar-n8n-vps-docker.html" hreflang="pt-BR" lang="pt-BR">Português</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/de/n8n-vps-docker-installieren.html" hreflang="de" lang="de">Deutsch</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hi/install-n8n-vps-docker.html" hreflang="hi" lang="hi">हिन्दी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bn/install-n8n-vps-docker.html" hreflang="bn" lang="bn">বাংলা</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ja/install-n8n-vps-docker.html" hreflang="ja" lang="ja">日本語</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pa/install-n8n-vps-docker.html" hreflang="pa" lang="pa">ਪੰਜਾਬੀ</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/mr/install-n8n-vps-docker.html" hreflang="mr" lang="mr">मराठी</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/te/install-n8n-vps-docker.html" hreflang="te" lang="te">తెలుగు</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ta/install-n8n-vps-docker.html" hreflang="ta" lang="ta">தமிழ்</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tr/n8n-vps-docker-kurulumu.html" hreflang="tr" lang="tr">Türkçe</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/vi/cai-n8n-tren-vps.html" hreflang="vi" lang="vi">Tiếng Việt</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ko/install-n8n-vps-docker.html" hreflang="ko" lang="ko">한국어</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fr/installer-n8n-vps-docker.html" hreflang="fr" lang="fr">Français</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fa/install-n8n-vps-docker.html" hreflang="fa" lang="fa">فارسی</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/it/" hreflang="it" lang="it">Italiano</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/pl/jak-zainstalowac-n8n-na-vps.html" hreflang="pl" lang="pl">Polski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ar/install-n8n-on-a-vps.html" hreflang="ar" lang="ar">العربية</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/id/install-n8n-vps-docker.html" hreflang="id" lang="id">Bahasa Indonesia</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-tw/install-n8n-vps-docker.html" hreflang="zh-TW" lang="zh-TW">繁體中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/zh-cn/install-n8n-vps-docker.html" hreflang="zh-CN" lang="zh-CN">简体中文</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ca/install-n8n-vps-docker.html" hreflang="ca" lang="ca">Català</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ro/instalare-n8n-vps-docker.html" hreflang="ro" lang="ro">Română</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/nl/n8n-installeren-vps-docker.html" hreflang="nl" lang="nl">Nederlands</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/th/install-n8n-vps-docker.html" hreflang="th" lang="th">ไทย</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/az/install-n8n-on-a-vps.html" hreflang="az" lang="az">Azərbaycanca</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/el/install-n8n-on-a-vps.html" hreflang="el" lang="el">Ελληνικά</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hu/install-n8n-on-a-vps.html" hreflang="hu" lang="hu">Magyar</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/cs/install-n8n-on-a-vps.html" hreflang="cs" lang="cs">Čeština</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/bg/install-n8n-on-a-vps.html" hreflang="bg" lang="bg">Български</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sv/install-n8n-on-a-vps.html" hreflang="sv" lang="sv">Svenska</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sr/install-n8n-on-a-vps.html" hreflang="sr" lang="sr">Srpski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/he/install-n8n-on-a-vps.html" hreflang="he" lang="he">עברית</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/fi/install-n8n-on-a-vps.html" hreflang="fi" lang="fi">Suomi</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/da/install-n8n-on-a-vps.html" hreflang="da" lang="da">Dansk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/no/install-n8n-on-a-vps.html" hreflang="no" lang="no">Norsk</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sk/install-n8n-on-a-vps.html" hreflang="sk" lang="sk">Slovenčina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hr/install-n8n-on-a-vps.html" hreflang="hr" lang="hr">Hrvatski</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ka/install-n8n-on-a-vps.html" hreflang="ka" lang="ka">ქართული</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/hy/install-n8n-on-a-vps.html" hreflang="hy" lang="hy">Հայերեն</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lt/kaip-idiegti-n8n-vps.html" hreflang="lt" lang="lt">Lietuvių</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/sl/namestitev-n8n-na-vps.html" hreflang="sl" lang="sl">Slovenščina</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/lv/n8n-instalesana-vps.html" hreflang="lv" lang="lv">Latviešu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/et/n8n-paigaldamine-vps-i.html" hreflang="et" lang="et">Eesti</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/ms/install-n8n-vps-docker.html" hreflang="ms" lang="ms">Bahasa Melayu</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/kk/n8n-vps-ornatu.html" hreflang="kk" lang="kk">Қазақша</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/uz/n8n-vps-ornatish.html" hreflang="uz" lang="uz">O‘zbekcha</a><a href="https://agurkin2021-gif.github.io/vps-for-n8n/tg/nasbi-n8n-dar-vps.html" hreflang="tg" lang="tg" aria-current="page">Тоҷикӣ</a></div></div></footer><script>(function(){document.addEventListener("click",function(e){var sw=e.target.closest(".lang-switch");document.querySelectorAll(".lang-switch.open").forEach(function(x){if(x!==sw)x.classList.remove("open")});if(e.target.closest(".lang-switch button")){e.preventDefault();sw.classList.toggle("open")}});document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".lang-switch.open").forEach(function(x){x.classList.remove("open")})})})();</script></body></html>
