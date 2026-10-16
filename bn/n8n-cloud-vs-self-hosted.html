@@ -163,7 +163,7 @@
 
 
 
-<section class="section"><p class="eyebrow">পাশাপাশি তুলনা</p><h2>n8n Cloud vs VPS: যে difference সিদ্ধান্ত বদলায়</h2><div class="requirements"><div><b>সেটআপ</b><span>Cloud: managed onboarding। VPS: Linux provision, n8n deploy, database, HTTPS ও persistence configure।</span></div><div><b>মেইনটেন্যান্স</b><span>Cloud: infrastructure maintenance managed। VPS: update, patching, monitoring ও recovery আপনার responsibility।</span></div><div><b>ইনফ্রাস্ট্রাকচার নিয়ন্ত্রণ</b><span>Cloud: managed environment। VPS: compute, storage, network ও supporting service-এর root-level control।</span></div><div><b>ডেটা লোকেশন</b><span>Cloud: data managed service environment-এ থাকে। VPS: provider ও configuration অনুযায়ী infrastructure ও region আপনি বেছে নেন।</span></div><div><b>স্কেলিং</b><span>Cloud: purchased concurrency allowance-সহ service limit-এর মধ্যে infrastructure scaling handle হয়। VPS: measured demand অনুযায়ী resource resize বা queue mode, Redis ও worker design করুন।</span></div><div><b>খরচের মডেল</b><span>Cloud: completed-workflow execution ও concurrency allowance-সহ plan pricing। VPS: infrastructure ও selected service + operational time + recovery responsibility + paid software edition থাকলে তার cost।</span></div></div></section>
+<section class="section"><p class="eyebrow">পাশাপাশি তুলনা</p><h2>n8n Cloud vs VPS: যে difference সিদ্ধান্ত বদলায়</h2><div class="requirements"><div><b>সেটআপ</b><span>Cloud: managed onboarding। VPS: Linux provision, n8n deploy, database, HTTPS ও persistence configure।</span></div><div><b>মেইনটেন্যান্স</b><span>Cloud: infrastructure maintenance managed। VPS: update, patching, monitoring ও recovery আপনার responsibility।</span></div><div><b>ইনফ্রাস্ট্রাকচার নিয়ন্ত্রণ</b><span>Cloud: managed environment। VPS: compute, storage, network ও supporting service-এর root-level control।</span></div><div><b>ডেটা লোকেশন</b><span>Cloud: data managed service environment-এ থাকে। VPS: provider ও configuration অনুযায়ী infrastructure ও region আপনি বেছে নেন।</span></div><div><b>স্কেলিং</b><span>Cloud: purchased concurrency allowance-সহ service limit-এর মধ্যে infrastructure scaling handle হয়। VPS: measured demand অনুযায়ী resource resize বা queue mode, Redis ও worker design করুন।</span></div><div><b>খরচের মডেল</b><span>Cloud: completed-workflow execution ও concurrency allowance-সহ plan pricing। VPS: infrastructure ও selected service + operational time + recovery responsibility + paid software edition থাকলে তার cost।</span></div></div></section>
 
 
 
@@ -315,7 +315,7 @@
 
 
 
-<section class="section"><p class="eyebrow">নিয়ন্ত্রণ &amp; ডেটা</p><h2>Self-hosting কোথায় architecture বদলায়</h2><div class="cards"><article><h3>Private system</h3><p>Self-hosted deployment এমন infrastructure-এর মধ্যে রাখা যায় যার private database, internal API ও restricted network-এ direct access আছে।</p></article><article><h3>Data residency</h3><p>Self-hosting available server region বেছে নিতে ও application database কোথায় run করবে control করতে দেয়। তবে সব workflow data সেখানে থাকবে guarantee নয়: external API, model provider, log ও backup destination অন্য জায়গায় data process করতে পারে। Regulated use-এর জন্য complete data flow confirm করুন।</p></article><article><h3>কাস্টম server configuration</h3><p>Reverse proxy rule, firewall policy, storage, database configuration, environment variable ও supporting service আপনি control করেন।</p></article><article><h3>নিরাপত্তার দায়িত্ব</h3><p>Control responsibility transfer করে। VPS-এ SSH, TLS, firewall rule, credential, database exposure, backup ও update আপনাকেই secure করতে হবে।</p></article></div></section>
+<section class="section"><p class="eyebrow">নিয়ন্ত্রণ &amp; ডেটা</p><h2>Self-hosting কোথায় architecture বদলায়</h2><div class="cards"><article><h3>Private system</h3><p>Self-hosted deployment এমন infrastructure-এর মধ্যে রাখা যায় যার private database, internal API ও restricted network-এ direct access আছে।</p></article><article><h3>Data residency</h3><p>Self-hosting available server region বেছে নিতে ও application database কোথায় run করবে control করতে দেয়। তবে সব workflow data সেখানে থাকবে guarantee নয়: external API, model provider, log ও backup destination অন্য জায়গায় data process করতে পারে। Regulated use-এর জন্য complete data flow confirm করুন।</p></article><article><h3>কাস্টম server configuration</h3><p>Reverse proxy rule, firewall policy, storage, database configuration, environment variable ও supporting service আপনি control করেন।</p></article><article><h3>নিরাপত্তার দায়িত্ব</h3><p>Control responsibility transfer করে। VPS-এ SSH, TLS, firewall rule, credential, database exposure, backup ও update আপনাকেই secure করতে হবে।</p></article></div></section>
 
 
 
@@ -363,7 +363,7 @@
 
 
 
-<section class="section" id="migration-checklist"><p class="eyebrow">মাইগ্রেশন সিদ্ধান্ত</p><h2>n8n Cloud থেকে নিজের VPS-এ গেলে কী বদলায়?</h2><p class="intro">Workflow export complete migration নয়। Cloud instance বন্ধ করার আগে destination operational করুন।</p><div class="cards">
+<section class="section" id="migration-checklist"><p class="eyebrow">মাইগ্রেশন সিদ্ধান্ত</p><h2>n8n Cloud থেকে নিজের VPS-এ গেলে কী বদলায়?</h2><p class="intro">Workflow export complete migration নয়। Cloud instance বন্ধ করার আগে destination operational করুন।</p><div class="cards">
 
 
 

@@ -187,7 +187,7 @@
 
 
 
-</div><details class="context-detail"><summary>AI workflow: model কোথায় চলে তার ভিত্তিতে বেছে নিন</summary><p><strong>হোস্টেড মডেল API:</strong> payload size ও overlap অনুযায়ী budget, light বা small-business configuration ব্যবহার করুন। Inference model provider সামলায়, তাই VPS মূলত orchestration ও data সামলায়।</p><p><strong>Local processing বা local model:</strong> document parsing, embedding বা local inference-এর জন্য আলাদা CPU, RAM এবং সম্ভব হলে GPU budget দরকার। <a href="#architecture">Worker কখন যোগ করবেন</a>.</p></details>
+</div><details class="context-detail"><summary>AI workflow: model কোথায় চলে তার ভিত্তিতে বেছে নিন</summary><p><strong>হোস্টেড মডেল API:</strong> payload size ও overlap অনুযায়ী budget, light বা small-business configuration ব্যবহার করুন। Inference model provider সামলায়, তাই VPS মূলত orchestration ও data সামলায়।</p><p><strong>Local processing বা local model:</strong> document parsing, embedding বা local inference-এর জন্য আলাদা CPU, RAM এবং সম্ভব হলে GPU budget দরকার। <a href="#architecture">Worker কখন যোগ করবেন</a>.</p></details>
 
 
 
@@ -219,7 +219,7 @@
 
 
 
-<details class="context-detail"><summary>শুধু workflow count দেখে plan বেছে নেওয়া ভুল কেন</summary><p><strong>ঘনঘন ছোট API call:</strong> ছোট record process করে পরের batch আসার আগে শেষ হলে modest server-ও অনেক execution সামলাতে পারে।</p><p><strong>বড় import বা burst:</strong> বড় file process বা একসঙ্গে run করলে অল্প কয়েকটি workflow-ও memory-তে অনেক data ধরে রাখতে পারে। শুধু monthly total নয়, সবচেয়ে busy period দেখুন।</p><p><strong>AI API call:</strong> model API provider-এর কাছে চলে; VPS workflow, data এবং concurrent request সামলায়। Local model ও extra database আলাদা workload তৈরি করে। n8n memory factors · <a href="n8n-vps-requirements.html">বিস্তারিত requirements</a>.</p></details></section>
+<details class="context-detail"><summary>শুধু workflow count দেখে plan বেছে নেওয়া ভুল কেন</summary><p><strong>ঘনঘন ছোট API call:</strong> ছোট record process করে পরের batch আসার আগে শেষ হলে modest server-ও অনেক execution সামলাতে পারে।</p><p><strong>বড় import বা burst:</strong> বড় file process বা একসঙ্গে run করলে অল্প কয়েকটি workflow-ও memory-তে অনেক data ধরে রাখতে পারে। শুধু monthly total নয়, সবচেয়ে busy period দেখুন।</p><p><strong>AI API call:</strong> model API provider-এর কাছে চলে; VPS workflow, data এবং concurrent request সামলায়। Local model ও extra database আলাদা workload তৈরি করে। n8n memory factors · <a href="n8n-vps-requirements.html">বিস্তারিত requirements</a>.</p></details></section>
 
 
 
@@ -251,7 +251,7 @@
 
 
 
-<section class="section" id="decision"><p class="eyebrow">CONTROL নাকি MANAGED সুবিধা</p><h2>n8n-এর জন্য VPS কখন সঠিক</h2><div class="decision-row"><div class="cards"><article><h3>Control-এর জন্য নিজের VPS বেছে নিন</h3><p>নিজের stack চালান, internal service connect করুন এবং business অনুযায়ী update schedule করুন। Linux ও Docker-এ স্বচ্ছন্দ এবং infrastructure নিজে manage করতে চায় এমন team-এর জন্য এটি উপযুক্ত।</p></article><article><h3>Managed hosting-এর জন্য Cloud বেছে নিন</h3><p>n8n Cloud hosting platform সামলায়। Server-level customization-এর চেয়ে operational convenience বেশি গুরুত্বপূর্ণ হলে execution allowance ও included feature workload-এর সঙ্গে compare করুন।</p></article></div></div><p>One-click image installation দ্রুত করে; ongoing application management আলাদা service। <a href="n8n-cloud-vs-self-hosted.html">VPS ও n8n Cloud compare করুন</a>.</p></section>
+<section class="section" id="decision"><p class="eyebrow">CONTROL নাকি MANAGED সুবিধা</p><h2>n8n-এর জন্য VPS কখন সঠিক</h2><div class="decision-row"><div class="cards"><article><h3>Control-এর জন্য নিজের VPS বেছে নিন</h3><p>নিজের stack চালান, internal service connect করুন এবং business অনুযায়ী update schedule করুন। Linux ও Docker-এ স্বচ্ছন্দ এবং infrastructure নিজে manage করতে চায় এমন team-এর জন্য এটি উপযুক্ত।</p></article><article><h3>Managed hosting-এর জন্য Cloud বেছে নিন</h3><p>n8n Cloud hosting platform সামলায়। Server-level customization-এর চেয়ে operational convenience বেশি গুরুত্বপূর্ণ হলে execution allowance ও included feature workload-এর সঙ্গে compare করুন।</p></article></div></div><p>One-click image installation দ্রুত করে; ongoing application management আলাদা service। <a href="n8n-cloud-vs-self-hosted.html">VPS ও n8n Cloud compare করুন</a>.</p></section>
 
 
 
