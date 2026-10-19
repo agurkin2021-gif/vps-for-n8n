@@ -1,0 +1,7 @@
+# Maintenance/source files that must never be published as static assets
+*.py
+scripts/
+.github/
+cloudflare-build.mjs
+CLOUDFLARE.md
+wrangler.jsonc
