@@ -2,8 +2,11 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "vps-for-n8n",
   "compatibility_date": "2026-10-19",
+  "build": {
+    "command": "node cloudflare-build.mjs"
+  },
   "assets": {
-    "directory": ".",
+    "directory": "./dist",
     "html_handling": "none",
     "not_found_handling": "404-page"
   }
