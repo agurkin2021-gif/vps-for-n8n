@@ -7,19 +7,20 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from site_config import ROOT, BASE_URL, LEGACY_SITE
+from site_config import ROOT
 from scripts.generate_sitemap import generate
 from scripts.check_internal_links import check as check_links
 from scripts.check_indexing_metadata import check as check_metadata
 from scripts.generate_hreflang import MAP_FILE, check as check_hreflang
+from scripts.check_robots import check as check_robots
 
 
 def validate(root=ROOT, hreflang_map=MAP_FILE):
     root = Path(root).resolve()
     count = generate(root, check=True)
-    robots = (root / 'robots.txt').read_text(encoding='utf-8')
-    if 'Sitemap: '+BASE_URL+'sitemap.xml' not in robots or LEGACY_SITE in robots:
-        raise ValueError('robots.txt must advertise the configured production sitemap')
+    robots = check_robots(root)
+    if robots['errors']:
+        raise ValueError('robots.txt blocks crawl access: '+json.dumps(robots['errors'][:10]))
     metadata = check_metadata(root)
     if metadata['errors']:
         raise ValueError('Indexing metadata errors: '+json.dumps(metadata['errors'][:10]))
@@ -31,6 +32,8 @@ def validate(root=ROOT, hreflang_map=MAP_FILE):
         raise ValueError('Broken internal links: '+json.dumps(links['errors'][:10]))
     return {'sitemap_urls': count, 'html_files': links['html_files'],
             'internal_links': links['internal_links'], 'metadata_errors': 0, 'broken_links': 0,
+            'robots_errors': 0, 'robots_checked_urls': robots['checked_urls'],
+            'robots_checked_agents': robots['checked_agents'],
             'hreflang_groups': hreflang['groups'],
             'hreflang_declarations': hreflang['hreflang_declarations'], 'hreflang_errors': 0}
 

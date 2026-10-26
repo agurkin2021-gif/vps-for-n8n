@@ -19,10 +19,20 @@ Locally, `PYTHON` can select a Python executable; otherwise the build uses `pyth
 on Windows and `python3` on other platforms.
 
 Before replacing `dist/`, the build checks the sitemap inventory, canonical URLs,
-page identity metadata, robots sitemap declaration, internal anchor destinations
+page identity metadata, robots sitemap declaration and crawl access, internal anchor destinations
 and reciprocal hreflang groups.
 It also runs the Worker routing regression tests against the source assets.
 Any failure stops the build. It never silently repairs source files during deployment.
+
+Robots validation checks every sitemap URL and the sitemap itself for both the
+generic `*` group and `Googlebot`. A rule that blocks any of these URLs fails the
+build before `dist/` is replaced. The check handles merged groups, specific-agent
+overrides, longest-match Allow/Disallow precedence, `*` and `$` path patterns,
+comments and percent-encoded UTF-8. Separate AI-crawler restrictions do not apply
+to Googlebot. A commented-out Sitemap declaration does not pass validation.
+Malformed access directives fail validation rather than silently allowing a build.
+Run `python -B scripts/check_robots.py` for the focused report. This checks source
+rules; Cloudflare changes to live robots.txt still require a post-deploy check.
 
 The build copies only public web assets (HTML, CSS, SVG, TXT and XML) into `dist/`.
 Editorial/translation Python scripts, GitHub workflow caches, Git metadata and maintenance files are not published.

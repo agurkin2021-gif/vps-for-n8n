@@ -64,6 +64,9 @@ class SitemapRegressionTests(unittest.TestCase):
         report = validate(self.root, self.hreflang_map)
         self.assertEqual(report['broken_links'], 0)
         self.assertEqual(report['hreflang_errors'], 0)
+        self.assertEqual(report['robots_errors'], 0)
+        self.assertEqual(report['robots_checked_urls'], 3)
+        self.assertEqual(report['robots_checked_agents'], ['*', 'Googlebot'])
 
     def test_regeneration_removes_legacy_duplicates_and_is_byte_stable(self):
         (self.root/'sitemap.xml').write_text(f'<urlset xmlns="{NS}"><url><loc>{LEGACY_SITE}/</loc></url><url><loc>{BASE_URL}</loc></url><url><loc>{BASE_URL}</loc></url></urlset>', encoding='utf-8')
@@ -116,27 +119,42 @@ class SitemapRegressionTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'stale, unordered or duplicated'):
                     generate(self.root, check=True)
 
-    def test_build_fails_before_replacing_existing_dist_on_invalid_sitemap_or_hreflang(self):
+    def test_build_fails_before_replacing_existing_dist_on_invalid_source(self):
         generate(self.root)
         generate_hreflang(self.root, self.hreflang_map)
         sitemap = self.root/'sitemap.xml'
         valid_sitemap = sitemap.read_bytes()
+        valid_spanish = (self.root/'es/index.html').read_bytes()
+        robots = self.root/'robots.txt'
+        valid_robots = robots.read_bytes()
         for name in ['cloudflare-build.mjs', 'site_config.py', 'site-config.json']:
             shutil.copyfile(ROOT/name, self.root/name)
         (self.root/'scripts').mkdir()
-        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py']:
+        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py', 'check_robots.py']:
             shutil.copyfile(ROOT/'scripts'/name, self.root/'scripts'/name)
         (self.root/'dist').mkdir()
         sentinel = self.root/'dist'/'existing.txt'
         sentinel.write_text('existing build', encoding='utf-8')
         env = {**os.environ, 'PYTHON': sys.executable, 'PYTHONDONTWRITEBYTECODE': '1'}
-        for broken, message in [('sitemap', 'sitemap.xml is stale'), ('hreflang', 'Hreflang errors')]:
+        cases = [('sitemap', 'sitemap.xml is stale'), ('hreflang', 'Hreflang errors')]
+        robots_cases = {
+            'robots_all': 'User-agent: *\nDisallow: /\n',
+            'robots_googlebot': 'User-agent: *\nAllow: /\nUser-agent: Googlebot\nDisallow: /\n',
+            'robots_section': 'User-agent: *\nDisallow: /es/\n',
+            'robots_sitemap': 'User-agent: *\nDisallow: /sitemap.xml$\n',
+        }
+        cases.extend((name, 'robots.txt blocks crawl access') for name in robots_cases)
+        for broken, message in cases:
             with self.subTest(broken=broken):
                 sitemap.write_bytes(valid_sitemap)
+                (self.root/'es/index.html').write_bytes(valid_spanish)
+                robots.write_bytes(valid_robots)
                 if broken == 'sitemap':
                     sitemap.write_text(sitemap.read_text(encoding='utf-8').replace(BASE_URL, LEGACY_SITE+'/'), encoding='utf-8')
-                else:
+                elif broken == 'hreflang':
                     self.page('es/index.html', BASE_URL+'es/', lang='es')  # Missing return/self links.
+                else:
+                    robots.write_text(robots_cases[broken]+'Sitemap: '+BASE_URL+'sitemap.xml\n', encoding='utf-8')
                 result = subprocess.run(['node', str(self.root/'cloudflare-build.mjs')], cwd=self.root, env=env, capture_output=True, text=True, timeout=30)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(message, result.stdout+result.stderr)
