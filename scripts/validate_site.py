@@ -11,8 +11,9 @@ from site_config import ROOT
 from scripts.generate_sitemap import generate
 from scripts.check_internal_links import check as check_links
 from scripts.check_indexing_metadata import check as check_metadata
-from scripts.generate_hreflang import MAP_FILE, check as check_hreflang
+from scripts.generate_hreflang import MAP_FILE, prepare, inspect as inspect_hreflang
 from scripts.check_robots import check as check_robots
+from scripts.sync_language_menus import MenuDocument, inspect as inspect_menus
 
 
 def validate(root=ROOT, hreflang_map=MAP_FILE):
@@ -24,9 +25,13 @@ def validate(root=ROOT, hreflang_map=MAP_FILE):
     metadata = check_metadata(root)
     if metadata['errors']:
         raise ValueError('Indexing metadata errors: '+json.dumps(metadata['errors'][:10]))
-    hreflang = check_hreflang(root, hreflang_map)
+    prepared = prepare(root, hreflang_map, document_class=MenuDocument)
+    hreflang = inspect_hreflang(*prepared)
     if hreflang['errors']:
         raise ValueError('Hreflang errors: '+json.dumps(hreflang['errors'][:10]))
+    menus = inspect_menus(*prepared)
+    if menus['errors']:
+        raise ValueError('Language menu errors: '+json.dumps(menus['errors'][:10]))
     links = check_links(root)
     if links['errors']:
         raise ValueError('Broken internal links: '+json.dumps(links['errors'][:10]))
@@ -34,6 +39,8 @@ def validate(root=ROOT, hreflang_map=MAP_FILE):
             'internal_links': links['internal_links'], 'metadata_errors': 0, 'broken_links': 0,
             'robots_errors': 0, 'robots_checked_urls': robots['checked_urls'],
             'robots_checked_agents': robots['checked_agents'],
+            'language_menus': menus['menu_count'], 'language_menu_links': menus['menu_links'],
+            'language_menu_errors': 0,
             'hreflang_groups': hreflang['groups'],
             'hreflang_declarations': hreflang['hreflang_declarations'], 'hreflang_errors': 0}
 

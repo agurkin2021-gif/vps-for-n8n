@@ -74,7 +74,7 @@ def unique_keys(pairs):
     return result
 
 
-def prepare(root=ROOT, map_path=MAP_FILE):
+def prepare(root=ROOT, map_path=MAP_FILE, *, document_class=Document):
     root = Path(root).resolve()
     data = json.loads(Path(map_path).read_text(encoding='utf-8'), object_pairs_hook=unique_keys)
     if data.get('version') != 1 or not isinstance(data.get('groups'), list) or not data['groups']:
@@ -85,7 +85,7 @@ def prepare(root=ROOT, map_path=MAP_FILE):
         relative = file.relative_to(root).as_posix()
         if re.fullmatch(r'google[0-9a-f]+\.html', file.name) and source.strip() == 'google-site-verification: '+file.name:
             continue
-        document = Document(source)
+        document = document_class(source)
         documents[relative] = document
         if document.excluded:
             continue

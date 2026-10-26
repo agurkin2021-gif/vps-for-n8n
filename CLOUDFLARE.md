@@ -19,8 +19,8 @@ Locally, `PYTHON` can select a Python executable; otherwise the build uses `pyth
 on Windows and `python3` on other platforms.
 
 Before replacing `dist/`, the build checks the sitemap inventory, canonical URLs,
-page identity metadata, robots sitemap declaration and crawl access, internal anchor destinations
-and reciprocal hreflang groups.
+page identity metadata, robots sitemap declaration and crawl access, internal anchor destinations,
+reciprocal hreflang groups and language-menu destinations.
 It also runs the Worker routing regression tests against the source assets.
 Any failure stops the build. It never silently repairs source files during deployment.
 
@@ -50,6 +50,7 @@ After adding, removing or renaming a source page, update its entry in
 ```sh
 python -B scripts/generate_sitemap.py
 python -B scripts/generate_hreflang.py
+python -B scripts/sync_language_menus.py
 python -B scripts/validate_site.py
 python -B -m unittest discover -s tests -v
 node --test tests/worker-routing.test.mjs
@@ -78,10 +79,23 @@ site. Other read-only probes retain their existing triggers.
 requests and manual runs. It uses Node.js 22 and Python 3.13 to run the Python
 regression tests and the complete Cloudflare build, including site metadata and
 Worker routing validation. It never publishes. After manual maintenance,
-regenerate hreflang and run the validation commands above before publishing the
+regenerate hreflang, synchronize language menus and run the validation commands above before publishing the
 resulting content.
 
 ## Language alternatives
+
+Visible language menus use the same reviewed topic map as head hreflang.
+Run `python -B scripts/sync_language_menus.py` after manual translation or
+navigation jobs; `--check` reports stale targets without writing. Existing menu
+links point to the same topic when a translation exists, and otherwise to that
+language's homepage. Correct links through configured redirects are preserved.
+The tool preserves labels, attributes, menu order and all non-menu HTML; it does
+not add missing language options. It recognizes a link's `hreflang`, then `lang`,
+or infers the language from its mapped destination when both are absent.
+Ambiguous or unknown languages and invalid maps fail before any file is written.
+Noindex and redirect pages are excluded. The build checks these destinations
+before replacing `dist/`, so stale output from historical navigation scripts
+cannot be published silently.
 
 `hreflang-groups.json` is the reviewed map of equivalent pages by topic. Each
 indexable page belongs to exactly one group. Map paths must be existing,
