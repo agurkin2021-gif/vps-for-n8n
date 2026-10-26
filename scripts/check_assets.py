@@ -6,6 +6,7 @@ analyzer. It follows stylesheets and CSS @imports, including conditional ones,
 but does not evaluate JS, CSS variables, image-set strings or network resources.
 """
 import argparse
+import ipaddress
 import json
 import posixpath
 import re
@@ -186,6 +187,7 @@ class Resources(HTMLParser):
         self.references = []
         self.inline_css = []
         self.base_href = None
+        self.base_line = None
         self.in_style = False
         self.template_depth = 0
         self.feed(source)
@@ -198,6 +200,7 @@ class Resources(HTMLParser):
             self.template_depth += 1
         if tag == 'base' and not self.template_depth and 'href' in attrs and self.base_href is None:
             self.base_href = attrs['href'] or ''
+            self.base_line = line
         if tag == 'style':
             self.in_style = True
         if attrs.get('style'):
@@ -234,6 +237,46 @@ class Resources(HTMLParser):
     def handle_data(self, data):
         if self.in_style:
             self.inline_css.append((self.getpos()[0], data))
+
+
+def effective_base(document_url, href):
+    """Accept explicit, portable HTTP(S) bases instead of silently losing refs.
+
+    Browsers ignore some forbidden bases (notably data: and javascript:), while
+    urljoin would use them and turn relative resources into uncheckable URLs.
+    The publication policy rejects these declarations rather than repairing them.
+    """
+    value = href.strip()
+    if any(ord(character) < 32 or ord(character) == 127 for character in value) or '\\' in value:
+        raise ValueError('base href must not contain control characters or backslashes')
+    declared = urlsplit(value)
+    if declared.scheme and (declared.scheme not in ('http', 'https') or not declared.netloc):
+        raise ValueError('base href must be relative or an absolute HTTP(S) URL with a hostname')
+    if value.startswith('//') and not declared.netloc:
+        raise ValueError('protocol-relative base href requires a hostname')
+    result = urljoin(document_url, value)
+    parsed = urlsplit(result)
+    if parsed.scheme not in ('http', 'https') or not parsed.hostname:
+        raise ValueError('effective base must be an HTTP(S) URL with a hostname')
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError('base href must not contain credentials')
+    # Accessing port also rejects nonnumeric and out-of-range ports.
+    _ = parsed.port
+    if parsed.netloc.endswith(':'):
+        raise ValueError('base href has an empty port')
+    hostname = parsed.hostname
+    if ':' in hostname:
+        ipaddress.IPv6Address(hostname)
+    else:
+        hostname = hostname.encode('idna').decode('ascii').rstrip('.')
+        labels = hostname.split('.')
+        if (not hostname or len(hostname) > 253
+                or any(not re.fullmatch(r'[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?', label)
+                       for label in labels)):
+            raise ValueError('base href has an invalid hostname')
+        if all(label.isdigit() for label in labels):
+            ipaddress.IPv4Address(hostname)
+    return result
 
 
 def check(root=ROOT, documents=None):
@@ -299,15 +342,15 @@ def check(root=ROOT, documents=None):
         document = documents.get(relative) if documents is not None else None
         source = document.source if document is not None else file.read_bytes().decode('utf-8-sig')
         parser = Resources(source.replace(LEGACY_SITE, SITE))
+        source_files += 1
         base = page_url(relative)
         if parser.base_href is not None:
             try:
-                base = urljoin(base, parser.base_href)
-            except ValueError as exc:
-                errors.append({'source': relative, 'line': 1, 'url': parser.base_href,
+                base = effective_base(base, parser.base_href)
+            except (ValueError, UnicodeError) as exc:
+                errors.append({'source': relative, 'line': parser.base_line, 'url': parser.base_href,
                                'reason': 'invalid base URL: '+str(exc)})
                 continue
-        source_files += 1
         for line, value, stylesheet in parser.references:
             consume(relative, line, value, stylesheet, base)
         for line, css in parser.inline_css:

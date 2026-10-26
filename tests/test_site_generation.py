@@ -143,6 +143,7 @@ class SitemapRegressionTests(unittest.TestCase):
                  ('missing_image', 'Missing or unpublished assets'),
                  ('missing_stylesheet', 'Missing or unpublished assets'),
                  ('excluded_script', 'Missing or unpublished assets'),
+                 ('invalid_base', 'invalid base URL'),
                  ('orphan_page', 'Unreachable indexable pages')]
         # The source file exists, but the build's public extension policy excludes it.
         (self.root/'app.js').write_text('console.log("fixture")', encoding='utf-8')
@@ -172,6 +173,9 @@ class SitemapRegressionTests(unittest.TestCase):
                         'missing_stylesheet': b'<link rel="stylesheet" href="/missing.css">',
                         'excluded_script': b'<script src="/app.js"></script>',
                     }[broken]
+                    (self.root/'index.html').write_bytes(valid_home.replace(b'</head>', markup+b'</head>'))
+                elif broken == 'invalid_base':
+                    markup = b'<base href="data:text/plain,ignored"><img src="/missing.svg">'
                     (self.root/'index.html').write_bytes(valid_home.replace(b'</head>', markup+b'</head>'))
                 elif broken == 'orphan_page':
                     (self.root/'index.html').write_bytes(valid_home.replace(b'<a href="es/">Spanish</a>', b''))

@@ -48,6 +48,12 @@ new asset format (for example, `.js`), deliberately update the shared extension
 policy. External and data URLs are skipped; the check makes no network requests
 and does not execute JavaScript or discover runtime-generated resource URLs.
 CSS variable evaluation and string candidates in `image-set()` are outside its scope.
+The first active `<base href>` must resolve to an HTTP(S) URL with a valid hostname
+and port, without credentials. Relative, root-relative and protocol-relative bases
+are supported, including external HTTP(S) hosts; bases inside templates are ignored.
+Forbidden schemes such as `data:` or `javascript:`, malformed hosts/ports and
+nonportable control characters or backslashes fail with the source file and line.
+They cannot silently suppress local resource checks or replace the existing `dist/`.
 Run `python -B scripts/check_assets.py` for the focused report.
 
 Every indexable page must be reachable from `/` through ordinary `<a href>` links.

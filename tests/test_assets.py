@@ -114,6 +114,61 @@ class AssetTests(unittest.TestCase):
         self.assertEqual(report['error_count'], 0, report)
         self.assertEqual(report['references'], 1)
 
+    def test_forbidden_and_malformed_bases_fail_with_the_source_line(self):
+        cases = [
+            'data:text/plain,ignored', 'javascript:alert(1)', 'mailto:editor@example.test',
+            'file:///local/assets/', 'https:///missing-host/', '//',
+            'https://[broken/', 'https://example.test:bad/', 'https://example.test:65536/',
+            'https://example.test:/', 'https://user:password@example.test/',
+            'https://bad host.test/', 'https://bad..host.test/', 'https://-bad.test/',
+        ]
+        for base in cases:
+            with self.subTest(base=base):
+                self.write('index.html', '<!doctype html>\n<html><head>\n'
+                           f'<base href="{base}">\n</head><body><img src="missing.svg"></body></html>')
+                with patch('urllib.request.urlopen', side_effect=AssertionError('Network access')):
+                    report = check(self.root)
+                self.assertEqual(report['source_files'], 1)
+                self.assertEqual(report['error_count'], 1, report)
+                error = report['errors'][0]
+                self.assertEqual((error['source'], error['line'], error['url']), ('index.html', 3, base))
+                self.assertIn('invalid base URL', error['reason'])
+
+    def test_valid_relative_root_and_protocol_relative_bases_keep_local_checks(self):
+        self.write('assets/logo.svg', '<svg/>')
+        for base in ('../assets/', '/assets/', '/assets/?version=1#icon',
+                     '//vpsforn8n.com/assets/', SITE+'/assets/',
+                     'http://vpsforn8n.com/assets/'):
+            with self.subTest(base=base):
+                self.write('nested/page.html', f'<base href="{base}"><img src="logo.svg">'
+                           '<img src="missing.svg">')
+                report = check(self.root)
+                self.assert_destinations(report, ['/assets/missing.svg'])
+                self.assertEqual(report['references'], 2)
+
+    def test_valid_external_https_and_ip_bases_remain_offline(self):
+        for base in ('https://cdn.example.test/assets/', '//cdn.example.test/assets/',
+                     'https://[2001:db8::1]:8443/assets/', 'https://127.0.0.1/assets/'):
+            with self.subTest(base=base):
+                self.write('index.html', f'<base href="{base}"><img src="remote.svg">')
+                with patch('urllib.request.urlopen', side_effect=AssertionError('Network access')):
+                    report = check(self.root)
+                self.assertEqual(report['error_count'], 0, report)
+                self.assertEqual(report['references'], 0)
+
+    def test_only_first_active_base_is_validated_and_template_base_is_ignored(self):
+        self.write('assets/logo.svg', '<svg/>')
+        self.write('index.html', '<template><base href="data:text/plain,inert"></template>'
+                   '<base href="/assets/"><base href="javascript:ignored">'
+                   '<img src="logo.svg">')
+        report = check(self.root)
+        self.assertEqual(report['error_count'], 0, report)
+        self.assertEqual(report['references'], 1)
+        self.write('index.html', '<base href="data:text/plain,invalid"><base href="/assets/">')
+        report = check(self.root)
+        self.assertEqual(report['error_count'], 1, report)
+        self.assertIn('invalid base URL', report['errors'][0]['reason'])
+
     def test_inline_styles_stylesheet_imports_and_cycles_are_checked_transitively(self):
         self.write('index.html', '''<link rel="stylesheet" href="css/main.css">
             <style>@import "css/inline.css"; body{background:url(inline-missing.svg)}</style>
