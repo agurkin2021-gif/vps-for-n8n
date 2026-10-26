@@ -1,12 +1,13 @@
-import { cp, mkdir, readdir, rm } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, rm } from 'node:fs/promises';
 import { dirname, extname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const out = join(root, 'dist');
-const allowed = new Set(['.html', '.css', '.svg', '.txt', '.xml']);
-const ignoredDirs = new Set(['.git', '.github', '.wrangler', 'dist', 'scripts', 'tests', 'node_modules', '__pycache__']);
+const config = JSON.parse(await readFile(join(root, 'site-config.json'), 'utf8'));
+const allowed = new Set(config.assets.extensions);
+const ignoredDirs = new Set(config.assets.excludedDirectories);
 
 const python = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 const validation = spawnSync(python, ['-B', join(root, 'scripts', 'validate_site.py'), '--root', root], {

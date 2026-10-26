@@ -20,7 +20,8 @@ on Windows and `python3` on other platforms.
 
 Before replacing `dist/`, the build checks the sitemap inventory, canonical URLs,
 page identity metadata, robots sitemap declaration and crawl access, internal anchor destinations,
-reciprocal hreflang groups and language-menu destinations.
+reciprocal hreflang groups, language-menu destinations, referenced local assets
+and page reachability through ordinary links.
 It also runs the Worker routing regression tests against the source assets.
 Any failure stops the build. It never silently repairs source files during deployment.
 
@@ -35,7 +36,30 @@ Run `python -B scripts/check_robots.py` for the focused report. This checks sour
 rules; Cloudflare changes to live robots.txt still require a post-deploy check.
 
 The build copies only public web assets (HTML, CSS, SVG, TXT and XML) into `dist/`.
+Both the build and Python checks use `assets.extensions` and
+`assets.excludedDirectories` in `site-config.json` for the publication inventory.
 Editorial/translation Python scripts, GitHub workflow caches, Git metadata and maintenance files are not published.
+
+Local resource references must resolve to that inventory with the correct filename
+case. This includes images and `srcset`, external script tags, stylesheet/icon/preload
+links, inline CSS and URLs/imports in reachable stylesheets. A file that exists in
+the repository but is excluded from publication still fails. Before introducing a
+new asset format (for example, `.js`), deliberately update the shared extension
+policy. External and data URLs are skipped; the check makes no network requests
+and does not execute JavaScript or discover runtime-generated resource URLs.
+CSS variable evaluation and string candidates in `image-set()` are outside its scope.
+Run `python -B scripts/check_assets.py` for the focused report.
+
+Every indexable page must be reachable from `/` through ordinary `<a href>` links.
+It must also be reachable from its language's homepage, using pages in that locale
+and excluding `.lang-switch` / `.lang-menu` navigation. The reviewed home hreflang
+group defines locale roots; regional codes sharing a homepage are checked together.
+This checks a complete traversal, so isolated cycles fail even when their pages
+link to each other. Head hreflang, script/template markup, nofollow links and
+noindex/redirect pages do not provide navigation paths for this guard. This is a
+conservative publication requirement, not a simulation of Google's crawler.
+Run `python -B scripts/check_crawl_reachability.py` for the focused report.
+Both guards run before `dist/` is removed; a failure leaves the previous build intact.
 
 ## URL configuration and sitemap maintenance
 

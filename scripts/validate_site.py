@@ -14,6 +14,8 @@ from scripts.check_indexing_metadata import check as check_metadata
 from scripts.generate_hreflang import MAP_FILE, prepare, inspect as inspect_hreflang
 from scripts.check_robots import check as check_robots
 from scripts.sync_language_menus import MenuDocument, inspect as inspect_menus
+from scripts.check_assets import check as check_assets
+from scripts.check_crawl_reachability import check as check_reachability
 
 
 def validate(root=ROOT, hreflang_map=MAP_FILE):
@@ -35,12 +37,21 @@ def validate(root=ROOT, hreflang_map=MAP_FILE):
     links = check_links(root)
     if links['errors']:
         raise ValueError('Broken internal links: '+json.dumps(links['errors'][:10]))
+    assets = check_assets(root, documents=prepared[0])
+    if assets['errors']:
+        raise ValueError('Missing or unpublished assets: '+json.dumps(assets['errors'][:10]))
+    crawl = check_reachability(root, hreflang_map, prepared=prepared)
+    if crawl['errors']:
+        raise ValueError('Unreachable indexable pages: '+json.dumps(crawl['errors'][:10]))
     return {'sitemap_urls': count, 'html_files': links['html_files'],
             'internal_links': links['internal_links'], 'metadata_errors': 0, 'broken_links': 0,
             'robots_errors': 0, 'robots_checked_urls': robots['checked_urls'],
             'robots_checked_agents': robots['checked_agents'],
             'language_menus': menus['menu_count'], 'language_menu_links': menus['menu_links'],
             'language_menu_errors': 0,
+            'asset_references': assets['references'], 'unique_assets': assets['unique_assets'],
+            'asset_errors': 0, 'crawl_reachable_pages': crawl['global_reachable'],
+            'crawl_locales_checked': crawl['locales_checked'], 'crawl_errors': 0,
             'hreflang_groups': hreflang['groups'],
             'hreflang_declarations': hreflang['hreflang_declarations'], 'hreflang_errors': 0}
 

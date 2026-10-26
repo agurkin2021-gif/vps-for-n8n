@@ -132,14 +132,20 @@ class SitemapRegressionTests(unittest.TestCase):
         for name in ['cloudflare-build.mjs', 'site_config.py', 'site-config.json']:
             shutil.copyfile(ROOT/name, self.root/name)
         (self.root/'scripts').mkdir()
-        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py', 'check_robots.py', 'sync_language_menus.py']:
+        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py', 'check_robots.py', 'sync_language_menus.py', 'check_assets.py', 'check_crawl_reachability.py']:
             shutil.copyfile(ROOT/'scripts'/name, self.root/'scripts'/name)
         (self.root/'dist').mkdir()
         sentinel = self.root/'dist'/'existing.txt'
         sentinel.write_text('existing build', encoding='utf-8')
         env = {**os.environ, 'PYTHON': sys.executable, 'PYTHONDONTWRITEBYTECODE': '1'}
         cases = [('sitemap', 'sitemap.xml is stale'), ('hreflang', 'Hreflang errors'),
-                 ('language_menu', 'Language menu errors')]
+                 ('language_menu', 'Language menu errors'),
+                 ('missing_image', 'Missing or unpublished assets'),
+                 ('missing_stylesheet', 'Missing or unpublished assets'),
+                 ('excluded_script', 'Missing or unpublished assets'),
+                 ('orphan_page', 'Unreachable indexable pages')]
+        # The source file exists, but the build's public extension policy excludes it.
+        (self.root/'app.js').write_text('console.log("fixture")', encoding='utf-8')
         robots_cases = {
             'robots_all': 'User-agent: *\nDisallow: /\n',
             'robots_googlebot': 'User-agent: *\nAllow: /\nUser-agent: Googlebot\nDisallow: /\n',
@@ -160,6 +166,15 @@ class SitemapRegressionTests(unittest.TestCase):
                 elif broken == 'language_menu':
                     menu = '<div class="lang-menu"><a href="'+BASE_URL+'" hreflang="es">Spanish</a></div>'
                     (self.root/'index.html').write_bytes(valid_home.replace(b'</body>', menu.encode()+b'</body>'))
+                elif broken in {'missing_image', 'missing_stylesheet', 'excluded_script'}:
+                    markup = {
+                        'missing_image': b'<img src="/missing.svg" alt="Missing">',
+                        'missing_stylesheet': b'<link rel="stylesheet" href="/missing.css">',
+                        'excluded_script': b'<script src="/app.js"></script>',
+                    }[broken]
+                    (self.root/'index.html').write_bytes(valid_home.replace(b'</head>', markup+b'</head>'))
+                elif broken == 'orphan_page':
+                    (self.root/'index.html').write_bytes(valid_home.replace(b'<a href="es/">Spanish</a>', b''))
                 else:
                     robots.write_text(robots_cases[broken]+'Sitemap: '+BASE_URL+'sitemap.xml\n', encoding='utf-8')
                 result = subprocess.run(['node', str(self.root/'cloudflare-build.mjs')], cwd=self.root, env=env, capture_output=True, text=True, timeout=30)
