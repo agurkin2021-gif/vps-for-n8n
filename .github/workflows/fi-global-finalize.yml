@@ -1,10 +1,7 @@
 name: Finnish sitewide language integration
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/fi-global-finalize.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

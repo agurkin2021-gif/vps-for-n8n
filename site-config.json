@@ -1,0 +1,11 @@
+{
+  "origin": "https://vpsforn8n.com",
+  "legacyBase": "https://agurkin2021-gif.github.io/vps-for-n8n",
+  "redirects": {
+    "/backup-restore.html": "/n8n-backup-and-restore.html",
+    "/docker-install.html": "/install-n8n-on-a-vps.html",
+    "/production-security.html": "/secure-n8n-on-a-vps.html",
+    "/queue-mode.html": "/n8n-queue-mode.html",
+    "/it/": "/it/vps-n8n/"
+  }
+}

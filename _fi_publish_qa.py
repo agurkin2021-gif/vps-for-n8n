@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Add Finnish to all existing site language selectors without changing page content."""
 from __future__ import annotations
+from site_config import BASE_URL, iter_public_html
 
 from collections import Counter
 from html import unescape
@@ -10,7 +11,7 @@ import re
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 EN = (
     "index.html", "best-vps-for-n8n.html", "about.html",
     "n8n-backup-and-restore.html", "contact.html", "install-n8n-on-a-vps.html",
@@ -166,7 +167,7 @@ def main():
     menus = 0
     fallback_count = 0
     dests = Counter()
-    for file in sorted(ROOT.rglob("*.html")):
+    for file in sorted(iter_public_html(ROOT)):
         if ".git" in file.parts:
             continue
         rel = file.relative_to(ROOT).as_posix()
@@ -186,7 +187,7 @@ def main():
     assert len(dests) == 11, f"Missing Finnish destinations: {sorted(dests)}"
     assert verify_sources() == url_count
     # A second pass must be idempotent.
-    for file in sorted(ROOT.rglob("*.html")):
+    for file in sorted(iter_public_html(ROOT)):
         if ".git" in file.parts:
             continue
         rel = file.relative_to(ROOT).as_posix()

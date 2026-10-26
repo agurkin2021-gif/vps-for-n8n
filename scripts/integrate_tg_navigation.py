@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Integrate Tajik into every site language menu without changing other languages."""
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from site_config import BASE_URL, iter_public_html
 from urllib.parse import urlsplit
 import json
 import re
-import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 MAP = {
     "": "tg/",
     "best-vps-for-n8n.html": "tg/behtarin-vps-baroi-n8n.html",
@@ -140,22 +142,11 @@ def validate_page(path, html, intent):
             json.loads(match.group(1))
 
 def sitemap_text():
-    p = ROOT / "sitemap.xml"
-    text = p.read_text(encoding="utf-8")
+    from scripts.generate_sitemap import collect_urls, render
+    urls = collect_urls(ROOT)
     for target in MAP.values():
-        url = BASE + target
-        if f"<loc>{url}</loc>" not in text:
-            text = re.sub(
-                r'</urlset>\s*$',
-                f'  <url><loc>{url}</loc></url>\n</urlset>\n',
-                text, count=1, flags=re.I,
-            )
-    root = ET.fromstring(text)
-    actual = [e.text for e in root.findall(".//{*}loc")]
-    for v in MAP.values():
-        u = BASE + v
-        assert actual.count(u) == 1, ("sitemap occurrence", u, actual.count(u))
-    return text, len(actual)
+        assert BASE + target in urls, ("missing canonical Tajik page", target)
+    return render(urls).decode("utf-8"), len(urls)
 
 def main():
     write = "--write" in sys.argv[1:]
@@ -168,7 +159,7 @@ def main():
     matched = 0
     changed = 0
     unknown = []
-    all_pages = sorted(ROOT.rglob("*.html"))
+    all_pages = sorted(iter_public_html(ROOT))
     for p in all_pages:
         if ".git" in p.parts:
             continue

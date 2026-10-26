@@ -1,8 +1,7 @@
 name: Marathi source-faithful localization and publication
 on:
-  push:
-    branches: [mr-google-complete-20261009]
-    paths: [.github/workflows/mr-google-localize.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

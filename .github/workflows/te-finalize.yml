@@ -1,8 +1,7 @@
 name: Telugu final editorial and global language-switch QA
 on:
-  push:
-    branches: [te-complete-sitemap-20261009]
-    paths: [.github/workflows/te-finalize.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

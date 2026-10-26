@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Integrate complete Vietnamese localization site-wide and run strict QA."""
 from __future__ import annotations
+from site_config import BASE_URL, iter_public_html, regenerate_sitemap
 from pathlib import Path
 import re, html, json, collections
 import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parent
-BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE=BASE_URL
 PAIRS=[
  ("index.html","vi/index.html"),
  ("best-vps-for-n8n.html","vi/vps-n8n-tot-nhat.html"),
@@ -145,16 +146,7 @@ def alternate(text,lang):
     return None
 
 def ensure_sitemap():
-    p=ROOT/"sitemap.xml"
-    source=p.read_text(encoding="utf-8")
-    existing=set(re.findall(r"<loc>([^<]+)</loc>",source));count=0
-    for _,translated in PAIRS:
-        url=canonical(translated)
-        if url not in existing:
-            source=source.replace("</urlset>",'  <url><loc>'+url+'</loc></url>\n</urlset>',1)
-            existing.add(url);count+=1
-    p.write_text(source,encoding="utf-8");ET.parse(p)
-    print("VIETNAMESE_SITEMAP_ADDED",count,flush=True)
+    return regenerate_sitemap(ROOT)
 
 def audit(changed):
     errors=[]
@@ -183,7 +175,7 @@ def audit(changed):
         if alternate(output,"en")!=canonical(en):errors.append(vi+": English hreflang wrong")
         print("VIETNAMESE_PAGE_QA "+str(index)+"/11 "+vi+(" PASS" if not errors else " checked"),flush=True)
 
-    pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html") if ".git" not in f.parts and f.name!="404.html")
+    pages=sorted(f.relative_to(ROOT).as_posix() for f in iter_public_html(ROOT) if ".git" not in f.parts and f.name!="404.html")
     total=menus=0
     for path in pages:
         text=(ROOT/path).read_text(encoding="utf-8")
@@ -227,7 +219,7 @@ def audit(changed):
 
 def main():
     changed=0
-    pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html") if ".git" not in f.parts and f.name!="404.html")
+    pages=sorted(f.relative_to(ROOT).as_posix() for f in iter_public_html(ROOT) if ".git" not in f.parts and f.name!="404.html")
     for path in pages:
         p=ROOT/path;src=p.read_text(encoding="utf-8");out=transform(path,src)
         if out!=src:p.write_text(out,encoding="utf-8");changed+=1

@@ -1,9 +1,7 @@
 name: Persian native polish current main
 on:
-  push:
-    branches: [fa-native-polish-current-20261009]
-    paths:
-      - .github/workflows/fa-native-polish-current.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

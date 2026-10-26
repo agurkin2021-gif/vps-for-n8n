@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Integrate Latvian links throughout all existing website language selectors."""
 from __future__ import annotations
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from site_config import BASE_URL, iter_public_html
 
 import argparse
 import json
 import re
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 MATCHES = {
     "": "lv/",
     "index.html": "lv/",
@@ -118,7 +121,7 @@ def verify_page(path: Path, html: str, original: str, menus: int, exact: bool, t
 
 def run(write: bool):
     verify_source()
-    paths = sorted(path for path in ROOT.rglob("*.html") if ".git" not in path.parts)
+    paths = sorted(path for path in iter_public_html(ROOT) if ".git" not in path.parts)
     total = menus_total = exact_total = fallback_total = changed = no_menu = 0
     for path in paths:
         original = path.read_text(encoding="utf-8")

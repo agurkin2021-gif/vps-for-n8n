@@ -1,10 +1,7 @@
 name: Swedish 11-page localization in verified two-page passes
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/sv-localization.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

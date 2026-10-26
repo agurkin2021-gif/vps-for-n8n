@@ -1,8 +1,7 @@
 name: Vietnamese complete source-faithful localization
 on:
-  push:
-    branches: [vi-complete-sitemap-20261009]
-    paths: [.github/workflows/vi-complete.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

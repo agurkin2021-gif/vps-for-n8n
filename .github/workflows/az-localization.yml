@@ -1,10 +1,7 @@
 name: Azerbaijani sequential localization and sitewide language selector QA
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/az-localization.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

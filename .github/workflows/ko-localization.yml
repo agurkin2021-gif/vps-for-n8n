@@ -1,9 +1,7 @@
 name: Korean final publication QA
 on:
-  push:
-    branches: [ko-complete-sitemap-20261009]
-    paths:
-      - .github/workflows/ko-localization.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

@@ -1,10 +1,7 @@
 name: Hebrew editorial revision for two completed pages
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/he-editorial-two.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

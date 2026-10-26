@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Integrate Hebrew in every existing language menu without modifying page content."""
 from __future__ import annotations
+from site_config import BASE_URL, iter_public_html
 
 from collections import Counter
 from html import unescape
@@ -9,7 +10,7 @@ import re
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent
-BASE = 'https://agurkin2021-gif.github.io/vps-for-n8n/'
+BASE = BASE_URL
 EN = ('index.html', 'best-vps-for-n8n.html', 'about.html',
       'n8n-backup-and-restore.html', 'contact.html',
       'install-n8n-on-a-vps.html', 'n8n-cloud-vs-self-hosted.html',
@@ -174,7 +175,7 @@ def audit():
     for en in EN:
         if not (ROOT / 'he' / en).is_file():
             raise AssertionError('Hebrew page missing: ' + en)
-    pages = sorted(p for p in ROOT.rglob('*.html') if '.git' not in p.parts and p.name != '404.html')
+    pages = sorted(p for p in iter_public_html(ROOT) if '.git' not in p.parts and p.name != '404.html')
     total_pages = menu_pages = total_menus = changed_pages = missing = 0
     destinations = Counter()
     for p in pages:

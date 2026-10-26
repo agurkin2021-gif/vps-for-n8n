@@ -1,9 +1,7 @@
 name: Telugu sequential HTML localization and publication QA
 on:
-  push:
-    branches: [te-complete-sitemap-20261009]
-    paths:
-      - .github/workflows/te-localization.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

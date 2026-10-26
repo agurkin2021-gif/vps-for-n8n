@@ -1,10 +1,7 @@
 name: Czech sequential localization and publication
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/cs-localization.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

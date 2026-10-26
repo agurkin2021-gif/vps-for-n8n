@@ -1,10 +1,7 @@
 name: Finalize Hebrew across every language selector and publish
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/he-global-finalize.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
@@ -67,6 +64,7 @@ jobs:
           python -u _he_publish_qa.py
           git diff --exit-code
           python - <<'PY'
+          from site_config import iter_public_html
           import json,re,xml.etree.ElementTree as ET
           from _he_publish_qa import ROOT,BASE,EN,HE_URLS,core_page,dest,MENU,ANCHOR,attr,LINK
           from _he_translate_full import PAGES,validate,verify_source_sitemap
@@ -75,7 +73,7 @@ jobs:
           urls=[x.text for x in xml.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
           assert len(set(urls))==len(urls)
           assert len([u for u in urls if u.startswith(BASE+'he/')])==11
-          pages=sorted(p for p in ROOT.rglob('*.html') if '.git' not in p.parts and p.name!='404.html')
+          pages=sorted(p for p in iter_public_html(ROOT) if '.git' not in p.parts and p.name!='404.html')
           menus_checked=pages_checked=he_pages=0
           for file in pages:
               path=file.relative_to(ROOT).as_posix()

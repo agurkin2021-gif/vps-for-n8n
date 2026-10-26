@@ -5,12 +5,15 @@ The English sitemap defines the 11 translated page equivalents. For extra
 regional landing pages without an English equivalent, the switch targets the
 Slovak home page; such non-equivalent pages receive no hreflang alternate.
 """
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from site_config import BASE_URL, iter_public_html
 import json
 import re
 import xml.etree.ElementTree as ET
 
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 ROOT = Path(".")
 EN_PAGES = [
     "", "best-vps-for-n8n.html", "about.html", "n8n-backup-and-restore.html",
@@ -83,7 +86,7 @@ def main():
              "already_present": 0, "skipped_no_menus": [],
              "head_alternates_added": 0, "menu_links_added": 0,
              "counterparts": {}, "checked_menu_links": 0}
-    for file in sorted(ROOT.rglob("*.html")):
+    for file in sorted(iter_public_html(ROOT)):
         if any(part in (".git", "_site", "node_modules") for part in file.parts):
             continue
         stats["scanned"] += 1

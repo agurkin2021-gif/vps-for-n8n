@@ -1,10 +1,7 @@
 name: Czech editorial QA and final publication
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/cs-publish.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

@@ -1,10 +1,7 @@
 name: Greek native editorial polish and final sitewide audit
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/el-editorial.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

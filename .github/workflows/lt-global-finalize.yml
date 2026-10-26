@@ -1,10 +1,5 @@
 name: Publish Lithuanian sitewide navigation
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/lt-global-finalize.yml"
-      - "scripts/integrate_lt_navigation.py"
   workflow_dispatch:
 
 permissions:
@@ -58,8 +53,9 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import re, json, time, urllib.request
-          base='https://agurkin2021-gif.github.io/vps-for-n8n/'
+          base=BASE_URL
           lt_paths=[
               'lt/',
               'lt/geriausias-vps-n8n.html',

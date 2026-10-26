@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Fail the build if source URLs or indexing metadata have regressed."""
+import argparse
+import json
+import sys
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from site_config import ROOT, BASE_URL, LEGACY_SITE
+from scripts.generate_sitemap import generate
+from scripts.check_internal_links import check as check_links
+from scripts.check_indexing_metadata import check as check_metadata
+from scripts.generate_hreflang import MAP_FILE, check as check_hreflang
+
+
+def validate(root=ROOT, hreflang_map=MAP_FILE):
+    root = Path(root).resolve()
+    count = generate(root, check=True)
+    robots = (root / 'robots.txt').read_text(encoding='utf-8')
+    if 'Sitemap: '+BASE_URL+'sitemap.xml' not in robots or LEGACY_SITE in robots:
+        raise ValueError('robots.txt must advertise the configured production sitemap')
+    metadata = check_metadata(root)
+    if metadata['errors']:
+        raise ValueError('Indexing metadata errors: '+json.dumps(metadata['errors'][:10]))
+    hreflang = check_hreflang(root, hreflang_map)
+    if hreflang['errors']:
+        raise ValueError('Hreflang errors: '+json.dumps(hreflang['errors'][:10]))
+    links = check_links(root)
+    if links['errors']:
+        raise ValueError('Broken internal links: '+json.dumps(links['errors'][:10]))
+    return {'sitemap_urls': count, 'html_files': links['html_files'],
+            'internal_links': links['internal_links'], 'metadata_errors': 0, 'broken_links': 0,
+            'hreflang_groups': hreflang['groups'],
+            'hreflang_declarations': hreflang['hreflang_declarations'], 'hreflang_errors': 0}
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, default=ROOT)
+    parser.add_argument('--hreflang-map', type=Path, default=MAP_FILE)
+    args = parser.parse_args()
+    try:
+        print(json.dumps(validate(args.root, args.hreflang_map)))
+    except (ValueError, OSError, ET.ParseError) as exc:
+        print('Site validation failed: '+str(exc), file=sys.stderr)
+        raise SystemExit(1)

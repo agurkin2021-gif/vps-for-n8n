@@ -1,8 +1,7 @@
 name: Vietnamese native editorial finalization
 on:
-  push:
-    branches: [vi-complete-sitemap-20261009]
-    paths: [.github/workflows/vi-finalize.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

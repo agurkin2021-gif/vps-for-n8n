@@ -1,9 +1,5 @@
 name: Publish Estonian in all language selectors
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/et-global-finalize.yml"
   workflow_dispatch:
 
 permissions:
@@ -55,12 +51,13 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import json
           import re
           import time
           import urllib.request
 
-          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          base = BASE_URL
           estonian = [
               "et/",
               "et/parim-vps-n8n-ile.html",

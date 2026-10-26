@@ -1,12 +1,7 @@
 name: Simplified Chinese sequential localization
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/zh-cn-localization.yml
-      - _zh_cn_translate_full.py
-      - _zh_cn_publish_qa.py
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

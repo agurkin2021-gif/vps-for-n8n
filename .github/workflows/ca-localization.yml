@@ -1,12 +1,7 @@
 name: Catalan sequential localization
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/ca-localization.yml
-      - _ca_translate_full.py
-      - _ca_publish_qa.py
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

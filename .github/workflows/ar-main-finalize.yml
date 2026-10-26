@@ -1,10 +1,8 @@
 name: Arabic post-merge selector finalization
 # selector-order-v3-arabic-last
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/ar-main-finalize.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

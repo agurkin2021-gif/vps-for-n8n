@@ -1,12 +1,7 @@
 name: Verify published Estonian pages
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/et-live-qa.yml"
-      - "et/**"
-      - "sitemap.xml"
   workflow_dispatch:
+
 permissions:
   contents: read
 concurrency:
@@ -24,6 +19,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import json
           import re
           import time
@@ -31,7 +27,7 @@ jobs:
           import xml.etree.ElementTree as ET
           from pathlib import Path
 
-          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          base = BASE_URL
           ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
           sitemap = ET.parse("sitemap.xml").getroot()
           urls = [x.text for x in sitemap.findall("sm:url/sm:loc", ns) if x.text]

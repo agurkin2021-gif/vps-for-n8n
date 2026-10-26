@@ -1,6 +1,7 @@
+from site_config import BASE_URL, iter_public_html
 from pathlib import Path
 import re
-root=Path(r"C:\Users\User\SEO_NICHE_RESEARCH\VPS for N8N\site"); base="https://agurkin2021-gif.github.io/vps-for-n8n/"
+root=Path(__file__).resolve().parent; base=BASE_URL
 langs=[("en","English",""),("es","Español","es/"),("ru","Русский","ru/"),("pt-BR","Português","pt-br/"),("de","Deutsch","de/"),("hi","हिन्दी","hi/"),("bn","বাংলা","bn/"),("ja","日本語","ja/"),("pa","ਪੰਜਾਬੀ","pa/")]
 dirs={"es","ru","pt-br","de","hi","bn","ja","pa"}
 def relprefix(f): return "../" if f.parent.name in dirs else ""
@@ -14,7 +15,7 @@ def langmenu(f):
  return "".join(items)
 footer='''<footer><b>n8nVPS</b><span>Independent infrastructure guide for self-hosted n8n.</span><p>Metro Manhattan Office Space, Inc.<br>122 East 42nd Street, Suite 446<br>New York, NY 10168<br>United States</p><p><a href="{P}about.html">About</a> · <a href="{P}contact.html">Contact</a> · <a href="{P}privacy.html">Privacy</a></p></footer>'''
 count=0
-for f in root.rglob("*.html"):
+for f in iter_public_html(root):
  if ".git" in f.parts or f.name=="404.html": continue
  s=f.read_text(encoding="utf-8",errors="ignore")
  if "n8n<span>VPS</span>" not in s: continue

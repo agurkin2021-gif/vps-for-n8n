@@ -1,6 +1,7 @@
+from site_config import BASE_URL, regenerate_sitemap
 from pathlib import Path
 import re,xml.etree.ElementTree as ET
-root=Path(r"C:\Users\User\SEO_NICHE_RESEARCH\VPS for N8N\site"); out=root/"pa"; out.mkdir(exist_ok=True); base="https://agurkin2021-gif.github.io/vps-for-n8n/"
+root=Path(__file__).resolve().parent; out=root/"pa"; out.mkdir(exist_ok=True); base=BASE_URL
 P=[
 ("index.html","n8n ਲਈ VPS: Self-Hosted Server Guide","n8n ਲਈ VPS ਚੁਣਦੇ ਸਮੇਂ CPU, RAM, NVMe, Docker, PostgreSQL, HTTPS, latency ਅਤੇ production workload ਨੂੰ ਇਕੱਠੇ ਵੇਖੋ।","n8n ਲਈ VPS: Production ਲਈ ਸਹੀ Server","ਹਲਕੇ automation ਲਈ 1–2 vCPU / 2 GB RAM ਚੱਲ ਸਕਦੀ ਹੈ। ਛੋਟੇ production ਲਈ 2 vCPU / 4 GB ਇੱਕ practical starting point ਹੈ; AI ਅਤੇ heavy workflows ਲਈ 4+ vCPU / 8 GB+ ਵੇਖੋ।","India commercial factors","₹/month ਅਤੇ renewal ਨਾਲ India region latency, NVMe, root access, backups, uptime/SLA ਅਤੇ vertical scaling ਵੇਖੋ।"),
 ("best-vps-for-n8n.html","n8n ਲਈ Best VPS India: RAM, CPU ਅਤੇ Price","n8n ਲਈ best VPS ਨੂੰ RAM, CPU, NVMe, India latency, SLA, bandwidth ਅਤੇ ₹ pricing ਨਾਲ compare ਕਰੋ।","n8n ਲਈ Best VPS ਕਿਵੇਂ ਚੁਣੀਏ","2 GB testing/light workload ਲਈ ਹੋ ਸਕਦੀ ਹੈ; Docker + PostgreSQL ਵਾਲੇ production ਲਈ 4 GB headroom practical ਹੈ।","Comparison criteria","Intro price ਤੋਂ ਇਲਾਵਾ renewal, bandwidth, snapshots, SLA, support scope ਅਤੇ upgrade cost compare ਕਰੋ।"),
@@ -16,12 +17,5 @@ for fn,title,desc,h1,p1,h2,p2 in P:
  url=base+"pa/"+("" if fn=="index.html" else fn)
  s=f'''<!doctype html><html lang="pa"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title><meta name="description" content="{desc}"><meta name="robots" content="index,follow"><link rel="canonical" href="{url}"><link rel="alternate" hreflang="pa" href="{url}"><link rel="alternate" hreflang="en" href="{base}"><link rel="alternate" hreflang="x-default" href="{base}"><link rel="icon" href="../favicon.svg"><link rel="stylesheet" href="../styles.css"></head><body><header><a class="brand" href="index.html">n8n<span>VPS</span></a><div class="lang-switch"><button type="button">ਪੰਜਾਬੀ &#9662;</button><div class="lang-menu"><a href="../">English</a><a href="../hi/">हिन्दी</a><a href="../bn/">বাংলা</a><a href="../ja/">日本語</a><a href="./">ਪੰਜਾਬੀ</a></div></div></header><main><section class="section"><h1>{h1}</h1><p class="lead">{desc}</p><div class="actions"><a class="primary" href="https://www.vdsina.com/?partner=ni8gzrvz75" rel="sponsored nofollow">VPS options ਵੇਖੋ</a></div></section><section class="section dark"><h2>{h2}</h2><p>{p1}</p></section><section class="section"><h2>Production intent</h2><p class="intro">{p2}</p></section><section class="section dark"><p>{links}</p></section></main></body></html>'''
  (out/fn).write_text(s,encoding="utf-8")
-urls=[]
-for f in root.rglob("*.html"):
- if ".git" in f.parts or f.name=="404.html": continue
- rel=f.relative_to(root).as_posix()
- if rel.endswith("/index.html"): rel=rel[:-10]
- elif rel=="index.html": rel=""
- urls.append(base+rel)
-(root/"sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc></url>' for u in sorted(set(urls)))+'\n</urlset>\n',encoding="utf-8")
-print("PA",len(list(out.glob("*.html"))),"URLS",len(set(urls)))
+sitemap_count = regenerate_sitemap(root)
+print("PA",len(list(out.glob("*.html"))),"URLS",sitemap_count)

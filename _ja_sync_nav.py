@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Synchronize Japanese site-wide footer/header language options and sitemap."""
+from site_config import BASE_URL, iter_public_html, regenerate_sitemap
 from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parent
-BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE=BASE_URL
 TOPICS=[
 ("best-vps-for-n8n.html",r"best-vps|bester-vps|mejor-vps|melhor-vps|luchshiy-vps|najlepszy-vps|meilleur-vps|miglior-vps|vps-n8n-tot-nhat"),
 ("n8n-backup-restore.html",r"backup|copias-seguridad|sauvegarde-restauration|rezervnoe|yedekleme|sao-luu|rezervnoe-kopirovanie"),
@@ -64,7 +65,7 @@ def process_file(f:Path):
     if f.relative_to(ROOT).as_posix().startswith("ja/"):return False,True
     relative=f.relative_to(ROOT).as_posix()
     target,has_equivalent=match_ja_page(relative)
-    want="/vps-for-n8n/ja/"+("" if target=="index.html" else target)
+    want=BASE+"ja/"+("" if target=="index.html" else target)
     processed=LANG_MENU.sub(lambda m:rewrite_menu(m,want),original)
     if not re.search(r'<footer\b[\s\S]*?<div\b[^>]*class=["\'][^"\']*footer-lang-switch',processed,re.I):
         # Existing pages are expected to have native footer dropdowns.
@@ -83,7 +84,7 @@ def process_file(f:Path):
     return False,True
 
 changed=0; checked=0;errors=[]
-for f in sorted(ROOT.rglob("*.html")):
+for f in sorted(iter_public_html(ROOT)):
     if ".git" in f.parts:continue
     edited,valid=process_file(f)
     checked+=1;changed+=int(edited)
@@ -92,12 +93,8 @@ print(f"LANGUAGE_SWITCH_QA checked={checked} changed={changed} missing_footer={l
 if errors:raise RuntimeError("Footer language missing in "+", ".join(errors[:20]))
 
 sitemap=ROOT/"sitemap.xml"
+regenerate_sitemap(ROOT)
 text=sitemap.read_text(encoding="utf-8")
-for p in ("ja/about.html","ja/contact.html","ja/privacy.html"):
-    url=BASE+p
-    if url not in text:text=text.replace("</urlset>","  <url><loc>"+url+"</loc></url>\n</urlset>",1)
-sitemap.write_text(text,encoding="utf-8")
-ET.parse(sitemap)
 urls=re.findall(r"<loc>([^<]+)</loc>",text)
 en=[p for p in urls if p.startswith(BASE) and not p.removeprefix(BASE).startswith(tuple(x+"/" for x in ["bn","ja","de","es","hi","ko","pa","pt-br","ru","mr","te","tr","ta","vi","fr","it","pl"])) and p.removeprefix(BASE) in ("","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html","contact.html","install-n8n-on-a-vps.html","n8n-cloud-vs-self-hosted.html","n8n-vps-requirements.html","privacy.html","secure-n8n-on-a-vps.html","n8n-queue-mode.html")]
 ja=[p for p in urls if p.startswith(BASE+"ja/")]

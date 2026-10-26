@@ -1,11 +1,6 @@
 name: Unify site header across every language and inner page
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/unify-site-headers.yml"
-      - "scripts/unify_site_headers.py"
   workflow_dispatch:
 
 permissions:
@@ -82,8 +77,9 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import re, time, urllib.request
-          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          BASE=BASE_URL
           PAGES=[
             "", "about.html", "best-vps-for-n8n.html",
             "install-n8n-on-a-vps.html", "n8n-queue-mode.html", "404.html",

@@ -1,8 +1,7 @@
 name: Tamil complete source-faithful localization
 on:
-  push:
-    branches: [ta-complete-sitemap-20261009]
-    paths: [.github/workflows/ta-complete.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

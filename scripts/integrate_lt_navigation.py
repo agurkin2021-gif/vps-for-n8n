@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Integrate Lithuanian into every existing language selector without changing page content."""
 from __future__ import annotations
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from site_config import BASE_URL, iter_public_html
 
 import argparse
 import json
 import re
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 COUNTERPARTS = {
     "": "lt/",
     "index.html": "lt/",
@@ -125,7 +128,7 @@ def verify(path: Path, text: str, menus: int, exact: bool, target: str | None) -
 def main(write: bool) -> None:
     validate_sitemap()
     changed = checked = menus_count = exact_count = fallback_count = skipped = 0
-    for path in sorted(ROOT.rglob("*.html")):
+    for path in sorted(iter_public_html(ROOT)):
         if ".git" in path.parts:
             continue
         original = path.read_text(encoding="utf-8")

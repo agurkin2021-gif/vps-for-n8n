@@ -1,9 +1,7 @@
 name: French sequential HTML localization and publication QA
 on:
-  push:
-    branches: [fr-complete-sitemap-20261009]
-    paths:
-      - .github/workflows/fr-localization.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

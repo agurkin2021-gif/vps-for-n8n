@@ -13,6 +13,8 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+from site_config import iter_public_html
 IDS = ("workloads", "requirements", "architecture", "faq")
 HDR = re.compile(r"<header\b[^>]*>[\s\S]*?</header>", re.I)
 NAV = re.compile(
@@ -187,7 +189,7 @@ def main():
     count_headers = 0
     noheaders = []
     locales = Counter()
-    for path in sorted(ROOT.rglob("*.html")):
+    for path in iter_public_html(ROOT):
         if ".git" in path.parts:
             continue
         before = path.read_text(encoding="utf-8")

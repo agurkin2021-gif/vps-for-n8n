@@ -1,10 +1,7 @@
 name: Hebrew translation — sitemap pages 3 and 4
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/he-pages-3-4.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
@@ -119,19 +116,13 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          from site_config import regenerate_sitemap
           import xml.etree.ElementTree as ET
           from _he_translate_full import ROOT,BASE,PAGES,verify_source_sitemap
           assert verify_source_sitemap()==11
           sm=ROOT/'sitemap.xml'
-          s=sm.read_text(encoding='utf-8')
-          urls={x.text for x in ET.fromstring(s).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')}
-          for en,he in PAGES[2:4]:
-              assert (ROOT/he).is_file()
-              url=BASE+he
-              if url not in urls:
-                  s=s.replace('</urlset>','  <url><loc>'+url+'</loc></url>\n</urlset>',1)
-                  urls.add(url)
-          sm.write_text(s,encoding='utf-8')
+          regenerate_sitemap()
+          urls={n.text for n in ET.parse(sm).iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
           ET.parse(sm)
           assert len([u for u in urls if u.startswith(BASE+'he/')])==4
           assert all(BASE+path in urls for _,path in PAGES[2:4])

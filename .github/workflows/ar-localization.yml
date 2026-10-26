@@ -1,9 +1,7 @@
 name: Arabic sequential HTML localization and publication QA
 on:
-  push:
-    branches: [ar-complete-sitemap-20261009]
-    paths:
-      - .github/workflows/ar-localization.yml
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

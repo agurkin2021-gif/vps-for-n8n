@@ -1,9 +1,7 @@
 name: Verify Norwegian pages over HTTPS
 on:
-  push:
-    paths:
-      - ".github/workflows/verify-norwegian-pages.yml"
   workflow_dispatch:
+
 permissions:
   contents: write
 jobs:
@@ -17,6 +15,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           from concurrent.futures import ThreadPoolExecutor
           from datetime import datetime, timezone
           from pathlib import Path
@@ -24,7 +23,7 @@ jobs:
           from urllib.error import HTTPError
           import json, re, time
 
-          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/no/"
+          BASE=BASE_URL + 'no/'
           PAGES=["","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html",
                  "contact.html","install-n8n-on-a-vps.html","n8n-cloud-vs-self-hosted.html",
                  "n8n-vps-requirements.html","privacy.html","secure-n8n-on-a-vps.html",

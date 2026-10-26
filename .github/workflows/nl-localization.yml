@@ -3,10 +3,7 @@
 name: Dutch sequential HTML localization and publication QA
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/nl-localization.yml
+
 permissions:
   contents: write
 jobs:

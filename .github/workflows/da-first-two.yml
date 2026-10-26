@@ -1,9 +1,5 @@
 name: Danish pages 1 and 2 – sequential localization
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/da-first-two.yml
   workflow_dispatch:
 
 permissions:

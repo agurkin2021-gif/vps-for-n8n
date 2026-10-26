@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Sequential English-sitemap -> Romanian HTML localization, strict technical-data and DOM checks."""
 from __future__ import annotations
+from site_config import BASE_URL
 import collections
 import html
 import json
@@ -12,7 +13,7 @@ import urllib.parse
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
-BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE = BASE_URL
 PAGES = [
     ("index.html", "ro/index.html"),
     ("best-vps-for-n8n.html", "ro/cel-mai-bun-vps-pentru-n8n.html"),

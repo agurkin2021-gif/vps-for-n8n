@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Finalize Punjabi localization on existing HTML pages without altering content or code."""
 from __future__ import annotations
+from site_config import BASE_URL, iter_public_html
 from pathlib import Path
 import re, html, json, collections
 import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parent
-BASE="https://agurkin2021-gif.github.io/vps-for-n8n/"
+BASE=BASE_URL
 PAIRS=[
  ("index.html","pa/index.html"),
  ("best-vps-for-n8n.html","pa/best-vps-for-n8n.html"),
@@ -67,7 +68,7 @@ def set_href(tag,url):
     return tag.replace("<a",'<a href="'+url+'"',1)
 
 def build_registry():
-    pages=sorted(f.relative_to(ROOT).as_posix() for f in ROOT.rglob("*.html")
+    pages=sorted(f.relative_to(ROOT).as_posix() for f in iter_public_html(ROOT)
                  if ".git" not in f.parts and f.name!="404.html")
     reg={}
     for path in pages:

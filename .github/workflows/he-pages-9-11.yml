@@ -1,10 +1,7 @@
 name: Hebrew final 3 pages - sitemap 9, 10 and 11
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/he-pages-9-11.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
@@ -136,19 +133,13 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          from site_config import regenerate_sitemap
           import xml.etree.ElementTree as ET
           from _he_translate_full import ROOT,BASE,PAGES,verify_source_sitemap
           assert verify_source_sitemap()==11
           p=ROOT/'sitemap.xml'
-          data=p.read_text(encoding='utf-8')
-          existing=[node.text for node in ET.fromstring(data).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-          for en,he in PAGES[8:]:
-              assert (ROOT/he).is_file(),he
-              url=BASE+he
-              if url not in existing:
-                  data=data.replace('</urlset>', '  <url><loc>'+url+'</loc></url>\n</urlset>',1)
-                  existing.append(url)
-          p.write_text(data,encoding='utf-8')
+          regenerate_sitemap()
+          existing=[n.text for n in ET.parse(p).iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
           ET.parse(p)
           assert len([u for u in existing if u.startswith(BASE+'he/')])==11
           assert len(existing)==len(set(existing))

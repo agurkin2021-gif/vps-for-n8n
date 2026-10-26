@@ -1,9 +1,7 @@
 name: Norwegian browser QA
 on:
-  push:
-    paths:
-      - ".github/workflows/norwegian-browser-qa.yml"
   workflow_dispatch:
+
 permissions:
   contents: write
 jobs:
@@ -25,13 +23,14 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import json, os, traceback
           from datetime import datetime, timezone
           from pathlib import Path
           from urllib.parse import urljoin, urlsplit
           from playwright.sync_api import sync_playwright, TimeoutError as BrowserTimeout
 
-          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/no/"
+          BASE=BASE_URL + 'no/'
           PAGES=["","best-vps-for-n8n.html","about.html","n8n-backup-and-restore.html",
                  "contact.html","install-n8n-on-a-vps.html","n8n-cloud-vs-self-hosted.html",
                  "n8n-vps-requirements.html","privacy.html","secure-n8n-on-a-vps.html",
@@ -87,7 +86,7 @@ jobs:
                   for href in internal_links:
                       target=urljoin(url,href)
                       path=urlsplit(target).path
-                      prefix="/vps-for-n8n/no/"
+                      prefix="/no/"
                       if not path.startswith(prefix):continue
                       tail=path[len(prefix):]
                       if tail=="index.html":tail=""

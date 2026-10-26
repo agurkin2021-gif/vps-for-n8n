@@ -1,9 +1,7 @@
 name: Finalize Norwegian navigation across all pages
 on:
-  push:
-    paths:
-      - ".github/workflows/finalize-norwegian-navigation.yml"
   workflow_dispatch:
+
 permissions:
   contents: write
 jobs:
@@ -17,12 +15,13 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL, iter_public_html
           from pathlib import Path
           import re
           import json
           from urllib.parse import urlparse
 
-          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          BASE = BASE_URL
           NO_DIR = Path("no")
           EN_FILES = ("index.html", "best-vps-for-n8n.html", "about.html",
                       "n8n-backup-and-restore.html", "contact.html",
@@ -88,7 +87,7 @@ jobs:
               eng[filename]=arr
 
           stats=dict(scanned=0,updated=0,already_ok=0,skipped=[],missing_norwegian=[],synced=0,seo_added=0,regional_home_links=0)
-          for file in sorted(Path(".").rglob("*.html")):
+          for file in sorted(iter_public_html(Path("."))):
               if any(p in (".git","node_modules","_site") for p in file.parts): continue
               if file.parts and file.parts[0]=="no": continue
               stats["scanned"]+=1

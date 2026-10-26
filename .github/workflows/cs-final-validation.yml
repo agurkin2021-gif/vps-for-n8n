@@ -1,10 +1,7 @@
 name: Czech final 11-page and global language QA
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/cs-final-validation.yml
   workflow_dispatch:
+
 permissions:
   contents: read
 jobs:
@@ -25,11 +22,12 @@ jobs:
       - name: Check English parity and Czech sitemap exact mapping
         run: |
           python - <<'PY'
+          from site_config import BASE_URL
           from pathlib import Path
           from _cs_translate_full import PAGES, verify_source_sitemap
           import re, json, collections, xml.etree.ElementTree as ET
           root=Path(".")
-          base="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          base=BASE_URL
           assert verify_source_sitemap()==len(PAGES)==11
           sitemap=ET.parse("sitemap.xml")
           urls=[u.text for u in sitemap.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]

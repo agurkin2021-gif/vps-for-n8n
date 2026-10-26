@@ -1,8 +1,7 @@
 name: Punjabi page one native editorial QA
 on:
-  push:
-    branches: [pa-complete-sitemap-20261009]
-    paths: [.github/workflows/pa-editorial-one.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

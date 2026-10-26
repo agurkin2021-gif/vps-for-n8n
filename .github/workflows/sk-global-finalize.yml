@@ -1,11 +1,7 @@
 name: Publish Slovak navigation across every language
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/sk-global-finalize.yml"
-      - "scripts/integrate_sk_navigation.py"
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

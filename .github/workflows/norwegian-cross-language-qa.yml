@@ -1,9 +1,7 @@
 name: Norwegian cross-language switch QA
 on:
-  push:
-    paths:
-      - ".github/workflows/norwegian-cross-language-qa.yml"
   workflow_dispatch:
+
 permissions:
   contents: write
 jobs:
@@ -25,13 +23,14 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import json, os, traceback
           from datetime import datetime, timezone
           from pathlib import Path
           from playwright.sync_api import sync_playwright
 
-          BASE="https://agurkin2021-gif.github.io/vps-for-n8n/no/"
-          ROOT="https://agurkin2021-gif.github.io/vps-for-n8n/"
+          BASE=BASE_URL + 'no/'
+          ROOT=BASE_URL
           results=[]
           with sync_playwright() as p:
               browser=p.chromium.launch(headless=True,args=["--no-sandbox"])

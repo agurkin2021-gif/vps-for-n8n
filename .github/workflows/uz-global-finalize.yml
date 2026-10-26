@@ -1,8 +1,6 @@
 name: Uzbek global finalize
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -21,10 +19,11 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL, iter_public_html, regenerate_sitemap
           from pathlib import Path
           import re
 
-          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          BASE = BASE_URL
           MAP = {
               "": "uz/",
               "best-vps-for-n8n.html": "uz/n8n-uchun-eng-yaxshi-vps.html",
@@ -95,7 +94,7 @@ jobs:
           menu_files = 0
           failures = []
 
-          for p in Path(".").rglob("*.html"):
+          for p in iter_public_html(Path(".")):
               if ".git" in p.parts:
                   continue
               html = p.read_text(encoding="utf-8")
@@ -140,13 +139,8 @@ jobs:
           if matched != menu_files:
               raise SystemExit(f"Matched {matched} core HTML pages but found {menu_files} files with language menus")
 
-          sitemap = Path("sitemap.xml")
-          sm = sitemap.read_text(encoding="utf-8")
-          for rel in MAP.values():
-              u = BASE + rel
-              if f"<loc>{u}</loc>" not in sm:
-                  sm = re.sub(r'</urlset>\s*$', f'  <url><loc>{u}</loc></url>\n</urlset>', sm, count=1, flags=re.I)
-          sitemap.write_text(sm, encoding="utf-8")
+          regenerate_sitemap()
+          sm = Path("sitemap.xml").read_text(encoding="utf-8")
 
           uz_pages = sorted(Path("uz").glob("*.html"))
           if len(uz_pages) != 11:
@@ -179,7 +173,7 @@ jobs:
                       raise SystemExit(f"Unlocalized internal link {bad} in {p}")
 
           # Validate every language menu on every core page contains exactly one Uzbek entry.
-          for p in Path(".").rglob("*.html"):
+          for p in iter_public_html(Path(".")):
               if ".git" in p.parts:
                   continue
               txt = p.read_text(encoding="utf-8")

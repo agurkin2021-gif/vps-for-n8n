@@ -1,11 +1,8 @@
 # Hungarian page 11 — English sitemap source, sequential localization and validation
 name: Hungarian localization — sequential two-page pass
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/hu-localization.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

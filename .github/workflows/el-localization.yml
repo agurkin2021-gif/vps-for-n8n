@@ -1,11 +1,8 @@
 # Syntax corrected for Greek script
 name: Greek sequential HTML localization, full parity QA and publication
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/el-localization.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

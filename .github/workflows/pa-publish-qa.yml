@@ -1,12 +1,7 @@
 name: Punjabi localization final QA and language-selector integration
 on:
-  push:
-    branches: [pa-complete-sitemap-20261009]
-    paths:
-      - .github/workflows/pa-publish-qa.yml
-      - _pa_publish_qa.py
-      - _pa_translate_full.py
-      - _pa_sync_nav.py
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

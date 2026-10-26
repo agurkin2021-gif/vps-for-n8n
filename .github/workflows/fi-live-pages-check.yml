@@ -1,8 +1,5 @@
 name: Finnish live URL and browser check
 on:
-  push:
-    paths:
-      - .github/workflows/fi-live-pages-check.yml
   workflow_dispatch:
 
 permissions:
@@ -18,12 +15,13 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
+          from site_config import BASE_URL
           import shutil
           import subprocess
           import sys
           import urllib.request
 
-          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          base = BASE_URL
           pages = [
               "", "best-vps-for-n8n.html", "about.html",
               "n8n-backup-and-restore.html", "contact.html",

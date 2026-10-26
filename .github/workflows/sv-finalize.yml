@@ -1,10 +1,7 @@
 name: Finalize Swedish sitewide menus and publication
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/sv-finalize.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
@@ -66,9 +63,10 @@ jobs:
           python -u _sv_publish_qa.py
           git diff --exit-code
           python - <<'PY'
+          from site_config import BASE_URL
           from pathlib import Path
           import re,xml.etree.ElementTree as ET
-          base='https://agurkin2021-gif.github.io/vps-for-n8n/'
+          base=BASE_URL
           pages=list(Path('sv').glob('*.html'))
           assert len(pages)==11
           for path in pages:

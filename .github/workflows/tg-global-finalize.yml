@@ -1,11 +1,6 @@
 name: Publish Tajik sitewide navigation and validate release
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/tg-global-finalize.yml"
-      - "scripts/integrate_tg_navigation.py"
   workflow_dispatch:
 
 permissions:
@@ -76,11 +71,12 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import re
           import time
           import urllib.request
 
-          BASE = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          BASE = BASE_URL
           pages = [
               "tg/",
               "tg/behtarin-vps-baroi-n8n.html",

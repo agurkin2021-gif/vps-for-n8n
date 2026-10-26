@@ -2,10 +2,7 @@ name: Indonesian sequential HTML localization and publication QA
 # Indonesian full sitemap refresh v5
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/id-localization.yml
+
 permissions:
   contents: write
 jobs:

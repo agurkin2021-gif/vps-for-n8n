@@ -1,8 +1,7 @@
 name: Punjabi full website sequential page translation
 on:
-  push:
-    branches: [pa-complete-sitemap-20261009]
-    paths: [.github/workflows/pa-translation.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

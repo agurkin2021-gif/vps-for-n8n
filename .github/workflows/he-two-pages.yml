@@ -1,10 +1,7 @@
 name: Hebrew translation — first two pages
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/he-two-pages.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
@@ -81,19 +78,14 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
+          from site_config import regenerate_sitemap
           from pathlib import Path
           import xml.etree.ElementTree as ET
           from _he_translate_full import ROOT, BASE, PAGES, verify_source_sitemap
           assert verify_source_sitemap()==11
           sitemap=ROOT/'sitemap.xml'
-          s=sitemap.read_text(encoding='utf-8')
-          existing={n.text for n in ET.fromstring(s).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')}
-          for en,he in PAGES[:2]:
-              url=BASE+('he/' if he=='he/index.html' else he)
-              if url not in existing:
-                  s=s.replace('</urlset>', '  <url><loc>'+url+'</loc></url>\n</urlset>',1)
-                  existing.add(url)
-          sitemap.write_text(s,encoding='utf-8')
+          regenerate_sitemap()
+          existing={n.text for n in ET.parse(sitemap).iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
           assert len([u for u in existing if u.startswith(BASE+'he/')])==2
           ET.parse(sitemap)
           print('HE_SITEMAP_PASS_2_OF_11')

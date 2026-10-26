@@ -1,9 +1,5 @@
 name: Publish Latvian in every language selector
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/lv-global-finalize.yml"
   workflow_dispatch:
 
 permissions:
@@ -55,8 +51,9 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          from site_config import BASE_URL
           import re, time, urllib.request
-          base = "https://agurkin2021-gif.github.io/vps-for-n8n/"
+          base = BASE_URL
           latvian = [
               "lv/",
               "lv/labakais-vps-n8n.html",

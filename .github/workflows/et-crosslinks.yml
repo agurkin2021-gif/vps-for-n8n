@@ -1,11 +1,7 @@
 name: Publish Estonian internal cross-links
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/et-crosslinks.yml"
-      - "scripts/sync_et_links.py"
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:

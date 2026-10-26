@@ -1,8 +1,7 @@
 name: Final Azerbaijani sitewide footer and sitemap publication
 on:
-  push:
-    branches: [main]
-    paths: [.github/workflows/az-page1-validation.yml]
+  workflow_dispatch:
+
 permissions:
   contents: write
 jobs:

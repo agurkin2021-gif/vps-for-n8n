@@ -2,10 +2,7 @@
 name: Thai sequential HTML localization and publication QA
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/th-localization.yml
+
 permissions:
   contents: write
 jobs:

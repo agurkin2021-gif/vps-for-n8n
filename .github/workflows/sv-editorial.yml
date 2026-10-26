@@ -1,10 +1,7 @@
 name: Swedish native terminology and heading audit
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/sv-editorial.yml
   workflow_dispatch:
+
 permissions:
   contents: write
 concurrency:
