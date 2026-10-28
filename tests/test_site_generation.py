@@ -41,6 +41,23 @@ class SitemapRegressionTests(unittest.TestCase):
     def urls(self):
         return [n.text for n in ET.parse(self.root/'sitemap.xml').iter('{'+NS+'}loc')]
 
+    def prepare_build(self):
+        for name in ['cloudflare-build.mjs', 'cloudflare-worker.mjs', 'wrangler.jsonc', 'site_config.py', 'site-config.json']:
+            shutil.copyfile(ROOT/name, self.root/name)
+        (self.root/'scripts').mkdir()
+        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py', 'check_robots.py', 'sync_language_menus.py', 'check_assets.py', 'check_crawl_reachability.py']:
+            shutil.copyfile(ROOT/'scripts'/name, self.root/'scripts'/name)
+        (self.root/'tests').mkdir()
+        shutil.copyfile(ROOT/'tests'/'worker-routing.test.mjs', self.root/'tests'/'worker-routing.test.mjs')
+        (self.root/'dist').mkdir()
+        sentinel = self.root/'dist'/'existing.txt'
+        sentinel.write_text('existing build', encoding='utf-8')
+        return sentinel
+
+    def run_build(self):
+        env = {**os.environ, 'PYTHON': sys.executable, 'PYTHONDONTWRITEBYTECODE': '1'}
+        return subprocess.run(['node', str(self.root/'cloudflare-build.mjs')], cwd=self.root, env=env, capture_output=True, text=True, timeout=30)
+
     def test_relative_scan_preserves_workflow_locale_paths(self):
         previous = Path.cwd()
         try:
@@ -120,6 +137,42 @@ class SitemapRegressionTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'stale, unordered or duplicated'):
                     generate(self.root, check=True)
 
+    def test_build_recreates_missing_and_stale_sitemap_before_validation_and_copy(self):
+        # Keep the real validation/routing pipeline, including its five alias targets.
+        config = json.loads((ROOT/'site-config.json').read_text(encoding='utf-8'))
+        mapping = json.loads(self.hreflang_map.read_text(encoding='utf-8'))
+        mapping['groups'][0]['variants']['it'] = '/it/vps-n8n/'
+        links = '<a href="es/">Spanish</a><a href="it/vps-n8n/">Italian</a>'
+        for index, target in enumerate(config['redirects'].values()):
+            italian = target == '/it/vps-n8n/'
+            filename = target.lstrip('/') + ('index.html' if target.endswith('/') else '')
+            self.page(filename, BASE_URL.rstrip('/')+target, lang='it' if italian else 'en')
+            if not italian:
+                mapping['groups'].append({'id': f'article-{index}', 'variants': {'en': target}})
+                links += f'<a href="{target}">Article {index}</a>'
+        self.page('index.html', BASE_URL, body=links)
+        self.hreflang_map.write_text(json.dumps(mapping), encoding='utf-8')
+        self.page('404.html', head='<meta name="robots" content="noindex">')
+        (self.root/'googleb2953904cf71c52f.html').write_text('google-site-verification: googleb2953904cf71c52f.html', encoding='utf-8')
+        (self.root/'styles.css').write_text('body { color: black; }', encoding='utf-8')
+        (self.root/'favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>', encoding='utf-8')
+        # Public inert assets satisfy the build's minimum inventory without hundreds of pages.
+        for index in range(500):
+            (self.root/f'asset-{index}.txt').write_text('fixture', encoding='utf-8')
+        generate_hreflang(self.root, self.hreflang_map)
+        sentinel = self.prepare_build()
+        sitemap = self.root/'sitemap.xml'
+        for state in ['missing', 'stale']:
+            with self.subTest(state=state):
+                sentinel.write_text('existing build', encoding='utf-8')
+                if state == 'stale':
+                    sitemap.write_text(f'<urlset xmlns="{NS}"><url><loc>{LEGACY_SITE}/</loc></url></urlset>', encoding='utf-8')
+                result = self.run_build()
+                self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
+                self.assertEqual(generate(self.root, check=True), 7)
+                self.assertEqual((self.root/'dist'/'sitemap.xml').read_bytes(), sitemap.read_bytes())
+                self.assertFalse(sentinel.exists())
+
     def test_build_fails_before_replacing_existing_dist_on_invalid_source(self):
         generate(self.root)
         generate_hreflang(self.root, self.hreflang_map)
@@ -129,16 +182,8 @@ class SitemapRegressionTests(unittest.TestCase):
         valid_spanish = (self.root/'es/index.html').read_bytes()
         robots = self.root/'robots.txt'
         valid_robots = robots.read_bytes()
-        for name in ['cloudflare-build.mjs', 'site_config.py', 'site-config.json']:
-            shutil.copyfile(ROOT/name, self.root/name)
-        (self.root/'scripts').mkdir()
-        for name in ['generate_sitemap.py', 'generate_hreflang.py', 'validate_site.py', 'check_indexing_metadata.py', 'check_internal_links.py', 'check_robots.py', 'sync_language_menus.py', 'check_assets.py', 'check_crawl_reachability.py']:
-            shutil.copyfile(ROOT/'scripts'/name, self.root/'scripts'/name)
-        (self.root/'dist').mkdir()
-        sentinel = self.root/'dist'/'existing.txt'
-        sentinel.write_text('existing build', encoding='utf-8')
-        env = {**os.environ, 'PYTHON': sys.executable, 'PYTHONDONTWRITEBYTECODE': '1'}
-        cases = [('sitemap', 'sitemap.xml is stale'), ('hreflang', 'Hreflang errors'),
+        sentinel = self.prepare_build()
+        cases = [('canonical', 'canonical must be'), ('hreflang', 'Hreflang errors'),
                  ('language_menu', 'Language menu errors'),
                  ('missing_image', 'Missing or unpublished assets'),
                  ('missing_stylesheet', 'Missing or unpublished assets'),
@@ -160,8 +205,8 @@ class SitemapRegressionTests(unittest.TestCase):
                 (self.root/'index.html').write_bytes(valid_home)
                 (self.root/'es/index.html').write_bytes(valid_spanish)
                 robots.write_bytes(valid_robots)
-                if broken == 'sitemap':
-                    sitemap.write_text(sitemap.read_text(encoding='utf-8').replace(BASE_URL, LEGACY_SITE+'/'), encoding='utf-8')
+                if broken == 'canonical':
+                    self.page('index.html', LEGACY_SITE+'/')
                 elif broken == 'hreflang':
                     self.page('es/index.html', BASE_URL+'es/', lang='es')  # Missing return/self links.
                 elif broken == 'language_menu':
@@ -181,10 +226,11 @@ class SitemapRegressionTests(unittest.TestCase):
                     (self.root/'index.html').write_bytes(valid_home.replace(b'<a href="es/">Spanish</a>', b''))
                 else:
                     robots.write_text(robots_cases[broken]+'Sitemap: '+BASE_URL+'sitemap.xml\n', encoding='utf-8')
-                result = subprocess.run(['node', str(self.root/'cloudflare-build.mjs')], cwd=self.root, env=env, capture_output=True, text=True, timeout=30)
+                result = self.run_build()
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn(message, result.stdout+result.stderr)
                 self.assertEqual(sentinel.read_text(encoding='utf-8'), 'existing build')
+                self.assertEqual(sitemap.read_bytes(), valid_sitemap)
 
 
 if __name__ == '__main__':

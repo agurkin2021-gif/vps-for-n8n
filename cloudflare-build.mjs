@@ -10,6 +10,15 @@ const allowed = new Set(config.assets.extensions);
 const ignoredDirs = new Set(config.assets.excludedDirectories);
 
 const python = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+const generation = spawnSync(python, ['-B', join(root, 'scripts', 'generate_sitemap.py'), '--root', root], {
+  cwd: root,
+  stdio: 'inherit',
+  env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' }
+});
+if (generation.error || generation.status !== 0) {
+  throw new Error(`Sitemap generation failed before building assets: ${generation.error?.message || generation.status}`);
+}
+
 const validation = spawnSync(python, ['-B', join(root, 'scripts', 'validate_site.py'), '--root', root], {
   cwd: root,
   stdio: 'inherit',

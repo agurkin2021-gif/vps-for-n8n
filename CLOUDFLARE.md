@@ -18,12 +18,16 @@ are available in the [Cloudflare Workers build image](https://developers.cloudfl
 Locally, `PYTHON` can select a Python executable; otherwise the build uses `python`
 on Windows and `python3` on other platforms.
 
-Before replacing `dist/`, the build checks the sitemap inventory, canonical URLs,
+Every build first regenerates `sitemap.xml` from the current indexable source pages,
+recreating a missing sitemap and replacing stale entries. Before replacing `dist/`,
+the build checks the generated sitemap inventory, canonical URLs,
 page identity metadata, robots sitemap declaration and crawl access, internal anchor destinations,
 reciprocal hreflang groups, language-menu destinations, referenced local assets
 and page reachability through ordinary links.
 It also runs the Worker routing regression tests against the source assets.
-Any failure stops the build. It never silently repairs source files during deployment.
+Any generation or validation failure stops the build and preserves the previous
+`dist/`. Only the derived sitemap is regenerated; HTML, robots rules, hreflang and
+language menus must pass validation as supplied.
 
 Robots validation checks every sitemap URL and the sitemap itself for both the
 generic `*` group and `Googlebot`. A rule that blocks any of these URLs fails the
@@ -93,6 +97,9 @@ verification file and build/tooling directories. Invalid or legacy canonicals
 stop generation before the existing sitemap is changed. URLs are sorted and
 unique; running the generator again leaves the sitemap bytes unchanged.
 `python -B scripts/generate_sitemap.py --check` checks without writing.
+The Cloudflare build runs generation automatically before validation and copies
+the resulting sitemap into `dist/`; the manual generation command above is useful
+when reviewing or committing updated sitemap output.
 
 Language publication scripts use the same generator. Translation and navigation
 jobs are separate maintenance operations; a normal build does not run them.
